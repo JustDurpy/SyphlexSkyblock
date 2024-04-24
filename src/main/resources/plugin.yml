@@ -1,0 +1,16 @@
+name: SyphlexSkyblock
+author: iDurpy
+main: net.syphlex.skyblock.Skyblock
+version: 0.0.1b
+api-version: 1.13
+
+dependencies:
+  server:
+    PlaceholderAPI:
+      # Load order is relative to the dependency. So here PlaceholderAPI loads before our plugin.
+      load: BEFORE
+      required: true
+
+commands:
+  island:
+    aliases: [is]
