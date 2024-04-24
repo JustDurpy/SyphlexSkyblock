@@ -1,9 +1,10 @@
 package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.Island;
+import net.syphlex.skyblock.handler.island.data.Island;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
+import net.syphlex.skyblock.handler.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -60,6 +61,7 @@ public class IslandFile extends SimpleConfig {
             }
 
             Island island = new Island(islandIdentifier, owner, corner1, corner2, center, members);
+            island.setHome(home);
             island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
             island.getUpgrades().setSpawnRate(spawnRate);
             island.getUpgrades().setHarvestRate(harvestRate);

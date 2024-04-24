@@ -3,12 +3,10 @@ package net.syphlex.skyblock.handler.island;
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.IslandFile;
-import net.syphlex.skyblock.database.flat.OreGeneratorFile;
-import net.syphlex.skyblock.handler.island.Island;
-import net.syphlex.skyblock.handler.island.IslandGrid;
+import net.syphlex.skyblock.handler.island.data.Island;
+import net.syphlex.skyblock.handler.island.data.IslandGrid;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
-import net.syphlex.skyblock.handler.island.upgrade.oregenerator.IslandOreGenerator;
 import net.syphlex.skyblock.profile.IslandProfile;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.config.ConfigEnum;
@@ -70,11 +68,8 @@ public class IslandHandler {
 
     private void deleteIslandBlocks(Island island, World world, int y, CompletableFuture<Void> completableFuture, int delay){
 
-        Position pos1 = island.getCorner1();
-        Position pos2 = island.getCorner2();
-
-        for (int x = pos1.getBlockX(); x <= pos2.getBlockX(); x++) {
-            for (int z = pos1.getBlockZ(); z <= pos2.getBlockZ(); z++) {
+        for (int x = island.getMinX(); x <= island.getMaxX(); x++) {
+            for (int z = island.getMinZ(); z <= island.getMaxZ(); z++) {
                 Block block = world.getBlockAt(x, y, z);
                 if (block.getType() != Material.AIR) {
                     if (block.getState() instanceof InventoryHolder) {

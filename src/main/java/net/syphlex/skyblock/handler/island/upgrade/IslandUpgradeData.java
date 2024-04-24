@@ -8,8 +8,7 @@ import net.syphlex.skyblock.util.config.ConfigEnum;
 
 @Getter
 @Setter
-public class IslandUpgrade {
-
+public class IslandUpgradeData {
     private double size = ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble();
     private double spawnRate = ConfigEnum.DEFAULT_ISLAND_SPAWNRATE.getAsDouble();
     private double harvestRate = ConfigEnum.DEFAULT_ISLAND_HARVESTRATE.getAsDouble();

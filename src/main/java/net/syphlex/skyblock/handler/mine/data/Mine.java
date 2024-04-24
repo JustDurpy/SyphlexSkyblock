@@ -1,0 +1,73 @@
+package net.syphlex.skyblock.handler.mine.data;
+
+import lombok.Getter;
+import lombok.Setter;
+import net.syphlex.skyblock.handler.island.upgrade.oregenerator.OreGeneratorBlockData;
+import net.syphlex.skyblock.util.Position;
+import org.bukkit.Location;
+
+import java.util.List;
+import java.util.Random;
+
+@Setter
+@Getter
+public class Mine {
+
+    private final int id;
+    private final String mineName;
+    private Position corner1, corner2;
+    private final List<MineBlockData> blocks;
+
+    public Mine(int id, String mineName, List<MineBlockData> blockData){
+        this.id = id;
+        this.mineName = mineName;
+        this.blocks = blockData;
+    }
+
+    public MineBlockData generateBlock(){
+        List<MineBlockData> compositions = blocks;
+        int totalPercentage = 0;
+        for(MineBlockData comp : compositions) {
+            totalPercentage = totalPercentage + (int)Math.round(comp.getChance());
+        }
+
+        if(totalPercentage == 0) return null;
+
+        Random random = new Random();
+        int index =  random.nextInt(totalPercentage);
+        int sum = 0, i = 0;
+        while (sum < index) {
+            sum = sum + (int)Math.round(compositions.get(i++).getChance());
+        }
+        return compositions.get(Math.max(0, i - 1));
+    }
+
+    public boolean isInside(Location location){
+        return location.getX() >= getMinX() && location.getY() >= getMinY() && location.getZ() >= getMinZ()
+                && location.getX() <= getMaxX() && location.getY() <= getMaxY() && location.getZ() <= getMaxZ();
+    }
+
+    public int getMaxX(){
+        return Math.max(corner1.getBlockX(), corner2.getBlockX());
+    }
+
+    public int getMaxY(){
+        return Math.max(corner1.getBlockY(), corner2.getBlockY());
+    }
+
+    public int getMaxZ(){
+        return Math.max(corner1.getBlockZ(), corner2.getBlockZ());
+    }
+
+    public int getMinX(){
+        return Math.min(corner1.getBlockX(), corner2.getBlockX());
+    }
+
+    public int getMinY(){
+        return Math.min(corner1.getBlockY(), corner2.getBlockY());
+    }
+
+    public int getMinZ(){
+        return Math.min(corner1.getBlockZ(), corner2.getBlockZ());
+    }
+}

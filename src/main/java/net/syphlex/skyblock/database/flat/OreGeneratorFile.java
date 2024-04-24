@@ -1,12 +1,13 @@
 package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.handler.island.upgrade.oregenerator.IslandOreGenerator;
-import net.syphlex.skyblock.handler.island.upgrade.oregenerator.OreGeneratorBlock;
+import net.syphlex.skyblock.handler.island.upgrade.oregenerator.OreGeneratorBlockData;
 import net.syphlex.skyblock.util.SimpleConfig;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("all")
 public class OreGeneratorFile extends SimpleConfig {
 
     public OreGeneratorFile() {
@@ -40,7 +41,7 @@ public class OreGeneratorFile extends SimpleConfig {
             for (String blockSec : config.getConfigurationSection("generators." + section + ".blocks").getKeys(false)) {
                 String materialName = config.getString("generators." + section + ".blocks." + blockSec + ".material");
                 double chance = config.getDouble("generators." + section + ".blocks." + blockSec + ".chance");
-                generator.getBlocks().add(new OreGeneratorBlock(Material.getMaterial(materialName), chance));
+                generator.getBlocks().add(new OreGeneratorBlockData(Material.getMaterial(materialName), chance));
             }
 
             oreGenerators.add(generator);

@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.listener;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.Island;
+import net.syphlex.skyblock.handler.island.data.Island;
 import net.syphlex.skyblock.profile.IslandProfile;
 import net.syphlex.skyblock.util.WorldUtil;
 import net.syphlex.skyblock.util.config.ConfigEnum;

@@ -12,7 +12,7 @@ public class IslandOreGenerator {
 
     private final int tier;
     private final String name;
-    private final ArrayList<OreGeneratorBlock> blocks = new ArrayList<>();
+    private final ArrayList<OreGeneratorBlockData> blocks = new ArrayList<>();
 
     public IslandOreGenerator(final int tier, final String name){
         this.tier = tier;
@@ -23,10 +23,10 @@ public class IslandOreGenerator {
         return StringUtil.CC(this.name);
     }
 
-    public OreGeneratorBlock generate(){
-        List<OreGeneratorBlock> compositions = blocks;
+    public OreGeneratorBlockData generate(){
+        List<OreGeneratorBlockData> compositions = blocks;
         int totalPercentage = 0;
-        for(OreGeneratorBlock comp : compositions) {
+        for(OreGeneratorBlockData comp : compositions) {
             totalPercentage = totalPercentage + (int)Math.round(comp.getChance());
         }
 

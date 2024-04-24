@@ -6,7 +6,7 @@ import org.bukkit.Material;
 
 @Getter
 @AllArgsConstructor
-public class OreGeneratorBlock {
+public class OreGeneratorBlockData {
     private final Material material;
     private final double chance;
 }

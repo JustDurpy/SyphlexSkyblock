@@ -2,15 +2,12 @@ package net.syphlex.skyblock.profile;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.Island;
+import net.syphlex.skyblock.handler.island.data.Island;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
-import net.syphlex.skyblock.util.Pair;
 import net.syphlex.skyblock.util.StringUtil;
 import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @Getter
 @Setter

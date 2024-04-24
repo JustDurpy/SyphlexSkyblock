@@ -1,10 +1,10 @@
-package net.syphlex.skyblock.handler.island;
+package net.syphlex.skyblock.handler.island.data;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
-import net.syphlex.skyblock.handler.island.upgrade.IslandUpgrade;
+import net.syphlex.skyblock.handler.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.util.Position;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -22,7 +22,7 @@ public class Island {
     private MemberProfile owner;
     private Position corner1, corner2, center, home;
     private List<MemberProfile> members = new ArrayList<>();
-    private final IslandUpgrade upgrades = new IslandUpgrade();
+    private final IslandUpgradeData upgrades = new IslandUpgradeData();
 
     public Island(String identifier,
                   MemberProfile owner, Position corner1,
@@ -66,27 +66,27 @@ public class Island {
                 && location.getX() <= maxX && location.getY() <= maxY && location.getZ() <= maxZ;
     }
 
-    public double getMinX(){
-        return Math.min(corner1.getX(), corner2.getX());
+    public int getMinX(){
+        return Math.min(corner1.getBlockX(), corner2.getBlockX());
     }
 
-    public double getMinY(){
-        return Math.min(corner1.getY(), corner2.getY());
+    public int getMinY(){
+        return Math.min(corner1.getBlockY(), corner2.getBlockY());
     }
 
-    public double getMinZ(){
-        return Math.min(corner1.getZ(), corner2.getZ());
+    public int getMinZ(){
+        return Math.min(corner1.getBlockZ(), corner2.getBlockZ());
     }
 
-    public double getMaxX(){
-        return Math.max(corner1.getX(), corner2.getX());
+    public int getMaxX(){
+        return Math.max(corner1.getBlockX(), corner2.getBlockX());
     }
 
-    public double getMaxY(){
-        return Math.max(corner1.getY(), corner2.getY());
+    public int getMaxY(){
+        return Math.max(corner1.getBlockY(), corner2.getBlockY());
     }
 
-    public double getMaxZ(){
-        return Math.max(corner1.getZ(), corner2.getZ());
+    public int getMaxZ(){
+        return Math.max(corner1.getBlockZ(), corner2.getBlockZ());
     }
 }

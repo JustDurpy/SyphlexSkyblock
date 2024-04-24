@@ -1,7 +1,6 @@
 package net.syphlex.skyblock;
 
 import lombok.Getter;
-import net.minecraft.server.players.PlayerList;
 import net.syphlex.skyblock.cmd.IslandCmd;
 import net.syphlex.skyblock.database.flat.PluginFile;
 import net.syphlex.skyblock.handler.DataHandler;

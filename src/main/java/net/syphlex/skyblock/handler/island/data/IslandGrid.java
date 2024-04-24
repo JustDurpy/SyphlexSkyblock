@@ -1,8 +1,6 @@
-package net.syphlex.skyblock.handler.island;
+package net.syphlex.skyblock.handler.island.data;
 
 import net.syphlex.skyblock.Skyblock;
-
-import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("all")
 public class IslandGrid {
