@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.handler.island.upgrade.oregenerator;
+package net.syphlex.skyblock.handler.island.block;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

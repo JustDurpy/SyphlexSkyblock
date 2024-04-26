@@ -1,21 +1,50 @@
 package net.syphlex.skyblock.handler.island.upgrade;
 
-import net.syphlex.skyblock.database.flat.OreGeneratorFile;
+import lombok.Getter;
+import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
+import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
 import net.syphlex.skyblock.handler.island.upgrade.oregenerator.IslandOreGenerator;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 
+@Getter
 public class IslandUpgradeHandler {
 
+
     private ArrayList<IslandOreGenerator> oreGenerators;
+    private ArrayList<SpecialBlockData> specialBlocks;
 
     public void onEnable(){
-        OreGeneratorFile oreGeneratorFile = new OreGeneratorFile();
-        this.oreGenerators = oreGeneratorFile.read();
+        this.oreGenerators = Skyblock.get().getSettingsFile().oreGeneratorsSection;
+        this.specialBlocks = Skyblock.get().getSettingsFile().specialBlocksSection;
     }
 
     public void onDisable(){
+    }
 
+    public boolean isSpecialBlock(Material material){
+        for (SpecialBlockData blockData : this.specialBlocks) {
+            if (blockData.getMaterial() == material)
+                return true;
+        }
+        return false;
+    }
+
+    public SpecialBlockData getSpecialBlockDataFromString(String s){
+        String[] split = s.split(":");
+        return new SpecialBlockData(
+                Material.getMaterial(split[0]),
+                Float.parseFloat(split[1]));
+    }
+
+    public SpecialBlockData getSpecialBlockData(Material material){
+        for (SpecialBlockData blockData : this.specialBlocks) {
+            if (blockData.getMaterial() == material)
+                return blockData;
+        }
+        return null;
     }
 
     public IslandOreGenerator getOreGenerator(int tier){

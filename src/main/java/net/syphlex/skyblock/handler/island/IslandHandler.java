@@ -3,16 +3,19 @@ package net.syphlex.skyblock.handler.island;
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.IslandFile;
+import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
 import net.syphlex.skyblock.handler.island.data.Island;
+import net.syphlex.skyblock.handler.island.block.IslandBlockData;
 import net.syphlex.skyblock.handler.island.data.IslandGrid;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
-import net.syphlex.skyblock.profile.IslandProfile;
+import net.syphlex.skyblock.handler.profile.IslandProfile;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -26,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class IslandHandler {
 
-    public final static double MINIMUM_Y_LIMIT = -128.0;
+    public final static double MINIMUM_Y_LIMIT = -64.0;
     public final static double BUILD_HEIGHT = 256.0;
 
     private IslandFile islandFile;
@@ -36,7 +39,8 @@ public class IslandHandler {
         this.islandFile = new IslandFile();
         ArrayList<Island> islandList = this.islandFile.read();
 
-        this.grid = new IslandGrid(islandList.size() / 2);
+        this.grid = new IslandGrid(islandList.size() + 1);
+
         for (Island island : islandList)
             this.grid.insert(island);
     }
@@ -96,18 +100,19 @@ public class IslandHandler {
     private CompletableFuture<Void> getRidOfPlayers(Island island){
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         Bukkit.getScheduler().runTask(Skyblock.get(), () -> {
-            for (MemberProfile profiles : island.getMembers()) {
 
-                Player p = Bukkit.getPlayer(profiles.getUuid());
+            for (Entity e : Skyblock.get().getIslandWorld().getNearbyEntities(
+                    island.getCenter().getAsBukkit(Skyblock.get().getIslandWorld()),
+                    island.getUpgrades().getSize(),
+                    256,
+                    island.getUpgrades().getSize())) {
 
-                if (p == null) continue;
+                if (!(e instanceof Player))
+                    continue;
 
-                p.setHealth(0); // todo change this to teleport back to spawn
+                Player p = (Player)e;
+                p.teleport(Skyblock.get().getMainSpawn());
             }
-
-            Player p = Bukkit.getPlayer(island.getOwner().getUuid());
-            if (p != null)
-                p.setHealth(0.0); // todo
         });
         return completableFuture;
     }
@@ -125,6 +130,8 @@ public class IslandHandler {
 
     public void degenerateIsland(IslandProfile profile){
 
+        long started = System.currentTimeMillis();
+
         if (!profile.hasIsland()) {
             Messages.DOES_NOT_HAVE_ISLAND.send(profile);
             return;
@@ -135,10 +142,11 @@ public class IslandHandler {
             return;
         }
 
-        Messages.ISLAND_DELETE.send(profile);
-
         degenerateIsland(profile.getIsland());
         profile.setIsland(null);
+
+        profile.getPlayer().sendMessage(Messages.ISLAND_DELETE.get()
+                .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
     }
 
     public void degenerateIsland(Island island){
@@ -153,35 +161,36 @@ public class IslandHandler {
 
         Player player = profile.getPlayer();
 
+        long started = System.currentTimeMillis();
+
         if (profile.getIsland() != null) {
             Messages.ALREADY_HAS_ISLAND.send(profile);
             return;
         }
 
-        Messages.ISLAND_CREATE.send(profile);
-
         int[] nextSpot = this.grid.getNextSpot();
 
-        Island island = new Island(idToString(nextSpot),
-                new MemberProfile(player.getUniqueId(), IslandRole.LEADER));
-
-        island.setCenter(new Position(Skyblock.get().getIslandWorld(),
+        Position center = new Position(Skyblock.get().getIslandWorld(),
                 ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5,
                 ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
-                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5));
-        island.setCorner1(island.getCenter().clone().add(
+                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5);
+        Position corner1 = center.clone().add(
                 -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
                 BUILD_HEIGHT - ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
-                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d));
-        island.setCorner2(island.getCenter().clone().add(
+                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
+        Position corner2 = center.clone().add(
                 ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
-                -(Math.abs(MINIMUM_Y_LIMIT - ConfigEnum.DEFAULT_Y_POSITION.getAsDouble()) - ConfigEnum.DEFAULT_Y_POSITION.getAsDouble()),
-                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d));
+                -ConfigEnum.DEFAULT_Y_POSITION.getAsDouble() + MINIMUM_Y_LIMIT,
+                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
 
-        island.setHome(island.getCenter().clone());
+        Island island = new Island(idToString(nextSpot),
+                new MemberProfile(player.getUniqueId(), IslandRole.LEADER),
+                corner1, corner2, center);
 
-        island.getCorner1().setBlock(Material.GLOWSTONE);
-        island.getCorner2().setBlock(Material.GLOWSTONE);
+        island.setHome(island.getCenter().clone().add(0, 1, 0));
+
+        //island.getCorner1().setBlock(Material.GLOWSTONE);
+        //island.getCorner2().setBlock(Material.GLOWSTONE);
         island.getCenter().setBlock(Material.DIAMOND_BLOCK);
 
         this.grid.insert(island, nextSpot);
@@ -189,21 +198,24 @@ public class IslandHandler {
         profile.setIsland(island);
 
         island.teleport(player);
+
+        profile.getPlayer().sendMessage(Messages.ISLAND_CREATE.get()
+                .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
     }
 
-    public void generateIslandBorder(Player player, Color color) {
+    public void generateIslandBorder(Island island, Player player, Color color) {
 
         WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
-        worldBorder.setCenter(player.getLocation().getX(), player.getLocation().getZ());
-        worldBorder.setSize(ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble());
+        worldBorder.setCenter(island.getCenter().getX(), island.getCenter().getZ());
+        worldBorder.setSize(island.getUpgrades().getSize());
 
         worldBorder.setDamageAmount(0);
         worldBorder.setDamageBuffer(0);
 
         if (color == Color.RED) {
-            worldBorder.setSize(ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() - 0.1D, 20000000L);
+            worldBorder.setSize(island.getUpgrades().getSize() - 0.1D, 20000000L);
         } else if (color == Color.GREEN) {
-            worldBorder.setSize( ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() + 0.1D, 20000000L);
+            worldBorder.setSize( island.getUpgrades().getSize() + 0.1D, 20000000L);
         }
 
         player.setWorldBorder(worldBorder);
@@ -221,9 +233,21 @@ public class IslandHandler {
     public Island getIslandAtLocation(Location location){
         for (int r = 0; r < this.grid.getGrid().length; r++) {
             for (int c = 0; c < this.grid.getGrid()[r].length; c++) {
+                Island island = this.grid.getGrid()[r][c];
+                if (island != null && island.isInside(location)) {
+                    return island;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Island getIslandAtXZ(double x, double z){
+        for (int r = 0; r < this.grid.getGrid().length; r++) {
+            for (int c = 0; c < this.grid.getGrid()[r].length; c++) {
                 Island island = this.grid.get(r, c);
                 if (island != null) {
-                    if (island.isInside(location))
+                    if (island.isInside(x, z))
                         return island;
                 }
             }
@@ -235,7 +259,7 @@ public class IslandHandler {
         return id[0] + ";" + id[1];
     }
 
-    public int[] getId(String identifier){
+    public int[] getId(String identifier) {
 
         if (identifier == null
                 || identifier.length() <= 0
@@ -244,6 +268,24 @@ public class IslandHandler {
 
         String[] split = identifier.split(";");
         return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
+    }
+
+    public IslandBlockData getIslandBlockDataFromString(String s){
+        String[] split = s.split(":");
+        return new IslandBlockData(
+                new Position(split[0]),
+                Material.getMaterial(split[1]),
+                Integer.parseInt(split[2]));
+    }
+
+    public IslandBlockData getIslandBlockDataFromPos(Island island, Location location) {
+        for (IslandBlockData blockData : island.getStoredBlocks()) {
+            if (blockData.getPosition().getBlockX() == location.getBlockX()
+                    && blockData.getPosition().getBlockY() == location.getBlockY()
+                    && blockData.getPosition().getBlockZ() == location.getBlockZ())
+                return blockData;
+        }
+        return null;
     }
 
     public String printGrid(){

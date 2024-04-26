@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.simple;
 
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;

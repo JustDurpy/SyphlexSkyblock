@@ -2,10 +2,11 @@ package net.syphlex.skyblock.handler.mine.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.handler.island.upgrade.oregenerator.OreGeneratorBlockData;
 import net.syphlex.skyblock.util.Position;
 import org.bukkit.Location;
+import org.bukkit.Material;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -22,6 +23,27 @@ public class Mine {
         this.id = id;
         this.mineName = mineName;
         this.blocks = blockData;
+    }
+
+    public Mine(int id, String mineName){
+        this.id = id;
+        this.mineName = mineName;
+        this.blocks = new ArrayList<>();
+    }
+
+    public String getConfigName(){
+        return this.mineName + this.id;
+    }
+
+    public boolean hasBlock(Material material){
+        return getBlockData(material) != null;
+    }
+
+    public MineBlockData getBlockData(Material material){
+        for (MineBlockData data : this.blocks)
+            if (data.getMaterial() == material)
+                return data;
+        return null;
     }
 
     public MineBlockData generateBlock(){

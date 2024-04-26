@@ -25,15 +25,16 @@ public class StringUtil {
         return translated;
     }
 
-    public static String hex(String message) {
-        Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-        Matcher matcher = pattern.matcher(message);
-
-        while (matcher.find()) {
-            NamedTextColor color = NamedTextColor.nearestTo(TextColor.fromHexString(matcher.group()));
-            message = message.replace(matcher.group(), "" + net.md_5.bungee.api.ChatColor.of(color.toString()));
-            matcher = pattern.matcher(message);
+    public boolean isDigit(String s){
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e){
+            return false;
         }
-        return message;
+    }
+
+    public String parseHex(String msg, String hex){
+        return net.md_5.bungee.api.ChatColor.of(hex) + msg;
     }
 }

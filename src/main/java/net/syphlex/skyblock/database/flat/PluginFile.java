@@ -1,6 +1,6 @@
 package net.syphlex.skyblock.database.flat;
 
-import net.syphlex.skyblock.util.SimpleConfig;
+import net.syphlex.skyblock.util.simple.SimpleConfig;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.config.Permissions;

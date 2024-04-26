@@ -1,5 +1,6 @@
 package net.syphlex.skyblock.handler.mine;
 
+import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.MinesFile;
 import net.syphlex.skyblock.handler.mine.data.Mine;
@@ -17,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class MineHandler {
 
+    @Getter
     private ArrayList<Mine> mines;
 
     private MinesFile minesFile;
@@ -28,6 +30,24 @@ public class MineHandler {
     }
 
     public void onDisable() {
+        this.minesFile.config.set("mines", null);
+        for (Mine mine : this.mines)
+            this.minesFile.write(mine);
+        this.minesFile.save();
+    }
+
+    public Mine getMine(int id){
+        for (Mine mine : this.mines)
+            if (mine.getId() == id)
+                return mine;
+        return null;
+    }
+
+    public Mine getMine(String name){
+        for (Mine mine : this.mines)
+            if (mine.getMineName().equalsIgnoreCase(name))
+                return mine;
+        return null;
     }
 
     public void regenerateMine(Mine mine) {

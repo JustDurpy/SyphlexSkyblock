@@ -1,9 +1,11 @@
-package net.syphlex.skyblock.handler;
+package net.syphlex.skyblock.handler.profile;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.ProfileFile;
-import net.syphlex.skyblock.profile.IslandProfile;
+import net.syphlex.skyblock.handler.island.data.Island;
+import net.syphlex.skyblock.util.WorldUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -15,9 +17,7 @@ public class DataHandler {
     private ProfileFile profileFile;
 
     public void onEnable(){
-
         this.profileFile = new ProfileFile();
-
         Bukkit.getOnlinePlayers().forEach(this::join);
     }
 
@@ -25,15 +25,22 @@ public class DataHandler {
         this.profileMap.values().forEach(data -> quit(data.getPlayer()));
     }
 
-    public void join(Player player){
+    public void join(Player player) {
         IslandProfile profile = new IslandProfile(player);
         this.profileFile.read(profile);
-
-        if (profile.getIsland() != null) {
-
-        }
-
         this.profileMap.put(player.getUniqueId(), profile);
+
+        if (!WorldUtil.isWorld(player.getWorld(), Skyblock.get().getIslandWorld()))
+            return;
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Skyblock.get(), () -> {
+            Island island = Skyblock.get().getIslandHandler().getIslandAtLocation(player.getLocation());
+
+            if (island == null)
+                return;
+
+            Skyblock.get().getIslandHandler().generateIslandBorder(island, player, Color.BLUE);
+        }, 1L);
     }
 
     public void quit(Player player){

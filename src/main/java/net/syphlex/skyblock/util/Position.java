@@ -17,14 +17,14 @@ public class Position {
     public Position(String s) {
 
         if (s.equalsIgnoreCase("null")){
-            this.world = null;
+            this.world = Skyblock.get().getIslandWorld();
             return;
         }
 
         String[] split = s.split(";");
 
         if (split.length < 4) {
-            this.world = null;
+            this.world = Skyblock.get().getIslandWorld();
             return;
         }
 
@@ -42,8 +42,22 @@ public class Position {
         }
     }
 
+    public Position(Location location) {
+        this.world = location.getWorld();
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+    }
+
     public Position(World world, double x, double y, double z){
         this.world = world;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public Position(double x, double y, double z){
+        this.world = Skyblock.get().getIslandWorld();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -79,6 +93,10 @@ public class Position {
 
     public Location getAsBukkit(){
         return new Location(this.world, this.x, this.y, this.z);
+    }
+
+    public Location getAsBukkit(World world){
+        return new Location(world, this.x, this.y, this.z);
     }
 
     public String getAsString() {

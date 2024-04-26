@@ -2,8 +2,8 @@ package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
-import net.syphlex.skyblock.profile.IslandProfile;
-import net.syphlex.skyblock.util.SimpleConfig;
+import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -16,28 +16,31 @@ public class ProfileFile extends SimpleConfig {
         super("/profiles/", true);
     }
 
-    public void read(IslandProfile profile){
+    public void read(IslandProfile profile) {
 
-        if (getFile().listFiles().length <= 0)
+        //if (getFile().listFiles().length <= 0)
+        //    return;
+
+        File f = new File(getFile().getPath() + "/"
+                + profile.getPlayer().getUniqueId() + ".yml");
+
+        if (!f.exists())
             return;
 
-        for (File f : getFile().listFiles()) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
-            FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+        config.addDefault("profile.island", "null");
+        config.addDefault("profile.island-role", "default");
 
-            config.addDefault("profile.island", "null");
-            config.addDefault("profile.island-role", "default");
+        String identifier = config.getString("profile.island");
+        String islandRole = config.getString("profile.island-role");
 
-            String identifier = config.getString("profile.island");
-            String islandRole = config.getString("profile.island-role");
+        int[] id = Skyblock.get().getIslandHandler().getId(identifier);
 
-            int[] id = Skyblock.get().getIslandHandler().getId(identifier);
+        if (id[0] != -1 && id[1] != -1)
+            profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
 
-            if (id[0] != -1 && id[1] != -1)
-                profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
-
-            profile.getMemberProfile().setRole(IslandRole.get(islandRole));
-        }
+        profile.getMemberProfile().setRole(IslandRole.get(islandRole));
     }
 
     public void write(IslandProfile profile) {

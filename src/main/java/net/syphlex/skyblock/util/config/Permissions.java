@@ -3,7 +3,8 @@ package net.syphlex.skyblock.util.config;
 import org.bukkit.entity.Player;
 
 public enum Permissions {
-    ADMIN("skyblock.admin");
+    ADMIN("skyblock.admin"),
+    MINE_ADMIN("skyblock.mine.admin");
 
     private String permission;
 

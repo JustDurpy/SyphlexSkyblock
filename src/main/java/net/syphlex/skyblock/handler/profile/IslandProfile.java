@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.profile;
+package net.syphlex.skyblock.handler.profile;
 
 import lombok.Getter;
 import lombok.Setter;

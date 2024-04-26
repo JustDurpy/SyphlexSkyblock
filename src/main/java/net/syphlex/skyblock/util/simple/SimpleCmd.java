@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.simple;
 
 import net.syphlex.skyblock.Skyblock;
 import org.bukkit.command.Command;

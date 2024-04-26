@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public enum ConfigEnum {
+    MAIN_WORLD("world"),
     ISLAND_WORLD("Skyblock"),
     ISLAND_NETHER_WORLD("Skyblock_nether"),
     ISLAND_END_WORLD("Skyblock_end"),
@@ -22,7 +23,11 @@ public enum ConfigEnum {
     SCOREBOARD_TITLE("&5&lSyphlex Skyblock"),
     ISLAND_SCOREBOARD_LINES(Arrays.asList(
             "&7&m-------------------",
-            "&aYou have an island.",
+            "&5&lYou",
+            " &fMoney: &d$%vault_eco_balance_formatted%",
+            "&5&lIsland",
+            " &fLeader:%island_leader%",
+            "",
             "&7&m-------------------")),
     NORMAL_SCOREBOARD(Arrays.asList(
             "&7&m-------------------",

@@ -2,7 +2,7 @@ package net.syphlex.skyblock.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.syphlex.skyblock.profile.IslandProfile;
+import net.syphlex.skyblock.handler.profile.IslandProfile;
 
 @Getter
 @AllArgsConstructor

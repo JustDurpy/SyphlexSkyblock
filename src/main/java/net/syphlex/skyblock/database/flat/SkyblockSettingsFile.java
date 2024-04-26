@@ -1,25 +1,40 @@
 package net.syphlex.skyblock.database.flat;
 
+import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
 import net.syphlex.skyblock.handler.island.upgrade.oregenerator.IslandOreGenerator;
-import net.syphlex.skyblock.handler.island.upgrade.oregenerator.OreGeneratorBlockData;
-import net.syphlex.skyblock.util.SimpleConfig;
+import net.syphlex.skyblock.handler.island.block.OreGeneratorBlockData;
+import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-@SuppressWarnings("all")
-public class OreGeneratorFile extends SimpleConfig {
+public class SkyblockSettingsFile extends SimpleConfig {
 
-    public OreGeneratorFile() {
-        super("/ore-generator.yml", false);
+    public ArrayList<IslandOreGenerator> oreGeneratorsSection = new ArrayList<>();
+    public ArrayList<SpecialBlockData> specialBlocksSection = new ArrayList<>();
+
+    public SkyblockSettingsFile() {
+        super("/settings.yml", false);
     }
 
-    public void write(){
-    }
-
-    public ArrayList<IslandOreGenerator> read(){
+    public void read(){
 
         config.options().copyDefaults(true);
+
+        /*
+        SPECIAL BLOCKS SECTION
+         */
+
+        config.addDefault("special-blocks", Arrays.asList(
+                "DIAMOND_BLOCK:10000",
+                "IRON_BLOCK:5000"));
+
+        /*
+        ORE GENERATOR SECTION
+         */
+
         config.addDefault("generators.example.tier", 1);
         config.addDefault("generators.example.name", "&6Example Generator");
         config.addDefault("generators.example.blocks.1.material", "COBBLESTONE");
@@ -29,7 +44,10 @@ public class OreGeneratorFile extends SimpleConfig {
 
         save();
 
-        ArrayList<IslandOreGenerator> oreGenerators = new ArrayList<>();
+        for (String specialBlocks : config.getStringList("special-blocks")) {
+            SpecialBlockData blockData = Skyblock.get().getUpgradeHandler().getSpecialBlockDataFromString(specialBlocks);
+            this.specialBlocksSection.add(blockData);
+        }
 
         for (String section : config.getConfigurationSection("generators").getKeys(false)) {
 
@@ -44,9 +62,7 @@ public class OreGeneratorFile extends SimpleConfig {
                 generator.getBlocks().add(new OreGeneratorBlockData(Material.getMaterial(materialName), chance));
             }
 
-            oreGenerators.add(generator);
+            this.oreGeneratorsSection.add(generator);
         }
-
-        return oreGenerators;
     }
 }

@@ -2,7 +2,7 @@ package net.syphlex.skyblock.handler.gui.impl;
 
 import net.syphlex.skyblock.handler.island.data.Island;
 import net.syphlex.skyblock.util.ClickEvent;
-import net.syphlex.skyblock.util.SimpleGui;
+import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

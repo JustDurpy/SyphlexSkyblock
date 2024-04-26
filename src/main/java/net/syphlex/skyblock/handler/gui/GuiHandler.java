@@ -1,10 +1,9 @@
 package net.syphlex.skyblock.handler.gui;
 
-import net.syphlex.skyblock.profile.IslandProfile;
-import net.syphlex.skyblock.util.SimpleGui;
+import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

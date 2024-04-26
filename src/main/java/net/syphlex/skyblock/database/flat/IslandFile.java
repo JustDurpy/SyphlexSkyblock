@@ -2,11 +2,11 @@ package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.handler.island.data.Island;
+import net.syphlex.skyblock.handler.island.block.IslandBlockData;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
-import net.syphlex.skyblock.handler.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.util.Position;
-import net.syphlex.skyblock.util.SimpleConfig;
+import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class IslandFile extends SimpleConfig {
@@ -27,10 +28,7 @@ public class IslandFile extends SimpleConfig {
 
         ArrayList<Island> islands = new ArrayList<>();
 
-        if (getFile().listFiles().length <= 0)
-            return islands;
-
-        for (File f : getFile().listFiles()) {
+        for (File f : Objects.requireNonNull(getFile().listFiles())) {
 
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
@@ -60,7 +58,15 @@ public class IslandFile extends SimpleConfig {
                 }
             }
 
-            Island island = new Island(islandIdentifier, owner, corner1, corner2, center, members);
+            ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
+            for (String section : config.getStringList("island.stored-blocks")) {
+                IslandBlockData blockData = Skyblock.get().getIslandHandler().getIslandBlockDataFromString(section);
+                if (!blockData.isSpecialBlock())
+                    continue;
+                storedBlocks.add(blockData);
+            }
+
+            Island island = new Island(islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
             island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
             island.getUpgrades().setSpawnRate(spawnRate);
@@ -110,6 +116,15 @@ public class IslandFile extends SimpleConfig {
                 }
             }
             config.set("island.members", uuids);
+
+            List<String> storedBlocks = new ArrayList<>();
+            if (island.getStoredBlocks().size() > 0) {
+                for (IslandBlockData data : island.getStoredBlocks()) {
+                    if (!data.isSpecialBlock()) continue;
+                    storedBlocks.add(data.getAsString());
+                }
+            }
+            config.set("island.stored-blocks", storedBlocks);
 
             config.save(f);
 

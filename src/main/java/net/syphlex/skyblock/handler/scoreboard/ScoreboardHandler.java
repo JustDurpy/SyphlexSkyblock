@@ -1,20 +1,15 @@
 package net.syphlex.skyblock.handler.scoreboard;
 
-import com.google.common.collect.Maps;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.profile.IslandProfile;
+import net.syphlex.skyblock.handler.profile.IslandProfile;
 import net.syphlex.skyblock.util.StringUtil;
-import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class ScoreboardHandler {
 

@@ -2,7 +2,6 @@ package net.syphlex.skyblock.handler.island.data;
 
 import net.syphlex.skyblock.Skyblock;
 
-@SuppressWarnings("all")
 public class IslandGrid {
 
     private Island[][] grid;
@@ -13,16 +12,17 @@ public class IslandGrid {
 
     public void insert(Island island){
 
-        int[] nextSpot = getNextSpot();
+        //int[] nextSpot = getNextSpot();
+        int[] id = Skyblock.get().getIslandHandler().getId(island.getIdentifier());
 
         /*
         free[0] is the row of the free spot found
         free[1] is the column of the free spot found
          */
-        final int row = nextSpot[0];
-        final int column = nextSpot[1];
+        final int row = id[0];
+        final int column = id[1];
 
-        grid[row][column] = island;
+        this.grid[row][column] = island;
     }
 
     public void insert(Island island, int[] nextSpot){
@@ -34,7 +34,7 @@ public class IslandGrid {
         final int row = nextSpot[0];
         final int column = nextSpot[1];
 
-        grid[row][column] = island;
+        this.grid[row][column] = island;
     }
 
     public int[] getNextSpot(){
@@ -97,9 +97,7 @@ public class IslandGrid {
         loop through the old virtual grid and fill in the new grid.
          */
         for (int rows = 0; rows < grid.length; rows++) {
-            for (int columns = 0; columns < grid[rows].length; columns++) {
-                newGrid[rows][columns] = grid[rows][columns];
-            }
+            System.arraycopy(grid[rows], 0, newGrid[rows], 0, grid[rows].length);
         }
 
         /*
