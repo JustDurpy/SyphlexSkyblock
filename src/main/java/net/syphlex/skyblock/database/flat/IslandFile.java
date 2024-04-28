@@ -1,12 +1,14 @@
 package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
 import net.syphlex.skyblock.handler.island.data.Island;
 import net.syphlex.skyblock.handler.island.block.IslandBlockData;
 import net.syphlex.skyblock.handler.island.member.MemberProfile;
 import net.syphlex.skyblock.handler.island.member.IslandRole;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -60,9 +62,8 @@ public class IslandFile extends SimpleConfig {
 
             ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
             for (String section : config.getStringList("island.stored-blocks")) {
-                IslandBlockData blockData = Skyblock.get().getIslandHandler().getIslandBlockDataFromString(section);
-                if (!blockData.isSpecialBlock())
-                    continue;
+                IslandBlockData blockData = getIslandBlockDataFromString(section);
+                if (blockData.isNull()) continue;
                 storedBlocks.add(blockData);
             }
 
@@ -120,7 +121,7 @@ public class IslandFile extends SimpleConfig {
             List<String> storedBlocks = new ArrayList<>();
             if (island.getStoredBlocks().size() > 0) {
                 for (IslandBlockData data : island.getStoredBlocks()) {
-                    if (!data.isSpecialBlock()) continue;
+                    if (data.isNull()) continue;
                     storedBlocks.add(data.getAsString());
                 }
             }
@@ -131,5 +132,25 @@ public class IslandFile extends SimpleConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private IslandBlockData getIslandBlockDataFromString(String s){
+        String[] split = s.split(":");
+
+        Material material = Material.getMaterial(split[1]);
+
+        SpecialBlockData blockData = null;
+
+        for (SpecialBlockData blockDatas : Skyblock.get().getUpgradeHandler().getSpecialBlocks()) {
+            if (blockDatas.getMaterial() == material) {
+                blockData = blockDatas;
+                break;
+            }
+        }
+
+        return new IslandBlockData(
+                new Position(split[0]),
+                blockData,
+                Integer.parseInt(split[2]));
     }
 }

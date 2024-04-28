@@ -9,6 +9,7 @@ import org.bukkit.Material;
 public class SpecialBlockData {
     private final Material material;
     private final float worth;
+    private final String displayName;
 
     public String getAsString(){
         return this.material.name() + ":" + this.worth;

@@ -10,26 +10,22 @@ import org.bukkit.Material;
 @Setter
 public class IslandBlockData {
     private final Position position;
-    private final Material material;
+    private final SpecialBlockData blockData;
     private int amount;
 
-    public IslandBlockData(Position position, Material material, int amount) {
+    public IslandBlockData(Position position, SpecialBlockData blockData, int amount) {
         this.position = position;
-        this.material = material;
+        this.blockData = blockData;
         this.amount = amount;
     }
 
-    public boolean isSpecialBlock(){
-        for (SpecialBlockData special : Skyblock.get().getUpgradeHandler().getSpecialBlocks()) {
-            if (special.getMaterial() == material)
-                return true;
-        }
-        return false;
+    public boolean isNull(){
+        return this.blockData == null;
     }
 
     public String getAsString() {
         return String.valueOf(this.position.getAsString() + ":"
-                + this.material.name() + ":"
+                + this.blockData.getMaterial().name() + ":"
                 + this.amount);
     }
 }

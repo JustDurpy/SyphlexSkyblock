@@ -36,26 +36,28 @@ public class IslandHandler {
     private IslandGrid grid;
 
     public void onEnable(){
-        this.islandFile = new IslandFile();
-        ArrayList<Island> islandList = this.islandFile.read();
+        Skyblock.get().getThreadHandler().fire(() -> {
+            this.islandFile = new IslandFile();
+            ArrayList<Island> islandList = this.islandFile.read();
 
-        this.grid = new IslandGrid(islandList.size() + 1);
+            this.grid = new IslandGrid(islandList.size() + 1);
 
-        for (Island island : islandList)
-            this.grid.insert(island);
+            for (Island island : islandList)
+                this.grid.insert(island);
+        });
     }
 
     public void onDisable() {
+        Skyblock.get().getThreadHandler().fire(() -> {
+            for (File f : Objects.requireNonNull(this.islandFile.getFile().listFiles()))
+                f.delete();
 
-        for (File f : Objects.requireNonNull(this.islandFile.getFile().listFiles())) {
-            f.delete();
-        }
-
-        for (int r = 0; r < this.grid.getGrid().length; r++) {
-            for (int c = 0; c < this.grid.getGrid()[r].length; c++) {
-                this.islandFile.write(this.getGrid().getGrid()[r][c]);
+            for (int r = 0; r < this.grid.getGrid().length; r++) {
+                for (int c = 0; c < this.grid.getGrid()[r].length; c++) {
+                    this.islandFile.write(this.getGrid().getGrid()[r][c]);
+                }
             }
-        }
+        });
     }
 
     private CompletableFuture<Void> deleteIslandBlocks(Island island, World world){
@@ -119,8 +121,8 @@ public class IslandHandler {
 
     public CompletableFuture<Void> destroyIsland(Island island){
         return CompletableFuture.runAsync(() -> {
+            getRidOfPlayers(island).join();
             List<CompletableFuture<Void>> completableFutures = Arrays.asList(
-                    getRidOfPlayers(island),
                     deleteIslandBlocks(island, Skyblock.get().getIslandWorld())
             );
             for (CompletableFuture<Void> future : completableFutures)
@@ -268,14 +270,6 @@ public class IslandHandler {
 
         String[] split = identifier.split(";");
         return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
-    }
-
-    public IslandBlockData getIslandBlockDataFromString(String s){
-        String[] split = s.split(":");
-        return new IslandBlockData(
-                new Position(split[0]),
-                Material.getMaterial(split[1]),
-                Integer.parseInt(split[2]));
     }
 
     public IslandBlockData getIslandBlockDataFromPos(Island island, Location location) {

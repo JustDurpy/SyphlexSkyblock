@@ -51,8 +51,10 @@ public class Island {
 
     public double getWorth(){
         double sum = 0.0;
-        for (IslandBlockData blockData : this.storedBlocks)
-            sum += blockData.getAmount() * Skyblock.get().getUpgradeHandler().getSpecialBlockData(blockData.getMaterial()).getWorth();
+        for (IslandBlockData islandBlock : this.storedBlocks) {
+            double blockWorth = islandBlock.getBlockData().getWorth();
+            sum += islandBlock.getAmount() * blockWorth;
+        }
         return sum;
     }
 

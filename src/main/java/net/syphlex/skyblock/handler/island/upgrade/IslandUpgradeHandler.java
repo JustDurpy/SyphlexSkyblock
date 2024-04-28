@@ -34,18 +34,35 @@ public class IslandUpgradeHandler {
 
     public SpecialBlockData getSpecialBlockDataFromString(String s){
         String[] split = s.split(":");
+
+        /*
+        split[0] is the material of the special block
+        split[1] is the worth of the special block
+        split[2] is the display name of the special block
+         */
+
         return new SpecialBlockData(
                 Material.getMaterial(split[0]),
-                Float.parseFloat(split[1]));
+                Float.parseFloat(split[1]),
+                split[2]);
     }
 
-    public SpecialBlockData getSpecialBlockData(Material material){
-        for (SpecialBlockData blockData : this.specialBlocks) {
-            if (blockData.getMaterial() == material)
-                return blockData;
+    public SpecialBlockData getSpecialBlockDataFromMaterial(Material material){
+        for (SpecialBlockData data : this.specialBlocks) {
+            if (data.getMaterial() == material) {
+                return data;
+            }
         }
         return null;
     }
+
+    //public SpecialBlockData getSpecialBlockData(Material material){
+    //    for (SpecialBlockData blockData : this.specialBlocks) {
+    //        if (blockData.getMaterial() == material)
+    //            return blockData;
+    //    }
+    //    return null;
+    //}
 
     public IslandOreGenerator getOreGenerator(int tier){
         for (IslandOreGenerator generator : this.oreGenerators) {

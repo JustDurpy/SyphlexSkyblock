@@ -25,15 +25,19 @@ public class MineHandler {
 
 
     public void onEnable() {
-        this.minesFile = new MinesFile();
-        this.mines = this.minesFile.read();
+        Skyblock.get().getThreadHandler().fire(() -> {
+            this.minesFile = new MinesFile();
+            this.mines = this.minesFile.read();
+        });
     }
 
     public void onDisable() {
-        this.minesFile.config.set("mines", null);
-        for (Mine mine : this.mines)
-            this.minesFile.write(mine);
-        this.minesFile.save();
+        Skyblock.get().getThreadHandler().fire(() -> {
+            this.minesFile.config.set("mines", null);
+            for (Mine mine : this.mines)
+                this.minesFile.write(mine);
+            this.minesFile.save();
+        });
     }
 
     public Mine getMine(int id){

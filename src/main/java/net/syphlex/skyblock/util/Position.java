@@ -100,9 +100,7 @@ public class Position {
     }
 
     public String getAsString() {
-        if (this.world == null)
-            return "null";
-        return this.world.getName() + ";"
+        return Skyblock.get().getIslandWorld().getName() + ";"
                 + this.x + ";"
                 + this.y + ";"
                 + this.z;

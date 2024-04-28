@@ -21,55 +21,59 @@ public class ProfileFile extends SimpleConfig {
         //if (getFile().listFiles().length <= 0)
         //    return;
 
-        File f = new File(getFile().getPath() + "/"
-                + profile.getPlayer().getUniqueId() + ".yml");
-
-        if (!f.exists())
-            return;
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(f);
-
-        config.addDefault("profile.island", "null");
-        config.addDefault("profile.island-role", "default");
-
-        String identifier = config.getString("profile.island");
-        String islandRole = config.getString("profile.island-role");
-
-        int[] id = Skyblock.get().getIslandHandler().getId(identifier);
-
-        if (id[0] != -1 && id[1] != -1)
-            profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
-
-        profile.getMemberProfile().setRole(IslandRole.get(islandRole));
-    }
-
-    public void write(IslandProfile profile) {
-        try {
-            if (profile == null)
-                return;
-
-            if (!getFile().exists())
-                getFile().mkdirs();
-
+        Skyblock.get().getThreadHandler().fire(() -> {
             File f = new File(getFile().getPath() + "/"
                     + profile.getPlayer().getUniqueId() + ".yml");
 
             if (!f.exists())
-                f.createNewFile();
+                return;
 
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
-            if (profile.getIsland() != null) {
-                config.set("profile.island", profile.getIsland().getIdentifier());
-            } else {
-                config.set("profile.island", "null");
+            config.addDefault("profile.island", "null");
+            config.addDefault("profile.island-role", "default");
+
+            String identifier = config.getString("profile.island");
+            String islandRole = config.getString("profile.island-role");
+
+            int[] id = Skyblock.get().getIslandHandler().getId(identifier);
+
+            if (id[0] != -1 && id[1] != -1)
+                profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
+
+            profile.getMemberProfile().setRole(IslandRole.get(islandRole));
+        });
+    }
+
+    public void write(IslandProfile profile) {
+        Skyblock.get().getThreadHandler().fire(() -> {
+            try {
+                if (profile == null)
+                    return;
+
+                if (!getFile().exists())
+                    getFile().mkdirs();
+
+                File f = new File(getFile().getPath() + "/"
+                        + profile.getPlayer().getUniqueId() + ".yml");
+
+                if (!f.exists())
+                    f.createNewFile();
+
+                FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+
+                if (profile.getIsland() != null) {
+                    config.set("profile.island", profile.getIsland().getIdentifier());
+                } else {
+                    config.set("profile.island", "null");
+                }
+
+                config.set("profile.island-role", profile.getMemberProfile().getRole().getIdentifier());
+
+                config.save(f);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            config.set("profile.island-role", profile.getMemberProfile().getRole().getIdentifier());
-
-            config.save(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

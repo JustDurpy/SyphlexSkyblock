@@ -28,8 +28,8 @@ public class SkyblockSettingsFile extends SimpleConfig {
          */
 
         config.addDefault("special-blocks", Arrays.asList(
-                "DIAMOND_BLOCK:10000",
-                "IRON_BLOCK:5000"));
+                "DIAMOND_BLOCK:10000:Diamond Blocks",
+                "IRON_BLOCK:5000:Iron Blocks"));
 
         /*
         ORE GENERATOR SECTION

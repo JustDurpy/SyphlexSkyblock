@@ -11,6 +11,7 @@ import net.syphlex.skyblock.handler.island.IslandHandler;
 import net.syphlex.skyblock.handler.island.upgrade.IslandUpgradeHandler;
 import net.syphlex.skyblock.handler.mine.MineHandler;
 import net.syphlex.skyblock.handler.scoreboard.ScoreboardHandler;
+import net.syphlex.skyblock.handler.thread.ThreadHandler;
 import net.syphlex.skyblock.listener.GuiListener;
 import net.syphlex.skyblock.listener.IslandListener;
 import net.syphlex.skyblock.listener.JoinQuitListener;
@@ -29,6 +30,7 @@ public class Skyblock extends JavaPlugin {
 
     private static Skyblock instance;
 
+    private ThreadHandler threadHandler;
     private VoidGenerator voidGenerator;
     private SkyblockSettingsFile settingsFile;
     private IslandUpgradeHandler upgradeHandler;
@@ -84,6 +86,7 @@ public class Skyblock extends JavaPlugin {
     }
 
     private void init(){
+        this.threadHandler = new ThreadHandler();
         this.upgradeHandler = new IslandUpgradeHandler();
         this.islandHandler = new IslandHandler();
         this.mineHandler = new MineHandler();
@@ -93,6 +96,7 @@ public class Skyblock extends JavaPlugin {
     }
 
     private void start(){
+        this.threadHandler.onEnable();
         this.settingsFile.read();
         this.upgradeHandler.onEnable();
         this.islandHandler.onEnable();
@@ -106,6 +110,7 @@ public class Skyblock extends JavaPlugin {
         this.scoreboardHandler.onDisable();
         this.mineHandler.onDisable();
         this.islandHandler.onDisable();
+        this.threadHandler.onDisable();
     }
 
     public Location getMainSpawn(){
