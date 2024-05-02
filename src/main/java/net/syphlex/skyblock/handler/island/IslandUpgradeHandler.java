@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.handler.island.upgrade;
+package net.syphlex.skyblock.handler.island;
 
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
@@ -55,14 +55,6 @@ public class IslandUpgradeHandler {
         }
         return null;
     }
-
-    //public SpecialBlockData getSpecialBlockData(Material material){
-    //    for (SpecialBlockData blockData : this.specialBlocks) {
-    //        if (blockData.getMaterial() == material)
-    //            return blockData;
-    //    }
-    //    return null;
-    //}
 
     public IslandOreGenerator getOreGenerator(int tier){
         for (IslandOreGenerator generator : this.oreGenerators) {

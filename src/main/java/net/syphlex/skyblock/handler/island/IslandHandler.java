@@ -272,16 +272,6 @@ public class IslandHandler {
         return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1])};
     }
 
-    public IslandBlockData getIslandBlockDataFromPos(Island island, Location location) {
-        for (IslandBlockData blockData : island.getStoredBlocks()) {
-            if (blockData.getPosition().getBlockX() == location.getBlockX()
-                    && blockData.getPosition().getBlockY() == location.getBlockY()
-                    && blockData.getPosition().getBlockZ() == location.getBlockZ())
-                return blockData;
-        }
-        return null;
-    }
-
     public String printGrid(){
         StringBuilder gridPrint = new StringBuilder();
 

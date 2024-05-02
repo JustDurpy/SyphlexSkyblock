@@ -10,8 +10,9 @@ import net.syphlex.skyblock.util.config.ConfigEnum;
 @Setter
 public class IslandUpgradeData {
     private double size = ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble();
-    private double spawnRate = ConfigEnum.DEFAULT_ISLAND_SPAWNRATE.getAsDouble();
-    private double harvestRate = ConfigEnum.DEFAULT_ISLAND_HARVESTRATE.getAsDouble();
+    private double spawnRateMult = ConfigEnum.DEFAULT_ISLAND_SPAWNRATE.getAsDouble();
+    private double spawnAmtMult = ConfigEnum.DEFAULT_ISLAND_SPAWN_AMOUNT_RATE.getAsDouble();
+    private double harvestMult = ConfigEnum.DEFAULT_ISLAND_HARVESTRATE.getAsDouble();
     private int maxMembers = ConfigEnum.DEFAULT_ISLAND_MAX_MEMBERS.getAsInteger();
     private IslandOreGenerator generator = Skyblock.get().getUpgradeHandler().getOreGenerator(ConfigEnum.DEFAULT_ISLAND_GENERATOR_TIER.getAsInteger());
 

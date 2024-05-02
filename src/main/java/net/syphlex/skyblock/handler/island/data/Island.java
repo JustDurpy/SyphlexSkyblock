@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -47,6 +48,14 @@ public class Island {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.center = center;
+    }
+
+    public MemberProfile getMember(UUID uuid){
+        for (MemberProfile profile : this.members) {
+            if (profile.equals(uuid))
+                return profile;
+        }
+        return null;
     }
 
     public double getWorth(){

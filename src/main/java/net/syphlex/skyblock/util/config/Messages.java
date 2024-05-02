@@ -7,7 +7,9 @@ import org.bukkit.entity.Player;
 
 @Getter
 public enum Messages {
+    USAGE("&Error: Usage: /%usage%"),
     NO_PERMISSION("&cError: You do not have permission to issue this."),
+    PLAYER_NOT_FOUND("&cError: That player is not online."),
     ISLAND_CREATE("&aYou have successfully created an island. (%time%ms)"),
     ISLAND_DELETE("&cYou have successfully deleted your island. (%time%ms)"),
     TELEPORTED_TO_ISLAND("&aYou have teleported to your island."),
@@ -17,7 +19,12 @@ public enum Messages {
     NOT_ISLAND_LEADER("&cError: You must be the leader of the island to issue this."),
     NO_ISLAND_PERMISSION("&cError: You must have a higher role in the island to issue this."),
     MUST_BE_AT_ISLAND("&cError: You must be at your island to issue this."),
-    INTERACT_NOT_ON_OWN_ISLAND("&cError: You cannot do this here as this is not your island.");
+    INTERACT_NOT_ON_OWN_ISLAND("&cError: You cannot do this here as this is not your island."),
+    SENT_ISLAND_INVITE("&aYou have invited %player% to your island."),
+    RECEIVED_ISLAND_INVITE("&aYou have received an invitation to join %player%'s island."),
+    ISLAND_INVITE_COOLDOWN("&cError: You must wait before sending another island invitation."),
+    LEFT_ISLAND("&cYou have left your island."),
+    LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island.");
 
     private String msg;
 
@@ -35,6 +42,16 @@ public enum Messages {
 
     public void send(Player p){
         p.sendMessage(get());
+    }
+
+    public Messages replace(String s1, String s2) {
+        this.msg = this.msg.replace(s1, s2);
+        return this;
+    }
+
+    public Messages usage(String usage){
+        this.msg = this.msg.replace("%usage%", usage);
+        return this;
     }
 
     public void send(IslandProfile profile){

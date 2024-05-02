@@ -26,6 +26,11 @@
             <url>https://repo.codemc.io/repository/maven-public/</url>
             <layout>default</layout>
         </repository>
+        <repository>
+            <id>respark-releases</id>
+            <name>Respark - Maven Repository</name>
+            <url>https://maven.respark.dev/releases</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -37,7 +42,7 @@
         <!-- This adds the Spigot API artifact to the build  -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -71,6 +76,11 @@
             <artifactId>item-nbt-api-plugin</artifactId>
             <version>2.12.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.respark.licensegate</groupId>
+            <artifactId>license-gate</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

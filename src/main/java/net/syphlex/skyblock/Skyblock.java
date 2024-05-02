@@ -8,7 +8,7 @@ import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
 import net.syphlex.skyblock.handler.profile.DataHandler;
 import net.syphlex.skyblock.handler.gui.GuiHandler;
 import net.syphlex.skyblock.handler.island.IslandHandler;
-import net.syphlex.skyblock.handler.island.upgrade.IslandUpgradeHandler;
+import net.syphlex.skyblock.handler.island.IslandUpgradeHandler;
 import net.syphlex.skyblock.handler.mine.MineHandler;
 import net.syphlex.skyblock.handler.scoreboard.ScoreboardHandler;
 import net.syphlex.skyblock.handler.thread.ThreadHandler;
