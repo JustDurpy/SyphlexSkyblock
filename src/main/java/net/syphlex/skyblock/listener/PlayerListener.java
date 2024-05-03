@@ -3,15 +3,14 @@ package net.syphlex.skyblock.listener;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.block.IslandBlockData;
-import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
-import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.manager.island.block.IslandBlockData;
+import net.syphlex.skyblock.manager.island.block.SpecialBlockData;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.StringUtil;
 import net.syphlex.skyblock.util.WorldUtil;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class PlayerListener implements Listener {
 
@@ -65,12 +62,17 @@ public class PlayerListener implements Listener {
                     p.getInventory().removeItem(item);
                     final IslandBlockData blockData = profile.getIsland().getStoredBlock(check);
                     blockData.setAmount(blockData.getAmount() + 1);
-                    //profile.getIsland().getStoredBlock(check)
-                    //        .setAmount(profile.getIsland().getStoredBlock(check).getAmount() + 1);
-                    wasSpecialBlockNear = true;
-                    p.sendMessage("found stored special block and stored new value : " + blockData.getAmount());
 
-                    Hologram hologram = DHAPI.getHologram("test");
+                    wasSpecialBlockNear = true;
+                    //p.sendMessage("found stored special block and stored new value : " + blockData.getAmount());
+
+                    Hologram hologram = DHAPI.getHologram(
+                            profile.getIsland().getIdentifier().replace(";", "-")
+                            + blockData.getBlockData().getMaterial().name());
+
+                    if (hologram == null)
+                        break;
+
                     DHAPI.setHologramLine(hologram, 2, StringUtil.CC(blockData.getBlockData().getDisplayName()
                             + ": &6&lx" + blockData.getAmount()));
                     break;
@@ -80,15 +82,23 @@ public class PlayerListener implements Listener {
 
         if (!wasSpecialBlockNear) {
 
-            p.sendMessage("placed new stored block!");
+            //p.sendMessage("placed new stored block!");
 
             SpecialBlockData data =  Skyblock.get().getUpgradeHandler().getSpecialBlockDataFromMaterial(block.getType());
 
             profile.getIsland().getStoredBlocks().add(
                     new IslandBlockData(new Position(location), data, 1));
 
-            DHAPI.createHologram("test", location.clone().add(0.5, 3, 0.5));
-            Hologram hologram = DHAPI.getHologram("test");
+            DHAPI.createHologram(profile.getIsland().getIdentifier().replace(";", "-")
+                            + block.getType().name(), location.clone().add(0.5, 3, 0.5), true);
+
+            Hologram hologram = DHAPI.getHologram(
+                    profile.getIsland().getIdentifier().replace(";", "-")
+                    + block.getType().name());
+
+            if (hologram == null)
+                return;
+
             DHAPI.addHologramLine(hologram, new ItemStack(block.getType()));
             DHAPI.addHologramLine(hologram, "");
             DHAPI.addHologramLine(hologram, StringUtil.CC(data.getDisplayName() + ": &6&lx1"));
@@ -129,17 +139,23 @@ public class PlayerListener implements Listener {
             }
             blockData.setAmount(blockData.getAmount() - 1);
 
-            Hologram hologram = DHAPI.getHologram("test");
+            Hologram hologram = DHAPI.getHologram(profile.getIsland().getIdentifier()
+                    .replace(";", "-")
+                    + blockData.getBlockData().getMaterial().name());
+
+            if (hologram == null)
+                return;
+
             DHAPI.setHologramLine(hologram, 2, StringUtil.CC(blockData.getBlockData().getDisplayName()
                     + ": &6&lx" + blockData.getAmount()));
 
-            p.sendMessage("removed 1 stored block from island (" + blockData.getAmount() + ")");
-
+            //p.sendMessage("removed 1 stored block from island (" + blockData.getAmount() + ")");
             return;
         }
 
-        DHAPI.removeHologram("test");
-        p.sendMessage("completely removed block data!");
+        DHAPI.removeHologram(profile.getIsland().getIdentifier()
+                .replace(";", "-") + blockData.getBlockData().getMaterial().name());
+        //p.sendMessage("completely removed block data!");
         profile.getIsland().getStoredBlocks().remove(blockData);
     }
 

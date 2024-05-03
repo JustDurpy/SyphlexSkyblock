@@ -1,20 +1,25 @@
 package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.gui.impl.IslandCreateGui;
-import net.syphlex.skyblock.handler.gui.impl.IslandDeleteGui;
-import net.syphlex.skyblock.handler.gui.impl.IslandGui;
-import net.syphlex.skyblock.handler.island.block.IslandBlockData;
-import net.syphlex.skyblock.handler.island.data.Island;
-import net.syphlex.skyblock.handler.island.request.InviteRequest;
-import net.syphlex.skyblock.handler.profile.IslandProfile;
-import net.syphlex.skyblock.util.Position;
-import net.syphlex.skyblock.util.WorldUtil;
+import net.syphlex.skyblock.manager.gui.impl.island.IslandCreateGui;
+import net.syphlex.skyblock.manager.gui.impl.island.IslandDeleteGui;
+import net.syphlex.skyblock.manager.gui.impl.island.IslandGui;
+import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.island.request.InviteRequest;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
+import net.syphlex.skyblock.util.IslandUtil;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IslandCmd extends SimpleCmd {
 
@@ -30,6 +35,7 @@ public class IslandCmd extends SimpleCmd {
         if (profile.hasIsland()) {
 
             player.sendMessage("worth: $" + profile.getIsland().getWorth());
+            player.sendMessage("placement: " + profile.getIsland().getIdentifier());
 
         }
 
@@ -55,7 +61,7 @@ public class IslandCmd extends SimpleCmd {
                     handleJoin(profile, args);
                     break;
                 case "grid":
-                    player.sendMessage(Skyblock.get().getIslandHandler().printGrid());
+                    player.sendMessage(IslandUtil.printGrid());
                     break;
                 default:
 
@@ -90,7 +96,27 @@ public class IslandCmd extends SimpleCmd {
         String islandToJoin = args[1];
         InviteRequest request = null;
 
+        if (Bukkit.getPlayer(islandToJoin) != null) {
+            IslandProfile inviterProfile = Skyblock.get().getDataHandler().get(Bukkit.getPlayer(islandToJoin));
+            request = profile.getIslandInvite(inviterProfile.getIsland());
+        }
 
+        if (request == null) {
+
+            Island island = IslandUtil.getIslandFromOwnerName(islandToJoin);
+
+            if (island == null) {
+                Messages.NO_INVITE_FROM_ISLAND.send(profile);
+                return;
+            }
+
+            request = profile.getIslandInvite(island);
+        }
+
+        Island island = request.getIsland();
+        island.addMember(profile);
+
+        profile.getPlayer().sendMessage("You have joined " + island.getLeader().getUsername() + "'s island.");
     }
 
     private void handleLeave(IslandProfile profile){
@@ -128,6 +154,11 @@ public class IslandCmd extends SimpleCmd {
 
         Island island = profile.getIsland();
         IslandProfile targetProfile = Skyblock.get().getDataHandler().get(target);
+
+        if (island.isApartOfIsland(target.getUniqueId())) {
+            Messages.CANT_INVITE_MEMBERS.send(profile);
+            return;
+        }
 
         if (targetProfile.hasIslandInviteRequest(island)) {
 
@@ -175,5 +206,28 @@ public class IslandCmd extends SimpleCmd {
 
     @Override
     public void handleServerCmd(CommandSender sender, String[] args) {
+    }
+
+    @Override
+    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+
+        if (args.length == 1) {
+            list.add("create");
+            list.add("delete");
+            list.add("sethome");
+            list.add("home");
+            list.add("invite");
+            list.add("join");
+            list.add("leave");
+        }
+
+        return list;
     }
 }

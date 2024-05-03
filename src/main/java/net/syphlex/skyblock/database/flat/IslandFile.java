@@ -1,11 +1,12 @@
 package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.block.SpecialBlockData;
-import net.syphlex.skyblock.handler.island.data.Island;
-import net.syphlex.skyblock.handler.island.block.IslandBlockData;
-import net.syphlex.skyblock.handler.island.member.MemberProfile;
-import net.syphlex.skyblock.handler.island.member.IslandRole;
+import net.syphlex.skyblock.manager.island.block.SpecialBlockData;
+import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.island.block.IslandBlockData;
+import net.syphlex.skyblock.manager.island.member.MemberProfile;
+import net.syphlex.skyblock.manager.island.member.IslandRole;
+import net.syphlex.skyblock.util.IslandUtil;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
@@ -45,6 +46,7 @@ public class IslandFile extends SimpleConfig {
 
             int generatorTier = config.getInt("island.upgrades.generator-tier");
             double spawnRate = config.getDouble("island.upgrades.spawn-rate");
+            double spawnAmt = config.getDouble("island.upgrades.spawn-amt");
             double harvestRate = config.getDouble("island.upgrades.harvest-rate");
             double size = config.getDouble("island.upgrades.size");
 
@@ -67,11 +69,14 @@ public class IslandFile extends SimpleConfig {
                 storedBlocks.add(blockData);
             }
 
-            Island island = new Island(islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
+            int[] id = IslandUtil.getId(islandIdentifier);
+
+            Island island = new Island(id, islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
             island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
-            island.getUpgrades().setSpawnRate(spawnRate);
-            island.getUpgrades().setHarvestRate(harvestRate);
+            island.getUpgrades().setSpawnRateMult(spawnRate);
+            island.getUpgrades().setSpawnAmtMult(spawnAmt);
+            island.getUpgrades().setHarvestMult(harvestRate);
             island.getUpgrades().setSize(size);
 
             islands.add(island);
@@ -97,15 +102,16 @@ public class IslandFile extends SimpleConfig {
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
             config.set("island.identifier", island.getIdentifier());
-            config.set("island.owner", island.getOwner().getUuid().toString());
+            config.set("island.owner", island.getLeader().getUuid().toString());
             config.set("island.corner1", island.getCorner1().getAsString());
             config.set("island.corner2", island.getCorner2().getAsString());
             config.set("island.center", island.getCenter().getAsString());
             config.set("island.home", island.getHome().getAsString());
 
             config.set("island.upgrades.generator-tier", island.getUpgrades().getGenerator().getTier());
-            config.set("island.upgrades.spawn-rate", island.getUpgrades().getSpawnRate());
-            config.set("island.upgrades.harvest-rate", island.getUpgrades().getHarvestRate());
+            config.set("island.upgrades.spawn-rate", island.getUpgrades().getSpawnRateMult());
+            config.set("island.upgrades.spawn-amt", island.getUpgrades().getSpawnAmtMult());
+            config.set("island.upgrades.harvest-rate", island.getUpgrades().getHarvestMult());
             config.set("island.upgrades.size", island.getUpgrades().getSize());
 
             List<String> uuids = new ArrayList<>();

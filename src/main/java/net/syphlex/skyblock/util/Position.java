@@ -91,6 +91,10 @@ public class Position {
         }.runTask(Skyblock.get());
     }
 
+    public boolean isSameLocation(Location location){
+        return location.getX() == this.x && location.getY() == this.y && location.getZ() == this.z;
+    }
+
     public Location getAsBukkit(){
         return new Location(this.world, this.x, this.y, this.z);
     }

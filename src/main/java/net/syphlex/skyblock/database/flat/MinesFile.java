@@ -1,7 +1,8 @@
 package net.syphlex.skyblock.database.flat;
 
-import net.syphlex.skyblock.handler.mine.data.Mine;
-import net.syphlex.skyblock.handler.mine.data.MineBlockData;
+import net.syphlex.skyblock.manager.mine.data.Mine;
+import net.syphlex.skyblock.manager.mine.data.MineBlockData;
+import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
 
@@ -19,6 +20,9 @@ public class MinesFile extends SimpleConfig {
         config.options().copyDefaults(true);
         config.addDefault("mines.A1.name", "A");
         config.addDefault("mines.A1.id", 1);
+        config.addDefault("mines.A1.spawn", "world;0;0;0");
+        config.addDefault("mines.A1.corner1", "world;0;0;0");
+        config.addDefault("mines.A1.corner2", "world;0;0;0");
         config.addDefault("mines.A1.blocks.1.material", "STONE");
         config.addDefault("mines.A1.blocks.1.chance", 50);
         config.addDefault("mines.A1.blocks.2.material", "IRON_ORE");
@@ -33,6 +37,10 @@ public class MinesFile extends SimpleConfig {
             String name = config.getString("mines." + section + ".name");
             int id = config.getInt("mines." + section + ".id");
 
+            Position spawn = new Position(config.getString("mines." + section + ".spawn"));
+            Position corner1 = new Position(config.getString("mines." + section + ".corner1"));
+            Position corner2 = new Position(config.getString("mines." + section + ".corner2"));
+
             ArrayList<MineBlockData> blocks = new ArrayList<>();
 
             for (String blockSec : config.getConfigurationSection("mines." + section + ".blocks").getKeys(false)) {
@@ -41,7 +49,7 @@ public class MinesFile extends SimpleConfig {
                 blocks.add(new MineBlockData(material, chance));
             }
 
-            mines.add(new Mine(id, name, blocks));
+            mines.add(new Mine(id, name, blocks, corner1, corner2, spawn));
         }
 
         return mines;

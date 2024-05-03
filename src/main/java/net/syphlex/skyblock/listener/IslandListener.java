@@ -1,15 +1,15 @@
 package net.syphlex.skyblock.listener;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.island.data.Island;
-import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
+import net.syphlex.skyblock.util.IslandUtil;
 import net.syphlex.skyblock.util.WorldUtil;
-import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.Phantom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +42,7 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(b.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        Island island = Skyblock.get().getIslandHandler().getIslandAtLocation(b.getLocation());
+        Island island = IslandUtil.getIslandAtLocation(b.getLocation());
 
         /*
         a real island was not found at the location
@@ -137,7 +137,7 @@ public class IslandListener implements Listener {
 
         if (WorldUtil.isWorld(e.getTo().getWorld(), Skyblock.get().getIslandWorld())) {
 
-            Island island = Skyblock.get().getIslandHandler().getIslandAtLocation(e.getTo());
+            Island island = IslandUtil.getIslandAtLocation(e.getTo());
 
             if (island == null)
                 return;
@@ -155,7 +155,7 @@ public class IslandListener implements Listener {
         final Player p = e.getPlayer();
 
         if (WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld())) {
-            Island island = Skyblock.get().getIslandHandler().getIslandAtLocation(p.getLocation());
+            Island island = IslandUtil.getIslandAtLocation(p.getLocation());
 
             if (island == null)
                 return;
@@ -218,7 +218,7 @@ public class IslandListener implements Listener {
         final Player p = e.getPlayer();
         final Location l = p.getLocation();
         if (l.getY() < -64.0 && WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld())) {
-            final Island island = Skyblock.get().getIslandHandler().getIslandAtXZ(l.getBlockX(), l.getBlockZ());
+            final Island island = IslandUtil.getIslandAtXZ(l.getBlockX(), l.getBlockZ());
             if (island == null) return;
             island.teleport(p);
             p.setFallDistance(0);
@@ -238,14 +238,14 @@ public class IslandListener implements Listener {
             return;
 
         for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
-            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().length(r); c++) {
+            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().width(r); c++) {
 
                 Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
 
                 if (island == null)
                     continue;
 
-                final double multiplier = island.getUpgrades().getHarvestRate();
+                final double multiplier = island.getUpgrades().getHarvestMult();
 
                 //if (multiplier <= 1.0) continue;
 
@@ -264,8 +264,16 @@ public class IslandListener implements Listener {
     @EventHandler
     public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
 
-        if (!WorldUtil.isWorld(e.getEntity().getWorld(), Skyblock.get().getIslandWorld())
-                || e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SPAWNER)
+        if (!WorldUtil.isWorld(e.getEntity().getWorld(), Skyblock.get().getIslandWorld()))
+            return;
+
+        if (e.getEntity() instanceof Phantom) {
+            e.setCancelled(true);
+            return;
+        }
+
+
+        if (e.getSpawnReason() != CreatureSpawnEvent.SpawnReason.SPAWNER)
             return;
 
         /*

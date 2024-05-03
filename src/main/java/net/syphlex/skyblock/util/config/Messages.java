@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.util.config;
 
 import lombok.Getter;
-import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
 import net.syphlex.skyblock.util.StringUtil;
 import org.bukkit.entity.Player;
 
@@ -22,9 +22,12 @@ public enum Messages {
     INTERACT_NOT_ON_OWN_ISLAND("&cError: You cannot do this here as this is not your island."),
     SENT_ISLAND_INVITE("&aYou have invited %player% to your island."),
     RECEIVED_ISLAND_INVITE("&aYou have received an invitation to join %player%'s island."),
+    CANT_INVITE_MEMBERS("&cError: This player is already apart of your island."),
     ISLAND_INVITE_COOLDOWN("&cError: You must wait before sending another island invitation."),
     LEFT_ISLAND("&cYou have left your island."),
-    LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island.");
+    LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island."),
+    NO_INVITE_FROM_ISLAND("&cError: There was no invite from this island or the invite has expired."),
+    WAIT_INVITE("&cError: You must wait before inviting this player again.");
 
     private String msg;
 

@@ -1,0 +1,282 @@
+package net.syphlex.skyblock.manager.island;
+
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.DataException;
+import eu.decentsoftware.holograms.api.DHAPI;
+import lombok.Getter;
+import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.database.flat.IslandFile;
+import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.island.block.IslandBlockData;
+import net.syphlex.skyblock.manager.island.data.IslandGrid;
+import net.syphlex.skyblock.manager.island.member.IslandRole;
+import net.syphlex.skyblock.manager.island.member.MemberProfile;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
+import net.syphlex.skyblock.util.IslandUtil;
+import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.config.ConfigEnum;
+import net.syphlex.skyblock.util.config.Messages;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.util.Vector;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+
+@Getter
+public class IslandHandler {
+
+    public final static double MINIMUM_Y_LIMIT = -64.0;
+    public final static double BUILD_HEIGHT = 256.0;
+
+    private IslandFile islandFile;
+    private IslandGrid grid;
+
+    public void onEnable(){
+        Skyblock.get().getThreadHandler().fire(() -> {
+            this.islandFile = new IslandFile();
+            ArrayList<Island> islandList = this.islandFile.read();
+
+            this.grid = new IslandGrid(islandList.size() + 1);
+
+            for (Island island : islandList)
+                this.grid.insert(island, island.getId());
+        });
+    }
+
+    public void onDisable() {
+        Skyblock.get().getThreadHandler().fire(() -> {
+
+
+
+            for (File f : this.islandFile.getFile().listFiles())
+                f.delete();
+
+            for (int r = 0; r < this.grid.length(); r++) {
+                for (int c = 0; c < this.grid.width(r); c++) {
+                    //this.getGrid().getGrid()[r][c].getStoredBlockHolograms().forEach();
+                    this.islandFile.write(this.grid.get(r, c));
+                }
+            }
+
+        });
+    }
+
+    private void deleteHolograms(Island island){
+        for (IslandBlockData blockData : island.getStoredBlocks()) {
+            String identifier = island.getIdentifier().replace(";", "-");
+            String blockName = blockData.getBlockData().getMaterial().name();
+
+            String hologram = identifier + blockName;
+
+            if (DHAPI.getHologram(hologram) == null)
+                continue;
+
+            DHAPI.removeHologram(hologram);
+        }
+    }
+
+    private CompletableFuture<Void> deleteIslandBlocks(Island island, World world){
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+        if (world == null) {
+            completableFuture.complete(null);
+        } else {
+            Bukkit.getScheduler().runTask(Skyblock.get(), () -> {
+                deleteIslandBlocks(island, world, world.getMaxHeight(), completableFuture, 0);
+            });
+        }
+        return completableFuture;
+    }
+
+    private void deleteIslandBlocks(Island island, World world, int y, CompletableFuture<Void> completableFuture, int delay){
+
+        for (int x = island.getMinX(); x <= island.getMaxX(); x++) {
+            for (int z = island.getMinZ(); z <= island.getMaxZ(); z++) {
+                Block block = world.getBlockAt(x, y, z);
+                if (block.getType() != Material.AIR) {
+                    if (block.getState() instanceof InventoryHolder) {
+                        ((InventoryHolder) block.getState()).getInventory().clear();
+                    }
+                    block.setType(Material.AIR, false);
+                }
+            }
+        }
+
+        if (y <= world.getMinHeight()) {
+            completableFuture.complete(null);
+        } else {
+            if (delay < 1) {
+                deleteIslandBlocks(island, world, y - 1, completableFuture, delay);
+            } else {
+                Bukkit.getScheduler().runTaskLater(Skyblock.get(), () -> {
+                    deleteIslandBlocks(island, world, y - 1, completableFuture, delay);
+                }, delay);
+            }
+        }
+    }
+
+    private CompletableFuture<Void> getRidOfPlayers(Island island){
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+        Bukkit.getScheduler().runTask(Skyblock.get(), () -> {
+
+            for (Entity e : Skyblock.get().getIslandWorld().getNearbyEntities(
+                    island.getCenter().getAsBukkit(Skyblock.get().getIslandWorld()),
+                    island.getUpgrades().getSize(),
+                    256,
+                    island.getUpgrades().getSize())) {
+
+                if (!(e instanceof Player))
+                    continue;
+
+                Player p = (Player)e;
+                p.teleport(Skyblock.get().getMainSpawn());
+            }
+        });
+        return completableFuture;
+    }
+
+    public CompletableFuture<Void> destroyIsland(Island island){
+        deleteHolograms(island);
+        return CompletableFuture.runAsync(() -> {
+            //getRidOfPlayers(island).join();
+            List<CompletableFuture<Void>> completableFutures = Arrays.asList(
+                    getRidOfPlayers(island),
+                    deleteIslandBlocks(island, Skyblock.get().getIslandWorld())
+            );
+            for (CompletableFuture<Void> future : completableFutures)
+                future.join();
+        });
+    }
+
+    public void degenerateIsland(IslandProfile profile){
+
+        long started = System.currentTimeMillis();
+
+        if (!profile.hasIsland()) {
+            Messages.DOES_NOT_HAVE_ISLAND.send(profile);
+            return;
+        }
+
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
+
+        degenerateIsland(profile.getIsland());
+        profile.setIsland(null);
+
+        profile.getPlayer().sendMessage(Messages.ISLAND_DELETE.get()
+                .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
+    }
+
+    public void degenerateIsland(Island island){
+
+        destroyIsland(island);
+
+        int[] id = island.getId();
+        this.grid.set(id[0], id[1], null);
+        //this.grid.getGrid()[id[0]][id[1]] = null;
+    }
+
+    public void generateIsland(IslandProfile profile) {
+
+        Player player = profile.getPlayer();
+
+        long started = System.currentTimeMillis();
+
+        if (profile.getIsland() != null) {
+            Messages.ALREADY_HAS_ISLAND.send(profile);
+            return;
+        }
+
+        int[] nextSpot = this.grid.getNextSpot();
+
+        player.sendMessage("your spot: " + nextSpot[0] + " : " + nextSpot[1]);
+
+        Position center = new Position(Skyblock.get().getIslandWorld(),
+                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5,
+                ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
+                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5);
+        Position corner1 = center.clone().add(
+                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
+                BUILD_HEIGHT - ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
+                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
+        Position corner2 = center.clone().add(
+                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
+                -ConfigEnum.DEFAULT_Y_POSITION.getAsDouble() + MINIMUM_Y_LIMIT,
+                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
+
+        Island island = new Island(nextSpot, IslandUtil.idToString(nextSpot),
+                new MemberProfile(player.getUniqueId(), IslandRole.LEADER),
+                corner1, corner2, center);
+
+        island.setHome(island.getCenter().clone().add(0, 0.5, 0));
+
+        Skyblock.get().getSchematicHandler().pasteSchematic(
+                island, Skyblock.get().getSchematicHandler().getSchematic("default"));
+
+        //island.getCorner1().setBlock(Material.GLOWSTONE);
+        //island.getCorner2().setBlock(Material.GLOWSTONE);
+        //island.getCenter().setBlock(Material.BEDROCK);
+
+        this.grid.insert(island, nextSpot);
+
+        profile.setIsland(island);
+
+        island.teleport(player);
+
+        profile.getPlayer().sendMessage(Messages.ISLAND_CREATE.get()
+                .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
+
+        int[] nextNext = this.grid.getNextSpot();
+
+        player.sendMessage("next spot: " + nextNext[0] + " : " + nextNext[1]);
+    }
+
+    public void generateIslandBorder(Island island, Player player, Color color) {
+
+        WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
+        worldBorder.setCenter(island.getCenter().getX(), island.getCenter().getZ());
+        worldBorder.setSize(island.getUpgrades().getSize());
+
+        worldBorder.setDamageAmount(0);
+        worldBorder.setDamageBuffer(0);
+
+        if (color == Color.RED) {
+            worldBorder.setSize(island.getUpgrades().getSize() - 0.1D, 20000000L);
+        } else if (color == Color.GREEN) {
+            worldBorder.setSize( island.getUpgrades().getSize() + 0.1D, 20000000L);
+        }
+
+        player.setWorldBorder(worldBorder);
+    }
+
+    public void degenerateIslandBorder(Player player){
+
+        if (player.getWorldBorder() == null)
+            return;
+
+        player.getWorldBorder().reset();
+        player.setWorldBorder(null);
+    }
+}

@@ -1,8 +1,8 @@
 package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.mine.data.Mine;
-import net.syphlex.skyblock.handler.mine.data.MineBlockData;
+import net.syphlex.skyblock.manager.mine.data.Mine;
+import net.syphlex.skyblock.manager.mine.data.MineBlockData;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.StringUtil;
@@ -39,6 +39,9 @@ public class MineCmd extends SimpleCmd {
                 case "setpos2":
                     handlePos2(player, args);
                     break;
+                case "setspawn":
+                    handleSetSpawn(player, args);
+                    break;
                 case "addblock":
                     handleAddBlock(player, args);
                     break;
@@ -60,6 +63,34 @@ public class MineCmd extends SimpleCmd {
                     break;
             }
         }
+    }
+
+    private void handleSetSpawn(Player player, String[] args){
+        if (args.length != 2) {
+            player.sendMessage("usage: /mine setspawn <id>");
+            return;
+        }
+
+        if (!StringUtil.isDigit(args[1])) {
+            player.sendMessage("The id must be a number.");
+            return;
+        }
+
+        int id = (int)Double.parseDouble(args[1]);
+
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
+            player.sendMessage("That mine does not exist.");
+            return;
+        }
+
+        mine.setSpawn(new Position(
+                player.getWorld(),
+                player.getLocation().getX(),
+                player.getLocation().getY(),
+                player.getLocation().getZ()));
+        player.sendMessage("You have set the spawn position for " + mine.getMineName() + " ID:" + mine.getId());
     }
 
     private void handleReset(Player player, String[] args){
@@ -105,7 +136,9 @@ public class MineCmd extends SimpleCmd {
         int id = (int)Double.parseDouble(args[1]);
         double chance = Double.parseDouble(args[3]);
 
-        if (Skyblock.get().getMineHandler().getMine(id) == null) {
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
             player.sendMessage("That mine does not exist.");
             return;
         }
@@ -113,7 +146,6 @@ public class MineCmd extends SimpleCmd {
         Material material = Material.getMaterial(args[2]);
         if (material == null) material = Material.STONE;
 
-        Mine mine = Skyblock.get().getMineHandler().getMine(id);
         MineBlockData blockData = mine.getBlockData(material);
 
         if (blockData == null) {
@@ -144,15 +176,15 @@ public class MineCmd extends SimpleCmd {
         int id = (int)Double.parseDouble(args[1]);
         double chance = Double.parseDouble(args[3]);
 
-        if (Skyblock.get().getMineHandler().getMine(id) == null) {
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
             player.sendMessage("That mine does not exist.");
             return;
         }
 
         Material material = Material.getMaterial(args[2]);
         if (material == null) material = Material.STONE;
-
-        Mine mine = Skyblock.get().getMineHandler().getMine(id);
 
         if (mine.hasBlock(material)) {
             player.sendMessage("This mine already has this block.");
@@ -176,12 +208,13 @@ public class MineCmd extends SimpleCmd {
 
         int id = (int)Double.parseDouble(args[1]);
 
-        if (Skyblock.get().getMineHandler().getMine(id) == null) {
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
             player.sendMessage("That mine does not exist.");
             return;
         }
 
-        Mine mine = Skyblock.get().getMineHandler().getMine(id);
         mine.setCorner2(new Position(
                 player.getWorld(),
                 player.getLocation().getX(),
@@ -203,12 +236,13 @@ public class MineCmd extends SimpleCmd {
 
         int id = (int)Double.parseDouble(args[1]);
 
-        if (Skyblock.get().getMineHandler().getMine(id) == null) {
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
             player.sendMessage("That mine does not exist.");
             return;
         }
 
-        Mine mine = Skyblock.get().getMineHandler().getMine(id);
         mine.setCorner1(new Position(
                 player.getWorld(),
                 player.getLocation().getX(),
@@ -230,12 +264,13 @@ public class MineCmd extends SimpleCmd {
 
         int id = (int)Double.parseDouble(args[1]);
 
-        if (Skyblock.get().getMineHandler().getMine(id) == null) {
+        Mine mine = Skyblock.get().getMineHandler().getMine(id);
+
+        if (mine == null) {
             player.sendMessage("That mine does not exist.");
             return;
         }
 
-        Mine mine = Skyblock.get().getMineHandler().getMine(id);
         Skyblock.get().getMineHandler().getMines().remove(mine);
         player.sendMessage("You deleted the mine ID:" + id);
     }

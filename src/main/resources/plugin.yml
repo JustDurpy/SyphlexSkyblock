@@ -4,10 +4,17 @@ main: net.syphlex.skyblock.Skyblock
 version: 0.0.5b
 api-version: 1.13
 
+depend:
+  - PlaceholderAPI
+  - DecentHolograms
+
 dependencies:
   server:
     PlaceholderAPI:
       # Load order is relative to the dependency. So here PlaceholderAPI loads before our plugin.
+      load: BEFORE
+      required: true
+    DecentHolograms:
       load: BEFORE
       required: true
 
@@ -16,3 +23,5 @@ commands:
     aliases: [is]
   mine:
     aliases: [mines]
+  minion:
+    aliases: [minions]

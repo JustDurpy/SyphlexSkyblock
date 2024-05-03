@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.listener;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.handler.profile.IslandProfile;
+import net.syphlex.skyblock.manager.profile.IslandProfile;
 import net.syphlex.skyblock.util.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -2,11 +2,14 @@ package net.syphlex.skyblock.util;
 
 import lombok.experimental.UtilityClass;
 import net.syphlex.skyblock.Skyblock;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import net.syphlex.skyblock.manager.mine.data.MineBlockData;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @UtilityClass
 public class WorldUtil {
@@ -21,5 +24,16 @@ public class WorldUtil {
 
     public boolean isWorld(World world1, World world2){
         return world1.getName().equalsIgnoreCase(world2.getName());
+    }
+
+    public List<LivingEntity> getLivingEntities(Location l, double radius){
+        List<LivingEntity> entities = new ArrayList<>();
+        for (double y = -radius; y <= radius; y += radius)
+            for (double x = -radius; x <= radius; x += radius)
+                for (double z = -radius; z <= radius; z += radius)
+                    for (Entity e : l.getWorld().getNearbyEntities(l, x, y, z))
+                        if (e instanceof LivingEntity)
+                            entities.add((LivingEntity) e);
+        return entities;
     }
 }
