@@ -18,11 +18,11 @@ public abstract class SimpleCmd implements CommandExecutor, TabCompleter {
         Skyblock.get().getCommand(cmd).setExecutor(this);
     }
 
+    public abstract ArrayList<String> onTabComplete(CommandSender sender, String[] args);
+
     public abstract void handleCmd(Player player, String[] args);
 
     public abstract void handleServerCmd(CommandSender sender, String[] args);
-
-    public abstract ArrayList<String> onTabComplete(CommandSender sender, String[] args);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String arg, @NotNull String[] args) {

@@ -69,7 +69,7 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland()) {
             e.setCancelled(true);
@@ -91,7 +91,7 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(block.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland()) {
             e.setCancelled(true);
@@ -113,7 +113,7 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland()) {
             e.setCancelled(true);
@@ -130,7 +130,7 @@ public class IslandListener implements Listener {
     @EventHandler
     public void onTeleportEvent(PlayerTeleportEvent e) {
         final Player p = e.getPlayer();
-        IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (profile.hasIsland() && profile.getIsland().isInside(e.getTo()))
             return;
@@ -142,12 +142,12 @@ public class IslandListener implements Listener {
             if (island == null)
                 return;
 
-            //Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
-            Skyblock.get().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
+            //Skyblock.get().getHandlers().getIslandHandler().degenerateIslandBorder(p);
+            Skyblock.get().getHandlers().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
             return;
         }
 
-        Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
+        Skyblock.get().getHandlers().getIslandHandler().degenerateIslandBorder(p);
     }
 
     @EventHandler
@@ -160,7 +160,7 @@ public class IslandListener implements Listener {
             if (island == null)
                 return;
 
-            Skyblock.get().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
+            Skyblock.get().getHandlers().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
         }
     }
 
@@ -173,7 +173,7 @@ public class IslandListener implements Listener {
             if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
                 return;
 
-            final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+            final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
             if (!profile.hasIsland()) {
                 e.setCancelled(true);
@@ -199,7 +199,7 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland()) {
             e.setCancelled(true);
@@ -237,10 +237,10 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(l.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
-            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().width(r); c++) {
+        for (int r = 0; r < Skyblock.get().getHandlers().getIslandHandler().getGrid().length(); r++) {
+            for (int c = 0; c < Skyblock.get().getHandlers().getIslandHandler().getGrid().width(r); c++) {
 
-                Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
+                Island island = Skyblock.get().getHandlers().getIslandHandler().getGrid().get(r, c);
 
                 if (island == null)
                     continue;

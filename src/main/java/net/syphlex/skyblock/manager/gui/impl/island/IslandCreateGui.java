@@ -26,7 +26,7 @@ public class IslandCreateGui extends SimpleGui {
     public void onClickEvent(ClickEvent e) {
         switch (e.getSlot()) {
             case 13:
-                Skyblock.get().getIslandHandler().generateIsland(e.getProfile());
+                Skyblock.get().getHandlers().getIslandHandler().generateIsland(e.getProfile());
                 closeInventory(e.getProfile().getPlayer());
                 break;
         }

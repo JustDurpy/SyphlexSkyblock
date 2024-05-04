@@ -26,7 +26,7 @@ public class IslandDeleteGui extends SimpleGui {
     public void onClickEvent(ClickEvent e) {
         switch (e.getSlot()) {
             case 13:
-                Skyblock.get().getIslandHandler().degenerateIsland(e.getProfile());
+                Skyblock.get().getHandlers().getIslandHandler().degenerateIsland(e.getProfile());
                 closeInventory(e.getProfile().getPlayer());
                 break;
         }

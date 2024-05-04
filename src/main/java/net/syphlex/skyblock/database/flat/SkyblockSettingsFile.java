@@ -6,18 +6,17 @@ import net.syphlex.skyblock.manager.island.upgrade.oregenerator.IslandOreGenerat
 import net.syphlex.skyblock.manager.island.block.OreGeneratorBlockData;
 import net.syphlex.skyblock.manager.minion.Minion;
 import net.syphlex.skyblock.manager.minion.MinionData;
+import net.syphlex.skyblock.manager.mobcoin.MobCoinEntity;
+import net.syphlex.skyblock.manager.mobcoin.MobCoinHandler;
 import net.syphlex.skyblock.util.Pair;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SkyblockSettingsFile extends SimpleConfig {
-
-    public ArrayList<IslandOreGenerator> oreGeneratorsSection = new ArrayList<>();
-    public ArrayList<SpecialBlockData> specialBlocksSection = new ArrayList<>();
-    public ArrayList<MinionData> minionDataSection = new ArrayList<>();
 
     public SkyblockSettingsFile() {
         super("/settings.yml", false);
@@ -67,11 +66,18 @@ public class SkyblockSettingsFile extends SimpleConfig {
         config.addDefault("minion.lumberjack.levels.2", "radius:3,amount:3");
         config.addDefault("minion.lumberjack.levels.3", "radius:5,amount:5");
 
+        /*
+        MOBCOINS SECTION
+         */
+
+        config.addDefault("mobcoins.mobs", Arrays.asList("ZOMBIE:4.5", "SKELETON:7.5"));
+        // todo make the shop here.
+
         save();
 
         for (String specialBlocks : config.getStringList("special-blocks")) {
-            SpecialBlockData blockData = Skyblock.get().getUpgradeHandler().getSpecialBlockDataFromString(specialBlocks);
-            this.specialBlocksSection.add(blockData);
+            SpecialBlockData blockData = Skyblock.get().getHandlers().getUpgradeHandler().getSpecialBlockDataFromString(specialBlocks);
+            Skyblock.get().getHandlers().getUpgradeHandler().getSpecialBlocks().add(blockData);
         }
 
         for (String section : config.getConfigurationSection("generators").getKeys(false)) {
@@ -87,11 +93,11 @@ public class SkyblockSettingsFile extends SimpleConfig {
                 generator.getBlocks().add(new OreGeneratorBlockData(Material.getMaterial(materialName), chance));
             }
 
-            this.oreGeneratorsSection.add(generator);
+            Skyblock.get().getHandlers().getUpgradeHandler().getOreGenerators().add(generator);
 
             for (String minionType : config.getConfigurationSection("minion").getKeys(false)) {
 
-                Minion.Type type = Skyblock.get().getMinionHandler().getTypeFromName(minionType);
+                Minion.Type type = Skyblock.get().getHandlers().getMinionHandler().getTypeFromName(minionType);
                 int maxLvl = config.getInt("minion." + minionType + ".max-level");
                 int radius = config.getInt("minion." + minionType + ".radius");
 
@@ -108,7 +114,18 @@ public class SkyblockSettingsFile extends SimpleConfig {
                     data.getObjects().add(o);
                 }
 
-                this.minionDataSection.add(data);
+                Skyblock.get().getHandlers().getMinionHandler().getMinionDataList().add(data);
+            }
+
+            for (String mobcoinMobs : config.getStringList("mobcoins.mobs")) {
+
+                String[] split = mobcoinMobs.split(":");
+
+                String mobName = split[0];
+                double chance = Double.parseDouble(split[1]);
+                EntityType type = EntityType.valueOf(mobName);
+
+                Skyblock.get().getHandlers().getMobCoinHandler().getEntities().add(new MobCoinEntity(type, chance));
             }
         }
     }

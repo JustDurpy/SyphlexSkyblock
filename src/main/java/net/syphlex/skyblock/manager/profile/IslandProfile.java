@@ -23,6 +23,8 @@ public class IslandProfile {
 
     private Island island = null;
 
+    private int mobCoins;
+
     private final ArrayList<InviteRequest> inviteRequests = new ArrayList<>();
 
     public IslandProfile(final Player player){

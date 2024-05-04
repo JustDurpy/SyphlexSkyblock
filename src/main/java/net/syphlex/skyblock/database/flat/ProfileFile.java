@@ -32,9 +32,12 @@ public class ProfileFile extends SimpleConfig {
 
         config.addDefault("profile.island", "null");
         config.addDefault("profile.island-role", "default");
+        config.addDefault("profile.mobcoins", 0);
 
         String identifier = config.getString("profile.island");
         String islandRole = config.getString("profile.island-role");
+
+        int mobCoins = config.getInt("profile.mobcoins");
 
         int[] id = IslandUtil.getId(identifier);
 
@@ -42,6 +45,8 @@ public class ProfileFile extends SimpleConfig {
             profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
 
         profile.getMemberProfile().setRole(IslandRole.get(islandRole));
+
+        profile.setMobCoins(mobCoins);
     }
 
     public void write(IslandProfile profile) {
@@ -67,6 +72,7 @@ public class ProfileFile extends SimpleConfig {
             }
 
             config.set("profile.island-role", profile.getMemberProfile().getRole().getIdentifier());
+            config.set("profile.mobcoins", profile.getMobCoins());
 
             config.save(f);
         } catch (IOException e) {

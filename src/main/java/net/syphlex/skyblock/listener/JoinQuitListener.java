@@ -12,12 +12,12 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         final Player p = e.getPlayer();
-        Skyblock.get().getDataHandler().join(p);
+        Skyblock.get().getHandlers().getDataHandler().join(p);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
         final Player p = e.getPlayer();
-        Skyblock.get().getDataHandler().quit(p);
+        Skyblock.get().getHandlers().getDataHandler().quit(p);
     }
 }

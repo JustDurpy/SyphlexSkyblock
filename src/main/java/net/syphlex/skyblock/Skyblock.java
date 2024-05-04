@@ -6,14 +6,7 @@ import net.syphlex.skyblock.cmd.MineCmd;
 import net.syphlex.skyblock.cmd.MinionCmd;
 import net.syphlex.skyblock.database.flat.PluginFile;
 import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
-import net.syphlex.skyblock.manager.minion.MinionHandler;
-import net.syphlex.skyblock.manager.profile.DataHandler;
-import net.syphlex.skyblock.manager.gui.GuiHandler;
-import net.syphlex.skyblock.manager.island.IslandHandler;
-import net.syphlex.skyblock.manager.island.IslandUpgradeHandler;
-import net.syphlex.skyblock.manager.mine.MineHandler;
-import net.syphlex.skyblock.manager.schematic.SchematicHandler;
-import net.syphlex.skyblock.manager.scoreboard.ScoreboardHandler;
+import net.syphlex.skyblock.manager.Handler;
 import net.syphlex.skyblock.manager.thread.ThreadHandler;
 import net.syphlex.skyblock.listener.*;
 import net.syphlex.skyblock.util.VoidGenerator;
@@ -33,14 +26,7 @@ public class Skyblock extends JavaPlugin {
     private ThreadHandler threadHandler;
     private VoidGenerator voidGenerator;
     private SkyblockSettingsFile settingsFile;
-    private SchematicHandler schematicHandler;
-    private IslandUpgradeHandler upgradeHandler;
-    private IslandHandler islandHandler;
-    private MineHandler mineHandler;
-    private MinionHandler minionHandler;
-    private ScoreboardHandler scoreboardHandler;
-    private DataHandler dataHandler;
-    private GuiHandler guiHandler;
+    private Handler handlers;
 
     @Override
     public void onLoad(){
@@ -91,35 +77,17 @@ public class Skyblock extends JavaPlugin {
 
     private void init(){
         this.threadHandler = new ThreadHandler();
-        this.schematicHandler = new SchematicHandler();
-        this.upgradeHandler = new IslandUpgradeHandler();
-        this.islandHandler = new IslandHandler();
-        this.mineHandler = new MineHandler();
-        this.minionHandler = new MinionHandler();
-        this.scoreboardHandler = new ScoreboardHandler();
-        this.dataHandler = new DataHandler();
-        this.guiHandler = new GuiHandler();
+        this.handlers = new Handler();
     }
 
     private void start(){
         this.threadHandler.onEnable();
+        this.handlers.onEnable();
         this.settingsFile.read();
-        this.schematicHandler.onEnable();
-        this.upgradeHandler.onEnable();
-        this.islandHandler.onEnable();
-        this.mineHandler.onEnable();
-        this.minionHandler.onEnable();
-        this.dataHandler.onEnable();
-        this.scoreboardHandler.onEnable();
     }
 
     private void stop(){
-        this.dataHandler.onDisable();
-        this.scoreboardHandler.onDisable();
-        this.minionHandler.onDisable();
-        this.mineHandler.onDisable();
-        this.islandHandler.onDisable();
-        this.schematicHandler.onDisable();
+        this.handlers.onDisable();
         this.threadHandler.onDisable();
     }
 

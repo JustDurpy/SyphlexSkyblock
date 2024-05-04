@@ -11,12 +11,8 @@ import net.syphlex.skyblock.util.IslandUtil;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +24,24 @@ public class IslandCmd extends SimpleCmd {
     }
 
     @Override
+    public ArrayList<String> onTabComplete(CommandSender sender, String[] args){
+        ArrayList<String> list = new ArrayList<>();
+        if (args.length == 1) {
+            list.add("create");
+            list.add("delete");
+            list.add("sethome");
+            list.add("home");
+            list.add("invite");
+            list.add("join");
+            list.add("leave");
+        }
+        return list;
+    }
+
+    @Override
     public void handleCmd(Player player, String[] args) {
 
         final IslandProfile profile = Skyblock.get().getDataHandler().get(player);
-
-        if (profile.hasIsland()) {
-
-            player.sendMessage("worth: $" + profile.getIsland().getWorth());
-            player.sendMessage("placement: " + profile.getIsland().getIdentifier());
-
-        }
 
         if (args.length > 0) {
 
@@ -206,28 +210,5 @@ public class IslandCmd extends SimpleCmd {
 
     @Override
     public void handleServerCmd(CommandSender sender, String[] args) {
-    }
-
-    @Override
-    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        ArrayList<String> list = new ArrayList<>();
-
-        if (args.length == 1) {
-            list.add("create");
-            list.add("delete");
-            list.add("sethome");
-            list.add("home");
-            list.add("invite");
-            list.add("join");
-            list.add("leave");
-        }
-
-        return list;
     }
 }

@@ -12,16 +12,8 @@ import java.util.ArrayList;
 public class IslandUpgradeHandler {
 
 
-    private ArrayList<IslandOreGenerator> oreGenerators;
-    private ArrayList<SpecialBlockData> specialBlocks;
-
-    public void onEnable(){
-        this.oreGenerators = Skyblock.get().getSettingsFile().oreGeneratorsSection;
-        this.specialBlocks = Skyblock.get().getSettingsFile().specialBlocksSection;
-    }
-
-    public void onDisable(){
-    }
+    private final ArrayList<IslandOreGenerator> oreGenerators = new ArrayList<>();
+    private final ArrayList<SpecialBlockData> specialBlocks = new ArrayList<>();
 
     public boolean isSpecialBlock(Material material){
         for (SpecialBlockData blockData : this.specialBlocks) {

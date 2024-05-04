@@ -19,12 +19,12 @@ public class GuiListener implements Listener {
             return;
 
         final Player p = (Player) e.getWhoClicked();
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
-        if (!Skyblock.get().getGuiHandler().isInOurGui(profile, e.getInventory()))
+        if (!Skyblock.get().getHandlers().getGuiHandler().isInOurGui(profile, e.getInventory()))
             return;
 
-        Skyblock.get().getGuiHandler().get(profile).onClickEvent(
+        Skyblock.get().getHandlers().getGuiHandler().get(profile).onClickEvent(
                 new ClickEvent(profile, e.getRawSlot()));
         e.setCancelled(true);
     }
@@ -36,12 +36,12 @@ public class GuiListener implements Listener {
             return;
 
         final Player p = (Player) e.getPlayer();
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
-        if (!Skyblock.get().getGuiHandler().isInOurGui(profile, e.getInventory()))
+        if (!Skyblock.get().getHandlers().getGuiHandler().isInOurGui(profile, e.getInventory()))
             return;
 
-        Skyblock.get().getGuiHandler().get(profile).onCloseEvent();
-        Skyblock.get().getGuiHandler().closeGui(profile);
+        Skyblock.get().getHandlers().getGuiHandler().get(profile).onCloseEvent();
+        Skyblock.get().getHandlers().getGuiHandler().closeGui(profile);
     }
 }

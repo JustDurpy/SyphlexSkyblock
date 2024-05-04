@@ -9,18 +9,55 @@ import net.syphlex.skyblock.manager.profile.IslandProfile;
 import net.syphlex.skyblock.util.Position;
 import net.syphlex.skyblock.util.StringUtil;
 import net.syphlex.skyblock.util.WorldUtil;
+import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityDeathEvent(EntityDeathEvent e){
+
+        if (e.getEntity() instanceof Player)
+            return;
+
+        Skyblock.get().getHandlers().getMobCoinHandler().handleEntityDeath(e.getEntity());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onItemPickUp(EntityPickupItemEvent e) {
+
+        final ItemStack i = e.getItem().getItemStack();
+
+        if (!Skyblock.get().getHandlers().getMobCoinHandler().isMobCoin(i))
+            return;
+
+        if (!(e.getEntity() instanceof Player)) {
+            e.setCancelled(true);
+            return;
+        }
+
+        final Player p = (Player) e.getEntity();
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
+
+        e.getItem().remove();
+        profile.setMobCoins(profile.getMobCoins() + 1);
+
+        Messages.MOB_COIN_COLLECTED
+                .replace("%mobcoins%", profile.getMobCoins())
+                .send(profile);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent e) {
@@ -29,7 +66,7 @@ public class PlayerListener implements Listener {
         if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland())
             return;
@@ -40,7 +77,7 @@ public class PlayerListener implements Listener {
         if (!profile.getIsland().isInside(location))
             return;
 
-        if (!Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType()))
+        if (!Skyblock.get().getHandlers().getUpgradeHandler().isSpecialBlock(block.getType()))
             return;
 
         boolean wasSpecialBlockNear = false;
@@ -84,7 +121,7 @@ public class PlayerListener implements Listener {
 
             //p.sendMessage("placed new stored block!");
 
-            SpecialBlockData data =  Skyblock.get().getUpgradeHandler().getSpecialBlockDataFromMaterial(block.getType());
+            SpecialBlockData data =  Skyblock.get().getHandlers().getUpgradeHandler().getSpecialBlockDataFromMaterial(block.getType());
 
             profile.getIsland().getStoredBlocks().add(
                     new IslandBlockData(new Position(location), data, 1));
@@ -112,7 +149,7 @@ public class PlayerListener implements Listener {
         if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(p);
+        final IslandProfile profile = Skyblock.get().getHandlers().getDataHandler().get(p);
 
         if (!profile.hasIsland())
             return;

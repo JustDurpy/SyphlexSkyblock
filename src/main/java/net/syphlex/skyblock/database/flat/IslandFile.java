@@ -73,7 +73,7 @@ public class IslandFile extends SimpleConfig {
 
             Island island = new Island(id, islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
-            island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
+            island.getUpgrades().setGenerator(Skyblock.get().getHandlers().getUpgradeHandler().getOreGenerator(generatorTier));
             island.getUpgrades().setSpawnRateMult(spawnRate);
             island.getUpgrades().setSpawnAmtMult(spawnAmt);
             island.getUpgrades().setHarvestMult(harvestRate);

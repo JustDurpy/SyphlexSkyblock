@@ -12,9 +12,29 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 public class MineCmd extends SimpleCmd {
     public MineCmd() {
         super("mine");
+    }
+
+    @Override
+    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        if (args.length == 1) {
+            list.add("create");
+            list.add("delete");
+            list.add("setpos1");
+            list.add("setpos2");
+            list.add("setspawn");
+            list.add("addblock");
+            list.add("delblock");
+            list.add("reset");
+            list.add("list");
+        }
+
+        return list;
     }
 
     @Override

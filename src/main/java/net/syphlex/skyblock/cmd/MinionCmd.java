@@ -11,9 +11,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+
 public class MinionCmd extends SimpleCmd {
     public MinionCmd() {
         super("minion");
+    }
+
+    @Override
+    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+        ArrayList<String> list = new ArrayList<>();
+        return list;
     }
 
     @Override

@@ -27,7 +27,8 @@ public enum Messages {
     LEFT_ISLAND("&cYou have left your island."),
     LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island."),
     NO_INVITE_FROM_ISLAND("&cError: There was no invite from this island or the invite has expired."),
-    WAIT_INVITE("&cError: You must wait before inviting this player again.");
+    WAIT_INVITE("&cError: You must wait before inviting this player again."),
+    MOB_COIN_COLLECTED("&bYou &fhave collected a &bMob Coin &fthat was on the floor. &7(%mobcoins%)");
 
     private String msg;
 
@@ -47,8 +48,8 @@ public enum Messages {
         p.sendMessage(get());
     }
 
-    public Messages replace(String s1, String s2) {
-        this.msg = this.msg.replace(s1, s2);
+    public Messages replace(String s1, Object s2) {
+        this.msg = this.msg.replace(s1, String.valueOf(s2));
         return this;
     }
 
