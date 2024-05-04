@@ -7,7 +7,8 @@ import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.manager.minion.Minion;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import org.bukkit.entity.Player;
@@ -16,18 +17,19 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-public class IslandProfile {
+public class Profile {
     private final Player player;
     private final MemberProfile memberProfile;
     private FastBoard scoreboard;
 
     private Island island = null;
+    private Minion attachingChest = null;
 
     private int mobCoins;
 
     private final ArrayList<InviteRequest> inviteRequests = new ArrayList<>();
 
-    public IslandProfile(final Player player){
+    public Profile(final Player player){
         this.player = player;
         this.memberProfile = new MemberProfile(this.player.getUniqueId());
 

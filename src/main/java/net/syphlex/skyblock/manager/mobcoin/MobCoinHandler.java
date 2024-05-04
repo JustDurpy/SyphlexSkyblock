@@ -13,14 +13,8 @@ import java.util.ArrayList;
 @Getter
 public class MobCoinHandler {
 
-    private ArrayList<MobCoinEntity> entities;
+    private final ArrayList<MobCoinEntity> mobCoinEntities = new ArrayList<>();
     public final static String MOB_COIN_TAG = "mobcoin";
-
-    public void onEnable(){
-    }
-
-    public void onDisable(){
-    }
 
     public boolean isMobCoin(ItemStack item) {
         if (item == null
@@ -44,6 +38,7 @@ public class MobCoinHandler {
         if (dropCoin) {
 
             ItemStack item = new ItemBuilder()
+                    .setName("&6&lMOB COIN")
                     .setMaterial(Material.SUNFLOWER)
                     .build();
 
@@ -56,7 +51,7 @@ public class MobCoinHandler {
     }
 
     public MobCoinEntity getEntityData(Entity e){
-        for (MobCoinEntity mobCoinEntity : this.entities) {
+        for (MobCoinEntity mobCoinEntity : this.mobCoinEntities) {
 
             if (mobCoinEntity.getEntityType() == null) {
                 // todo error log

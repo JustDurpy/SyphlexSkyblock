@@ -3,8 +3,8 @@ package net.syphlex.skyblock.manager.profile;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.ProfileFile;
 import net.syphlex.skyblock.manager.island.data.Island;
-import net.syphlex.skyblock.util.IslandUtil;
-import net.syphlex.skyblock.util.WorldUtil;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
+import net.syphlex.skyblock.util.utilities.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataHandler {
-    private final Map<UUID, IslandProfile> profileMap = new ConcurrentHashMap<>();
+    private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
     private ProfileFile profileFile;
 
     public void onEnable(){
@@ -24,14 +24,14 @@ public class DataHandler {
     }
 
     public void onDisable(){
-        for (IslandProfile profile : this.profileMap.values()) {
+        for (Profile profile : this.profileMap.values()) {
             quit(profile.getPlayer());
         }
     }
 
     public void join(Player player) {
         Skyblock.get().getThreadHandler().fire(() -> {
-            IslandProfile profile = new IslandProfile(player);
+            Profile profile = new Profile(player);
             this.profileMap.put(player.getUniqueId(), profile);
             this.profileFile.read(get(player));
         });
@@ -51,22 +51,22 @@ public class DataHandler {
 
     public void quit(Player player){
         Skyblock.get().getThreadHandler().fire(() -> {
-            IslandProfile profile = get(player);//this.profileMap.remove(player.getUniqueId());
+            Profile profile = get(player);//this.profileMap.remove(player.getUniqueId());
             Skyblock.get().getScoreboardHandler().delScoreboard(profile);
             this.profileFile.write(profile);
             this.profileMap.remove(player.getUniqueId());
         });
     }
 
-    public IslandProfile get(Player player){
+    public Profile get(Player player){
         return this.profileMap.get(player.getUniqueId());
     }
 
-    public IslandProfile get(UUID uuid){
+    public Profile get(UUID uuid){
         return this.profileMap.get(uuid);
     }
 
-    public Map<UUID, IslandProfile> getMap(){
+    public Map<UUID, Profile> getMap(){
         return this.profileMap;
     }
 }

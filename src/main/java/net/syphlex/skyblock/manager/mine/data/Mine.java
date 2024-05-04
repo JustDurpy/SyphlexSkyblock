@@ -2,7 +2,7 @@ package net.syphlex.skyblock.manager.mine.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.data.Position;
 import org.bukkit.Location;
 import org.bukkit.Material;
 

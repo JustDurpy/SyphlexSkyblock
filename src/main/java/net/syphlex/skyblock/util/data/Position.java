@@ -1,8 +1,9 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.data;
 
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.util.MathHelper;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

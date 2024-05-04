@@ -3,13 +3,10 @@ package net.syphlex.skyblock.manager.minion.impl;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
 import net.syphlex.skyblock.manager.minion.Minion;
 import net.syphlex.skyblock.util.ItemBuilder;
-import net.syphlex.skyblock.util.Pair;
-import net.syphlex.skyblock.util.PluginUtil;
-import net.syphlex.skyblock.util.WorldUtil;
+import net.syphlex.skyblock.util.data.Pair;
+import net.syphlex.skyblock.util.utilities.PluginUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

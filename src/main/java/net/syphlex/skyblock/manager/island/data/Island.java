@@ -7,8 +7,8 @@ import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.upgrade.IslandUpgradeData;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.data.Position;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -56,7 +56,7 @@ public class Island {
         this.center = center;
     }
 
-    public void addMember(IslandProfile profile){
+    public void addMember(Profile profile){
         this.members.add(new MemberProfile(profile.getPlayer().getUniqueId()));
         profile.getMemberProfile().setRole(IslandRole.DEFAULT);
     }

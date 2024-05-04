@@ -1,8 +1,8 @@
 package net.syphlex.skyblock.util.config;
 
 import lombok.Getter;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.entity.Player;
 
 @Getter
@@ -28,7 +28,7 @@ public enum Messages {
     LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island."),
     NO_INVITE_FROM_ISLAND("&cError: There was no invite from this island or the invite has expired."),
     WAIT_INVITE("&cError: You must wait before inviting this player again."),
-    MOB_COIN_COLLECTED("&bYou &fhave collected a &bMob Coin &fthat was on the floor. &7(%mobcoins%)");
+    MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)");
 
     private String msg;
 
@@ -58,7 +58,7 @@ public enum Messages {
         return this;
     }
 
-    public void send(IslandProfile profile){
+    public void send(Profile profile){
         profile.getPlayer().sendMessage(get());
     }
 }

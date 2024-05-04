@@ -1,10 +1,9 @@
 package net.syphlex.skyblock.util.config;
 
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public enum ConfigEnum {

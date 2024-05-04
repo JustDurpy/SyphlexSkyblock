@@ -1,8 +1,5 @@
 package net.syphlex.skyblock.manager.island.data;
 
-import net.syphlex.skyblock.util.IslandUtil;
-import org.bukkit.Bukkit;
-
 public class IslandGrid {
 
     private Island[][] grid;

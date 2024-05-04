@@ -2,7 +2,7 @@ package net.syphlex.skyblock.manager.island.upgrade.oregenerator;
 
 import lombok.Getter;
 import net.syphlex.skyblock.manager.island.block.OreGeneratorBlockData;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

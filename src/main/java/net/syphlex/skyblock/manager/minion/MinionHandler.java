@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -17,16 +18,24 @@ import java.util.UUID;
 public class MinionHandler {
 
     private final ArrayList<Minion> minions = new ArrayList<>();
-    private ArrayList<MinionData> minionDataList = new ArrayList<>();
+    private final ArrayList<MinionData> minionDataList = new ArrayList<>();
 
     public final static String EGG_TAG = "minion_egg";
     public final static String LEVEL_TAG = "minion_level";
 
     public void onEnable(){
-        this.minionDataList = Skyblock.get().getSettingsFile().minionDataSection;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                for (Minion m : minions)
+                    m.update();
+            }
+        }.runTaskTimer(Skyblock.get(), 0L, 20L);
     }
 
     public void onDisable(){
+        for (Minion m : this.minions)
+            m.removeStand();
     }
 
     public void create(Player player, ItemStack item, Location spawn, Minion.Type type){

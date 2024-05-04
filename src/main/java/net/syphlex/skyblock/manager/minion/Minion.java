@@ -3,11 +3,13 @@ package net.syphlex.skyblock.manager.minion;
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.util.PluginUtil;
-import net.syphlex.skyblock.util.Position;
-import net.syphlex.skyblock.util.StringUtil;
-import net.syphlex.skyblock.util.WorldUtil;
+import net.syphlex.skyblock.util.data.Position;
+import net.syphlex.skyblock.util.utilities.PlayerUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -52,6 +54,56 @@ public abstract class Minion {
         }
     }
 
+    public void sendItem(){
+
+        if (!hasChest())
+            return;
+
+        if (this.chest.getAsBukkit().getBlock().getState() instanceof DoubleChest) {
+            DoubleChest c = (DoubleChest) this.chest.getAsBukkit().getBlock().getState();
+            for (Item i : this.drops) {
+                if (c.getInventory().firstEmpty() == -1) {
+                    this.position.getWorld().dropItemNaturally(this.position.getAsBukkit(), i.getItemStack());
+                    continue;
+                }
+                c.getInventory().addItem(i.getItemStack());
+            }
+            this.drops.clear();
+        } else if (this.chest.getAsBukkit().getBlock().getState() instanceof Chest) {
+            Chest c = (Chest) this.chest.getAsBukkit().getBlock().getState();
+            for (Item i : this.drops) {
+                if (c.getInventory().firstEmpty() == -1) {
+                    this.position.getWorld().dropItemNaturally(this.position.getAsBukkit(), i.getItemStack());
+                    continue;
+                }
+                c.getInventory().addItem(i.getItemStack());
+            }
+            this.drops.clear();
+        }
+    }
+
+    public void attachChest(Location l){
+
+        Block b = l.getBlock();
+
+        if (b.getType() != Material.CHEST)
+            return;
+
+        this.chest = new Position(l);
+    }
+
+    public boolean hasChest(){
+        if (this.chest != null) {
+            if (!(this.chest.getAsBukkit().getBlock().getState() instanceof Chest
+                    || this.chest.getAsBukkit().getBlock().getState() instanceof DoubleChest)) {
+                this.chest = null;
+            }
+        }
+        return this.chest != null
+                && (this.chest.getAsBukkit().getBlock().getState() instanceof Chest
+                || this.chest.getAsBukkit().getBlock().getState() instanceof DoubleChest);
+    }
+
     public void placeMinion(Location placedAt){
         this.uuid = Skyblock.get().getMinionHandler().generateUUID();
         this.position = new Position(placedAt);
@@ -59,7 +111,8 @@ public abstract class Minion {
     }
 
     public void pickUpMinion(Player p){
-        // todo
+        ItemStack egg = Skyblock.get().getMinionHandler().pickUpMinion(this);
+        PlayerUtil.giveItem(p, egg);
         destroy();
     }
 

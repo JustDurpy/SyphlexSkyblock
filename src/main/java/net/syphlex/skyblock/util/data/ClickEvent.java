@@ -1,13 +1,13 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
+import net.syphlex.skyblock.manager.profile.Profile;
 
 @Getter
 @AllArgsConstructor
 public class ClickEvent {
-    private final IslandProfile profile;
+    private final Profile profile;
     private final int slot;
 
 }

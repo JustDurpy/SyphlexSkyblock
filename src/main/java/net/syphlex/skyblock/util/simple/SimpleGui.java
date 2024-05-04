@@ -1,9 +1,8 @@
 package net.syphlex.skyblock.util.simple;
 
 import lombok.Getter;
-import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.util.ClickEvent;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.util.data.ClickEvent;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

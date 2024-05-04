@@ -1,5 +1,7 @@
 package net.syphlex.skyblock.util;
 
+import net.syphlex.skyblock.util.data.Pair;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -65,7 +67,7 @@ public class ItemBuilder {
                 meta.addEnchant(pair.getX(), pair.getY(), true);
             }
         }
-        meta.setDisplayName(StringUtil.CC(this.displayName));
+        meta.setDisplayName(StringUtil.CC(this.displayName == null ? this.material.name() : this.displayName));
         meta.setLore(StringUtil.CC(this.lore));
         meta.setUnbreakable(this.unbreakable);
         item.setItemMeta(meta);

@@ -2,8 +2,8 @@ package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.IslandUtil;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,7 +17,7 @@ public class ProfileFile extends SimpleConfig {
         super("/profiles/", true);
     }
 
-    public void read(IslandProfile profile) {
+    public void read(Profile profile) {
 
         //if (getFile().listFiles().length <= 0)
         //    return;
@@ -49,7 +49,7 @@ public class ProfileFile extends SimpleConfig {
         profile.setMobCoins(mobCoins);
     }
 
-    public void write(IslandProfile profile) {
+    public void write(Profile profile) {
         try {
             if (profile == null)
                 return;

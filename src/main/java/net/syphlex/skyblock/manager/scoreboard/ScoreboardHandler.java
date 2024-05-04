@@ -2,8 +2,8 @@ package net.syphlex.skyblock.manager.scoreboard;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -19,7 +19,7 @@ public class ScoreboardHandler {
         this.task = new BukkitRunnable(){
             @Override
             public void run(){
-                for (IslandProfile profile : Skyblock.get().getDataHandler().getMap().values()) {
+                for (Profile profile : Skyblock.get().getDataHandler().getMap().values()) {
                     if (profile.getScoreboard() == null) continue;
                     profile.getScoreboard().updateTitle(StringUtil.CC(ConfigEnum.SCOREBOARD_TITLE.getAsString()));
                     profile.getScoreboard().updateLines(createLines(profile, profile.hasIsland()));
@@ -32,7 +32,7 @@ public class ScoreboardHandler {
         this.task.cancel();
     }
 
-    private List<String> createLines(IslandProfile profile, boolean island){
+    private List<String> createLines(Profile profile, boolean island){
         List<String> board = new ArrayList<>();
 
         for (String l : (island
@@ -43,7 +43,7 @@ public class ScoreboardHandler {
         return board;
     }
 
-    public void delScoreboard(IslandProfile profile){
+    public void delScoreboard(Profile profile){
         if (profile.getScoreboard() != null) profile.getScoreboard().delete();
         profile.setScoreboard(null);
     }

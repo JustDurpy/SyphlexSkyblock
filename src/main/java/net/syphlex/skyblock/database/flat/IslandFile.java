@@ -6,8 +6,8 @@ import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
-import net.syphlex.skyblock.util.IslandUtil;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
+import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,7 +37,7 @@ public class IslandFile extends SimpleConfig {
 
             String islandIdentifier = config.getString("island.identifier");
             MemberProfile owner = new MemberProfile(
-                    UUID.fromString(config.getString("island.owner")),
+                    UUID.fromString(config.getString("island.leader")),
                     IslandRole.LEADER);
             Position corner1 = new Position(config.getString("island.corner1"));
             Position corner2 = new Position(config.getString("island.corner2"));
@@ -73,7 +73,7 @@ public class IslandFile extends SimpleConfig {
 
             Island island = new Island(id, islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
-            island.getUpgrades().setGenerator(Skyblock.get().getHandlers().getUpgradeHandler().getOreGenerator(generatorTier));
+            island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
             island.getUpgrades().setSpawnRateMult(spawnRate);
             island.getUpgrades().setSpawnAmtMult(spawnAmt);
             island.getUpgrades().setHarvestMult(harvestRate);
@@ -102,7 +102,7 @@ public class IslandFile extends SimpleConfig {
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
             config.set("island.identifier", island.getIdentifier());
-            config.set("island.owner", island.getLeader().getUuid().toString());
+            config.set("island.leader", island.getLeader().getUuid().toString());
             config.set("island.corner1", island.getCorner1().getAsString());
             config.set("island.corner2", island.getCorner2().getAsString());
             config.set("island.center", island.getCenter().getAsString());

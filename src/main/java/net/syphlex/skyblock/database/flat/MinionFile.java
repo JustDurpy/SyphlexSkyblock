@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.manager.minion.Minion;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -2,7 +2,7 @@ package net.syphlex.skyblock.manager.minion;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.util.Pair;
+import net.syphlex.skyblock.util.data.Pair;
 
 import java.util.ArrayList;
 

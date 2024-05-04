@@ -1,6 +1,6 @@
 package net.syphlex.skyblock.manager.gui.impl.island;
 
-import net.syphlex.skyblock.util.ClickEvent;
+import net.syphlex.skyblock.util.data.ClickEvent;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 
 public class IslandGui extends SimpleGui {

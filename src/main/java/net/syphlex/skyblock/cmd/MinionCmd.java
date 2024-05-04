@@ -2,9 +2,8 @@ package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.minion.Minion;
-import net.syphlex.skyblock.util.PlayerUtil;
-import net.syphlex.skyblock.util.PluginUtil;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.util.utilities.PlayerUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -30,7 +29,7 @@ public class MinionCmd extends SimpleCmd {
             Player target = Bukkit.getPlayer(args[1]);
             Minion.Type type = Skyblock.get().getMinionHandler().getTypeFromName(args[2]);
 
-            if (!StringUtil.isDigit(args[3]))
+            if (!StringUtil.isNumber(args[3]))
                 return;
 
             int amount = Integer.parseInt(args[3]);

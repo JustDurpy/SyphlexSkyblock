@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

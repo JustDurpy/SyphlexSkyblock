@@ -3,9 +3,9 @@ package net.syphlex.skyblock.cmd;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.mine.data.Mine;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
-import net.syphlex.skyblock.util.StringUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.config.Permissions;
 import org.bukkit.Material;
@@ -91,7 +91,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
@@ -119,7 +119,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
@@ -143,12 +143,12 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
 
-        if (!StringUtil.isDigit(args[3])) {
+        if (!StringUtil.isNumber(args[3])) {
             player.sendMessage("The chance must be a number.");
             return;
         }
@@ -183,12 +183,12 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
 
-        if (!StringUtil.isDigit(args[3])) {
+        if (!StringUtil.isNumber(args[3])) {
             player.sendMessage("The chance must be a number.");
             return;
         }
@@ -221,7 +221,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
@@ -249,7 +249,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
@@ -277,7 +277,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[1])) {
+        if (!StringUtil.isNumber(args[1])) {
             player.sendMessage("The id must be a number.");
             return;
         }
@@ -301,7 +301,7 @@ public class MineCmd extends SimpleCmd {
             return;
         }
 
-        if (!StringUtil.isDigit(args[2])) {
+        if (!StringUtil.isNumber(args[2])) {
             player.sendMessage("The id must be a number.");
             return;
         }

@@ -2,7 +2,7 @@ package net.syphlex.skyblock.database.flat;
 
 import net.syphlex.skyblock.manager.mine.data.Mine;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import org.bukkit.Material;
 

@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.manager.gui.impl.island;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.util.ClickEvent;
+import net.syphlex.skyblock.util.data.ClickEvent;
 import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.Material;
@@ -26,7 +26,7 @@ public class IslandDeleteGui extends SimpleGui {
     public void onClickEvent(ClickEvent e) {
         switch (e.getSlot()) {
             case 13:
-                Skyblock.get().getHandlers().getIslandHandler().degenerateIsland(e.getProfile());
+                Skyblock.get().getIslandHandler().degenerateIsland(e.getProfile());
                 closeInventory(e.getProfile().getPlayer());
                 break;
         }

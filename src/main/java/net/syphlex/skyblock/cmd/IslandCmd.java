@@ -6,8 +6,8 @@ import net.syphlex.skyblock.manager.gui.impl.island.IslandDeleteGui;
 import net.syphlex.skyblock.manager.gui.impl.island.IslandGui;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.IslandUtil;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.Bukkit;
@@ -15,7 +15,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class IslandCmd extends SimpleCmd {
 
@@ -41,7 +40,7 @@ public class IslandCmd extends SimpleCmd {
     @Override
     public void handleCmd(Player player, String[] args) {
 
-        final IslandProfile profile = Skyblock.get().getDataHandler().get(player);
+        final Profile profile = Skyblock.get().getDataHandler().get(player);
 
         if (args.length > 0) {
 
@@ -68,7 +67,6 @@ public class IslandCmd extends SimpleCmd {
                     player.sendMessage(IslandUtil.printGrid());
                     break;
                 default:
-
                     if (profile.hasIsland()) {
                         Skyblock.get().getGuiHandler().openGui(profile, new IslandGui());
                     } else {
@@ -85,7 +83,7 @@ public class IslandCmd extends SimpleCmd {
         }
     }
 
-    private void handleJoin(IslandProfile profile, String[] args){
+    private void handleJoin(Profile profile, String[] args){
 
         if (args.length != 2) {
             Messages.USAGE.usage("island join <player>");
@@ -101,7 +99,7 @@ public class IslandCmd extends SimpleCmd {
         InviteRequest request = null;
 
         if (Bukkit.getPlayer(islandToJoin) != null) {
-            IslandProfile inviterProfile = Skyblock.get().getDataHandler().get(Bukkit.getPlayer(islandToJoin));
+            Profile inviterProfile = Skyblock.get().getDataHandler().get(Bukkit.getPlayer(islandToJoin));
             request = profile.getIslandInvite(inviterProfile.getIsland());
         }
 
@@ -123,7 +121,7 @@ public class IslandCmd extends SimpleCmd {
         profile.getPlayer().sendMessage("You have joined " + island.getLeader().getUsername() + "'s island.");
     }
 
-    private void handleLeave(IslandProfile profile){
+    private void handleLeave(Profile profile){
 
         if (!profile.hasIsland()) {
             Messages.DOES_NOT_HAVE_ISLAND.send(profile);
@@ -138,7 +136,7 @@ public class IslandCmd extends SimpleCmd {
 
     }
 
-    private void handleInvite(IslandProfile profile, String[] args){
+    private void handleInvite(Profile profile, String[] args){
 
         if (args.length != 2) {
             Messages.USAGE.usage("island invite <player>").send(profile);
@@ -157,7 +155,7 @@ public class IslandCmd extends SimpleCmd {
         }
 
         Island island = profile.getIsland();
-        IslandProfile targetProfile = Skyblock.get().getDataHandler().get(target);
+        Profile targetProfile = Skyblock.get().getDataHandler().get(target);
 
         if (island.isApartOfIsland(target.getUniqueId())) {
             Messages.CANT_INVITE_MEMBERS.send(profile);
@@ -185,7 +183,7 @@ public class IslandCmd extends SimpleCmd {
         Messages.RECEIVED_ISLAND_INVITE.replace("%player%", profile.getPlayer().getName()).send(targetProfile);
     }
 
-    private void handleHome(IslandProfile profile){
+    private void handleHome(Profile profile){
         if (!profile.hasIsland()) {
             Messages.DOES_NOT_HAVE_ISLAND.send(profile);
             return;
@@ -195,7 +193,7 @@ public class IslandCmd extends SimpleCmd {
         Messages.TELEPORTED_TO_ISLAND.send(profile);
     }
 
-    private void handleDelete(IslandProfile profile){
+    private void handleDelete(Profile profile){
         if (!profile.isIslandLeader()) {
             Messages.NOT_ISLAND_LEADER.send(profile);
             return;
@@ -204,7 +202,7 @@ public class IslandCmd extends SimpleCmd {
         Skyblock.get().getGuiHandler().openGui(profile, new IslandDeleteGui());
     }
 
-    private void handleCreate(IslandProfile profile){
+    private void handleCreate(Profile profile){
         Skyblock.get().getIslandHandler().generateIsland(profile);
     }
 

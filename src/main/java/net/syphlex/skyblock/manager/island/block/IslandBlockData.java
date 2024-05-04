@@ -2,7 +2,7 @@ package net.syphlex.skyblock.manager.island.block;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.util.data.Position;
 
 @Getter
 @Setter

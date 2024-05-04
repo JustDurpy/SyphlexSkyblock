@@ -1,18 +1,5 @@
 package net.syphlex.skyblock.manager.island;
 
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.DataException;
 import eu.decentsoftware.holograms.api.DHAPI;
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
@@ -22,9 +9,9 @@ import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.data.IslandGrid;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
-import net.syphlex.skyblock.manager.profile.IslandProfile;
-import net.syphlex.skyblock.util.IslandUtil;
-import net.syphlex.skyblock.util.Position;
+import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
+import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.*;
@@ -32,15 +19,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
@@ -66,8 +49,6 @@ public class IslandHandler {
 
     public void onDisable() {
         Skyblock.get().getThreadHandler().fire(() -> {
-
-
 
             for (File f : this.islandFile.getFile().listFiles())
                 f.delete();
@@ -168,7 +149,7 @@ public class IslandHandler {
         });
     }
 
-    public void degenerateIsland(IslandProfile profile){
+    public void degenerateIsland(Profile profile){
 
         long started = System.currentTimeMillis();
 
@@ -198,7 +179,7 @@ public class IslandHandler {
         //this.grid.getGrid()[id[0]][id[1]] = null;
     }
 
-    public void generateIsland(IslandProfile profile) {
+    public void generateIsland(Profile profile) {
 
         Player player = profile.getPlayer();
 
@@ -210,8 +191,6 @@ public class IslandHandler {
         }
 
         int[] nextSpot = this.grid.getNextSpot();
-
-        player.sendMessage("your spot: " + nextSpot[0] + " : " + nextSpot[1]);
 
         Position center = new Position(Skyblock.get().getIslandWorld(),
                 ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5,
@@ -243,14 +222,12 @@ public class IslandHandler {
 
         profile.setIsland(island);
 
-        island.teleport(player);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Skyblock.get(), () -> {
+            island.teleport(player);
+        }, 20L);
 
         profile.getPlayer().sendMessage(Messages.ISLAND_CREATE.get()
                 .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
-
-        int[] nextNext = this.grid.getNextSpot();
-
-        player.sendMessage("next spot: " + nextNext[0] + " : " + nextNext[1]);
     }
 
     public void generateIslandBorder(Island island, Player player, Color color) {

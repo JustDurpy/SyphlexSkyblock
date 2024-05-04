@@ -1,12 +1,13 @@
 name: SyphlexSkyblock
 author: iDurpy
 main: net.syphlex.skyblock.Skyblock
-version: 0.0.5b
+version: 0.0.6b
 api-version: 1.13
 
 depend:
   - PlaceholderAPI
   - DecentHolograms
+  - NBTAPI
 
 dependencies:
   server:
@@ -17,8 +18,12 @@ dependencies:
     DecentHolograms:
       load: BEFORE
       required: true
+    NBTAPI:
+      load: BEFORE
+      required: true
 
 commands:
+  syphlexskyblock:
   island:
     aliases: [is]
   mine:

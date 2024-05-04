@@ -11,7 +11,6 @@ import java.util.ArrayList;
 @Getter
 public class IslandUpgradeHandler {
 
-
     private final ArrayList<IslandOreGenerator> oreGenerators = new ArrayList<>();
     private final ArrayList<SpecialBlockData> specialBlocks = new ArrayList<>();
 

@@ -1,6 +1,7 @@
-package net.syphlex.skyblock.util;
+package net.syphlex.skyblock.util.utilities;
 
 import lombok.experimental.UtilityClass;
+import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +13,28 @@ import java.util.Random;
 
 @UtilityClass
 public class PluginUtil {
+
+    public double distanceXZ(Location l1, Location l2){
+        return Math.sqrt(Math.pow(l2.getX() - l1.getX(), 2.0) + Math.pow(l2.getZ() - l1.getZ(), 2.0));
+    }
+
+    public Material getMaterial(String s){
+        Material material = Material.getMaterial(s);
+        if (material == null) {
+            Skyblock.log("ERROR: Material: '" + s + "' IS UNKNOWN OR NOT A REAL MATERIAL");
+            Skyblock.log("ERROR: DEFAULTING TO AIR");
+        }
+        return material == null ? Material.AIR : material;
+    }
+
+    public Material getMaterial(String s, Material defaultMat){
+        Material material = Material.getMaterial(s);
+        if (material == null) {
+            Skyblock.log("ERROR: Material: '" + s + "' IS UNKNOWN OR NOT A REAL MATERIAL");
+            Skyblock.log("ERROR: DEFAULTING TO " + (defaultMat == null ? "NULL" : defaultMat.name()));
+        }
+        return material == null ? defaultMat : material;
+    }
 
     public Material generateRandomMineBlock(List<MineBlockData> mineBlocks) {
         List<MineBlockData> compositions = new ArrayList<>(mineBlocks);
