@@ -1,13 +1,14 @@
 name: SyphlexSkyblock
 author: iDurpy
 main: net.syphlex.skyblock.Skyblock
-version: 0.0.6b
+version: 0.0.7b
 api-version: 1.13
 
 depend:
   - PlaceholderAPI
   - DecentHolograms
   - NBTAPI
+  - Vault
 
 dependencies:
   server:
@@ -21,6 +22,9 @@ dependencies:
     NBTAPI:
       load: BEFORE
       required: true
+    Vault:
+      load: BEFORE
+      required: true
 
 commands:
   syphlexskyblock:
@@ -30,3 +34,7 @@ commands:
     aliases: [mines]
   minion:
     aliases: [minions]
+  enchanter:
+    aliases: [ce, customenchants, customenchantment, customenchant]
+  mobcoins:
+    aliases: [mc, mobcoin]

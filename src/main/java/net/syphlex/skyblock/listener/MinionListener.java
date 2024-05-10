@@ -1,11 +1,13 @@
 package net.syphlex.skyblock.listener;
 
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.manager.gui.impl.minion.ManageMinionGui;
 import net.syphlex.skyblock.manager.minion.Minion;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.utilities.PlayerUtil;
 import net.syphlex.skyblock.util.utilities.PluginUtil;
 import net.syphlex.skyblock.util.utilities.StringUtil;
+import net.syphlex.skyblock.util.utilities.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -56,11 +58,12 @@ public class MinionListener implements Listener {
 
                 e.setCancelled(true);
 
-                if (!m.getOwner().equals(p.getUniqueId())) {
-                    p.sendMessage(StringUtil.CC("That minion does not belong to you"));
-                    return;
-                }
+                //if (!m.getOwner().equals(p.getUniqueId())) {
+                //    p.sendMessage(StringUtil.CC("That minion does not belong to you"));
+                //    return;
+                //}
 
+                Skyblock.get().getGuiHandler().openGui(profile, new ManageMinionGui(m));
                 //new ManageMinionGui(m).open(e.getPlayer());
             }
         }
@@ -94,6 +97,9 @@ public class MinionListener implements Listener {
             //if (!(m instanceof SlayerMinion)
             //        || !(m.hasChest()))
             //    continue;
+
+            if (!WorldUtil.isWorld(l.getWorld(), m.getPosition().getWorld()))
+                continue;
 
             if (l.distance(m.getPosition().getAsBukkit()) >= m.getData().getRadius() * 3)
                 continue;
@@ -138,8 +144,13 @@ public class MinionListener implements Listener {
         Location placed = e.getClickedBlock().getLocation().add(0.5, 1, 0.5);
 
         for (Minion m : Skyblock.get().getMinionHandler().getMinions()) {
+
+            if (!WorldUtil.isWorld(m.getPosition().getWorld(), placed.getWorld()))
+                continue;
+
             if (m.getPosition().getAsBukkit().distance(placed) < m.getData().getRadius() * 3) {
                 p.sendMessage("This minion is too close to another minion!");
+                e.setCancelled(true);
                 return;
             }
         }
@@ -153,6 +164,7 @@ public class MinionListener implements Listener {
                 for (int z = -1; z <= 1; z += 1) {
                     if (placed.clone().add(x, 0, z).getBlock().getType() != Material.AIR) {
                         p.sendMessage(StringUtil.CC("&cTo place a miner minion you must clear a 3x3 area."));
+                        e.setCancelled(true);
                         return;
                     }
                 }
@@ -161,7 +173,7 @@ public class MinionListener implements Listener {
 
         Skyblock.get().getMinionHandler().create(p, item, placed, type);
         p.setItemInHand(PlayerUtil.removeItem(item, 1));
-        p.updateInventory();
+        //p.updateInventory();
         e.setCancelled(true);
     }
 }

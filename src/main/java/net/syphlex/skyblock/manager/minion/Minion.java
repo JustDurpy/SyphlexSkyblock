@@ -163,6 +163,10 @@ public abstract class Minion {
         this.armorStand.setSmall(true);
     }
 
+    public boolean canUpgrade(){
+        return this.level + 1 <= this.getData().getMaxLvl();
+    }
+
     public MinionData getData(){
         return Skyblock.get().getMinionHandler().getMinionDataOf(this);
     }

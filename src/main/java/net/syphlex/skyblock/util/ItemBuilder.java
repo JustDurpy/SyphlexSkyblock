@@ -4,6 +4,7 @@ import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,6 +16,7 @@ public class ItemBuilder {
     private List<String> lore = new ArrayList<>();
     private Material material;
     private boolean unbreakable = false;
+    private boolean glowing = false;
     private int amount = 1;
     private ArrayList<Pair<Enchantment, Integer>> enchantments = new ArrayList<>();
 
@@ -40,6 +42,11 @@ public class ItemBuilder {
 
     public ItemBuilder setUnbreakable(boolean unbreakable){
         this.unbreakable = unbreakable;
+        return this;
+    }
+
+    public ItemBuilder setGlowing(boolean glowing){
+        this.glowing = glowing;
         return this;
     }
 
@@ -70,6 +77,12 @@ public class ItemBuilder {
         meta.setDisplayName(StringUtil.CC(this.displayName == null ? this.material.name() : this.displayName));
         meta.setLore(StringUtil.CC(this.lore));
         meta.setUnbreakable(this.unbreakable);
+
+        if (this.glowing) {
+            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
         item.setItemMeta(meta);
         return item;
     }

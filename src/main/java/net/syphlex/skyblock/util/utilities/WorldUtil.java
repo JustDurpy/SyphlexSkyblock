@@ -22,7 +22,11 @@ public class WorldUtil {
         Bukkit.createWorld(worldCreator);
     }
 
-    public boolean isWorld(World world1, World world2){
+    public boolean isWorld(World world1, World world2) {
+
+        if (world1 == null || world2 == null)
+            return false;
+
         return world1.getName().equalsIgnoreCase(world2.getName());
     }
 

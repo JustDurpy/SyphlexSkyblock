@@ -19,6 +19,9 @@ public class Position {
 
         if (s.equalsIgnoreCase("null")){
             this.world = Skyblock.get().getIslandWorld();
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
             return;
         }
 
@@ -105,7 +108,10 @@ public class Position {
     }
 
     public String getAsString() {
-        return Skyblock.get().getIslandWorld().getName() + ";"
+        String name = Skyblock.get().getIslandWorld().getName();
+        if (this.world != null)
+            name = this.world.getName();
+        return name + ";"
                 + this.x + ";"
                 + this.y + ";"
                 + this.z;

@@ -2,7 +2,7 @@ package net.syphlex.skyblock.listener;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.profile.Profile;
-import net.syphlex.skyblock.util.data.ClickEvent;
+import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

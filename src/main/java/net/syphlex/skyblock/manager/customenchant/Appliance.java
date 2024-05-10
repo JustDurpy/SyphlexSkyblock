@@ -5,6 +5,7 @@ public enum Appliance {
     AXE,
     PICKAXE,
     SHOVEL,
+    HOE,
     ARMOR,
     HELMET,
     BOOTS,

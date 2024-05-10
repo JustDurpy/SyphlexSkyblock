@@ -33,7 +33,7 @@ public class EnchantHandler {
     }
 
     public void purchaseRune(Player player){
-        float cost = this.enchantSettingsConfig.getRuneCost();
+        float cost = Skyblock.get().getSettingsFile().getCeConfigData().runeCost;
         float exp = player.getExp();
         if (exp >= cost) {
             player.setExp(player.getExp() - cost);
@@ -69,10 +69,10 @@ public class EnchantHandler {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || meta.getLore() == null)
             return false;
-        if (this.enchantSettingsConfig.getShardItem().getItemMeta() == null
-                || this.enchantSettingsConfig.getShardItem().getItemMeta().getLore() == null)
+        if (Skyblock.get().getSettingsFile().getCeConfigData().shardItem.getItemMeta() == null
+                || Skyblock.get().getSettingsFile().getCeConfigData().shardItem.getItemMeta().getLore() == null)
             return false;
-        List<String> lore = this.enchantSettingsConfig.getShardItem().getItemMeta().getLore();
+        List<String> lore = Skyblock.get().getSettingsFile().getCeConfigData().shardItem.getItemMeta().getLore();
         lore.replaceAll(s -> s
                 .replace("%success%", String.valueOf(success))
                 .replace("%destroy%", String.valueOf(destroy)));
@@ -83,13 +83,13 @@ public class EnchantHandler {
     }
 
     public void giveAngelDust(Player player) {
-        ItemStack item = this.enchantSettingsConfig.getAngelDust().clone();
+        ItemStack item = Skyblock.get().getSettingsFile().getCeConfigData().angelDust.clone();
         ItemMeta meta = item.getItemMeta();
         if (meta == null || meta.getLore() == null)
             return;
         List<String> lore = meta.getLore();
-        int max = this.enchantSettingsConfig.getAngelDustMax();
-        int min = this.enchantSettingsConfig.getAngelDustMin();
+        int max = Skyblock.get().getSettingsFile().getCeConfigData().angelDustMax;
+        int min = Skyblock.get().getSettingsFile().getCeConfigData().angelDustMin;
         int success = (int) (Math.random() * (max - min) + min);
         meta.setDisplayName(meta.getDisplayName()
                 .replace("%success%",
@@ -102,7 +102,7 @@ public class EnchantHandler {
         nbt.setInteger(ANGEL_DUST_NBT_KEY, success);
         nbt.applyNBT(item);
         player.getInventory().addItem(item);
-        player.updateInventory();
+        //player.updateInventory();
     }
 
     public int getAngelSuccess(ItemStack item){
@@ -179,12 +179,12 @@ public class EnchantHandler {
     }
 
     public void giveWhiteScroll(Player player) {
-        ItemStack item = this.enchantSettingsConfig.getWhiteScrollItem().clone();
+        ItemStack item = Skyblock.get().getSettingsFile().getCeConfigData().whiteScrollItem.clone();
         NBTItem nbt = new NBTItem(item);
         nbt.setString(WHITE_SCROLL_NBT_KEY, "item");
         nbt.applyNBT(item);
         player.getInventory().addItem(item);
-        player.updateInventory();
+        //player.updateInventory();
     }
 
     public List<CustomEnchant> getAllEnchantsInCategory(Category category){
@@ -234,14 +234,14 @@ public class EnchantHandler {
         int r = (int) (Math.random() * enchantsInCategory.size());
         CustomEnchant randomEnchant = enchantsInCategory.get(r);
         player.getInventory().addItem(createShard(randomEnchant));
-        player.updateInventory();
+        //player.updateInventory();
     }
 
     private ItemStack createShard(CustomEnchant enchant){
 
         Category category = enchant.getCategory();
 
-        ItemStack configItem = this.enchantSettingsConfig.getShardItem().clone();
+        ItemStack configItem = Skyblock.get().getSettingsFile().getCeConfigData().shardItem.clone();
         ItemMeta meta = configItem.getItemMeta();
 
         if (meta == null)
@@ -298,7 +298,7 @@ public class EnchantHandler {
 
     public void giveRune(Player player){
 
-        ItemStack configItem = this.enchantSettingsConfig.getRuneItem().clone();
+        ItemStack configItem = Skyblock.get().getSettingsFile().getCeConfigData().runeItem.clone();
         ItemMeta meta = configItem.getItemMeta();
 
         if (meta == null)
@@ -312,7 +312,7 @@ public class EnchantHandler {
         nbt.applyNBT(configItem);
 
         player.getInventory().addItem(configItem);
-        player.updateInventory();
+        //player.updateInventory();
     }
 
     public boolean enchant(Player player, ItemStack shard, ItemStack item, CustomEnchant enchant) {
@@ -321,7 +321,7 @@ public class EnchantHandler {
             return false;
 
         if (!appliable(enchant.getAppliances(), item)) {
-            player.sendMessage(Messages.ENCHANT_CANT_APPLY_ITEM.get());
+            //player.sendMessage(Messages.ENCHANT_CANT_APPLY_ITEM.get());
             return false;
         }
 
@@ -352,7 +352,7 @@ public class EnchantHandler {
         }
 
         if (updateLvl > enchant.getMaxLvl()) {
-            player.sendMessage(Messages.ENCHANT_ALREADY_MAX_LVL.get());
+            //player.sendMessage(Messages.ENCHANT_ALREADY_MAX_LVL.get());
             return false;
         }
 
@@ -371,7 +371,7 @@ public class EnchantHandler {
         }
 
         if (destroyDiff < successDiff) {
-            player.sendMessage(Messages.ENCHANT_UNSUCCESSFUL.get());
+            //player.sendMessage(Messages.ENCHANT_UNSUCCESSFUL.get());
             return true;
         }
 
@@ -393,8 +393,8 @@ public class EnchantHandler {
         nbt.setInteger(enchant.getName(), updateLvl);
         nbt.applyNBT(item);
 
-        player.updateInventory();
-        player.sendMessage(Messages.ENCHANT_SUCCESS.get());
+        //player.updateInventory();
+        //player.sendMessage(Messages.ENCHANT_SUCCESS.get());
         return true;
     }
 
@@ -408,7 +408,7 @@ public class EnchantHandler {
         NBTItem nbt = new NBTItem(item);
 
         for (CustomEnchant e : this.enchants) {
-            if (nbt.getInteger(e.getName()) == null)
+            if (!itemHasEnchant(item, e))
                 continue;
             enchants.add(new Pair<>(e, nbt.getInteger(e.getName())));
         }

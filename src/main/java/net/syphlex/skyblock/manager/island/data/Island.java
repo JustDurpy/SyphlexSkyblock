@@ -1,5 +1,6 @@
 package net.syphlex.skyblock.manager.island.data;
 
+import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
@@ -8,6 +9,8 @@ import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.MathHelper;
+import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.data.Position;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -26,10 +29,16 @@ public class Island {
     private int[] id;
     private MemberProfile leader;
     private final Position corner1, corner2, center;
-    private Position home;
+    private Position home, warp;
     private List<MemberProfile> members = new ArrayList<>();
     private ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
     private final IslandUpgradeData upgrades = new IslandUpgradeData();
+
+    private final ImmutableList<IslandRole> roles = ImmutableList.of(
+            IslandRole.VISITOR,
+            IslandRole.MEMBER,
+            IslandRole.MODERATOR,
+            IslandRole.LEADER);
 
     public Island(int[] id, String identifier,
                   MemberProfile leader, Position corner1,
@@ -56,9 +65,30 @@ public class Island {
         this.center = center;
     }
 
+    public void refreshBorder(Player p, Color color){
+        Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
+        Skyblock.get().getIslandHandler().generateIslandBorder(this, p, color);
+    }
+
+    public IslandRole getLeaderRole(){
+        return this.roles.get(3);
+    }
+
+    public IslandRole getModeratorRole(){
+        return this.roles.get(2);
+    }
+
+    public IslandRole getMemberRole(){
+        return this.roles.get(1);
+    }
+
+    public IslandRole getVisitorRole(){
+        return this.roles.get(0);
+    }
+
     public void addMember(Profile profile){
         this.members.add(new MemberProfile(profile.getPlayer().getUniqueId()));
-        profile.getMemberProfile().setRole(IslandRole.DEFAULT);
+        profile.getMemberProfile().setRole(IslandRole.MEMBER);
     }
 
     public void removeMember(UUID uuid){
@@ -128,17 +158,8 @@ public class Island {
     }
 
     public boolean isInside(Location location){
-
-        final double minX = Math.min(corner1.getX(), corner2.getX());
-        final double minY = Math.min(corner1.getY(), corner2.getY());
-        final double minZ = Math.min(corner1.getZ(), corner2.getZ());
-
-        final double maxX = Math.max(corner1.getX(), corner2.getX());
-        final double maxY = Math.max(corner1.getY(), corner2.getY());
-        final double maxZ = Math.max(corner1.getZ(), corner2.getZ());
-
-        return location.getX() >= minX && location.getY() >= minY && location.getZ() >= minZ
-                && location.getX() <= maxX && location.getY() <= maxY && location.getZ() <= maxZ;
+        return location.getX() >= getMinX() && location.getY() >= getMinY() && location.getZ() >= getMinZ()
+                && location.getX() <= getMaxX() && location.getY() <= getMaxY() && location.getZ() <= getMaxZ();
     }
 
     public boolean isInside(double x, double z){
@@ -146,7 +167,7 @@ public class Island {
     }
 
     public int getMinX(){
-        return Math.min(corner1.getBlockX(), corner2.getBlockX());
+        return MathHelper.floor_double(Math.min(corner1.getBlockX(), corner2.getBlockX()) - (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 
     public int getMinY(){
@@ -154,11 +175,11 @@ public class Island {
     }
 
     public int getMinZ(){
-        return Math.min(corner1.getBlockZ(), corner2.getBlockZ());
+        return MathHelper.floor_double(Math.min(corner1.getBlockZ(), corner2.getBlockZ()) - (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 
     public int getMaxX(){
-        return Math.max(corner1.getBlockX(), corner2.getBlockX());
+        return MathHelper.floor_double(Math.max(corner1.getBlockX(), corner2.getBlockX()) + (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 
     public int getMaxY(){
@@ -166,6 +187,6 @@ public class Island {
     }
 
     public int getMaxZ(){
-        return Math.max(corner1.getBlockZ(), corner2.getBlockZ());
+        return MathHelper.floor_double(Math.max(corner1.getBlockZ(), corner2.getBlockZ()) + (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 }

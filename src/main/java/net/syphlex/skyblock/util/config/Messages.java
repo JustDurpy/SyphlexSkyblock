@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 @Getter
 public enum Messages {
-    USAGE("&Error: Usage: /%usage%"),
+    USAGE("&cUsage: /%usage%"),
     NO_PERMISSION("&cError: You do not have permission to issue this."),
     PLAYER_NOT_FOUND("&cError: That player is not online."),
     ISLAND_CREATE("&aYou have successfully created an island. (%time%ms)"),
@@ -16,6 +16,7 @@ public enum Messages {
     ISLAND_SETHOME("&aYou have set your island home."),
     ALREADY_HAS_ISLAND("&cError: You are already apart of an island."),
     DOES_NOT_HAVE_ISLAND("&cError: You do not have an island."),
+    ISLAND_NOT_FOUND("&cError: That island was not found."),
     NOT_ISLAND_LEADER("&cError: You must be the leader of the island to issue this."),
     NO_ISLAND_PERMISSION("&cError: You must have a higher role in the island to issue this."),
     MUST_BE_AT_ISLAND("&cError: You must be at your island to issue this."),
@@ -28,7 +29,10 @@ public enum Messages {
     LEADER_LEAVE_ISLAND("&cError: Leaders must either transfer island leadership or disband their island."),
     NO_INVITE_FROM_ISLAND("&cError: There was no invite from this island or the invite has expired."),
     WAIT_INVITE("&cError: You must wait before inviting this player again."),
-    MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)");
+    ISLAND_UPGRADE_INSUFFICIENT_FUNDS("&cError: You do not have enough money to purchase this upgrade."),
+    ISLAND_UPGRADE_SUCCESS("&aYou have successfully upgraded your island!"),
+    MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)"),
+    DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins.");
 
     private String msg;
 

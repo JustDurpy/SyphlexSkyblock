@@ -38,12 +38,14 @@ public class Profile {
     }
 
     public void joinIsland(Island island){
+
         if (hasIsland())
             return;
+
+        this.memberProfile.setRole(IslandRole.MEMBER);
+
         this.island = island;
-        this.island.getMembers().add(new MemberProfile(
-                this.player.getUniqueId(),
-                IslandRole.DEFAULT));
+        this.island.getMembers().add(this.memberProfile);
         this.island.teleport(this.player);
     }
 
@@ -58,6 +60,8 @@ public class Profile {
 
         this.island.getMembers().remove(profile);
         this.island = null;
+
+        this.memberProfile.setRole(IslandRole.VISITOR);
 
         this.player.teleport(Skyblock.get().getMainSpawn());
     }

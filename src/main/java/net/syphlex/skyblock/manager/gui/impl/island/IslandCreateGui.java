@@ -1,7 +1,7 @@
 package net.syphlex.skyblock.manager.gui.impl.island;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.util.data.ClickEvent;
+import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.Material;

@@ -15,7 +15,7 @@ public class MemberProfile {
 
     public MemberProfile(UUID uuid){
         this.uuid = uuid;
-        this.role = IslandRole.DEFAULT;
+        this.role = IslandRole.VISITOR;
     }
 
     public MemberProfile(UUID uuid, IslandRole rank){

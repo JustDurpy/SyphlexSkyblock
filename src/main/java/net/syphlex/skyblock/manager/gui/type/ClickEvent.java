@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.util.data;
+package net.syphlex.skyblock.manager.gui.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

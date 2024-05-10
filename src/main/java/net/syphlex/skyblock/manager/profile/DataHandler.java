@@ -3,38 +3,46 @@ package net.syphlex.skyblock.manager.profile;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.ProfileFile;
 import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataHandler {
     private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
-    private ProfileFile profileFile;
+    private final ProfileFile profileFile = new ProfileFile();
 
     public void onEnable(){
-        this.profileFile = new ProfileFile();
         for (Player p : Bukkit.getOnlinePlayers())
             join(p);
     }
 
     public void onDisable(){
-        for (Profile profile : this.profileMap.values()) {
+        for (Profile profile : this.profileMap.values())
             quit(profile.getPlayer());
-        }
     }
 
     public void join(Player player) {
-        Skyblock.get().getThreadHandler().fire(() -> {
+        //Skyblock.get().getThreadHandler().fire(() -> {
             Profile profile = new Profile(player);
             this.profileMap.put(player.getUniqueId(), profile);
-            this.profileFile.read(get(player));
-        });
+            this.profileFile.read(profile);
+
+            if (profile.getIsland() != null) {
+                if (profile.isIslandLeader()) {
+                    profile.getMemberProfile().setRole(IslandRole.LEADER);
+                } else {
+                    profile.getMemberProfile().setRole(profile.getIsland().getMember(player.getUniqueId()).getRole());
+                }
+            }
+        //});
 
         if (!WorldUtil.isWorld(player.getWorld(), Skyblock.get().getIslandWorld()))
             return;

@@ -6,6 +6,8 @@ import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
+import net.syphlex.skyblock.manager.island.permissions.IslandPermission;
+import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
@@ -35,6 +37,11 @@ public class IslandFile extends SimpleConfig {
 
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
+            if (config.get("island") == null) {
+                f.delete();
+                continue;
+            }
+
             String islandIdentifier = config.getString("island.identifier");
             MemberProfile owner = new MemberProfile(
                     UUID.fromString(config.getString("island.leader")),
@@ -54,11 +61,9 @@ public class IslandFile extends SimpleConfig {
 
             if (config.getStringList("island.members").size() > 0) {
                 for (String uuid : config.getStringList("island.members")) {
-                    members.add(new MemberProfile(
-                            UUID.fromString(uuid),
-                            IslandRole.get(config.getString("island.members."
-                                    + UUID.fromString(uuid) + ".role"))
-                    ));
+                    String[] split = uuid.split(":");
+                    members.add(new MemberProfile(UUID.fromString(split[0]),
+                            IslandRole.get(split[1])));
                 }
             }
 
@@ -78,6 +83,19 @@ public class IslandFile extends SimpleConfig {
             island.getUpgrades().setSpawnAmtMult(spawnAmt);
             island.getUpgrades().setHarvestMult(harvestRate);
             island.getUpgrades().setSize(size);
+
+            for (IslandRole role : island.getRoles()) {
+                for (IslandPermission permission : IslandPermission.values()) {
+
+                    if (config.get("island.roles." + role.getIdentifier() + "." + permission.getName()) == null)
+                        continue;
+
+                    boolean value = config.getBoolean("island.roles."
+                            + role.getIdentifier() + "." + permission.getName());
+
+                    role.getPermissions().get(role.getPermissionIndex(permission)).setY(value);
+                }
+            }
 
             islands.add(island);
         }
@@ -117,9 +135,7 @@ public class IslandFile extends SimpleConfig {
             List<String> uuids = new ArrayList<>();
             if (island.getMembers().size() > 0) {
                 for (MemberProfile profiles : island.getMembers()) {
-                    uuids.add(profiles.getUuid().toString());
-                    config.set("island.members." + profiles.getUuid().toString() + ".role",
-                            profiles.getRole().getIdentifier());
+                    uuids.add(profiles.getUuid().toString() + ":" + profiles.getRole().getIdentifier());
                 }
             }
             config.set("island.members", uuids);
@@ -132,6 +148,12 @@ public class IslandFile extends SimpleConfig {
                 }
             }
             config.set("island.stored-blocks", storedBlocks);
+
+            for (IslandRole role : island.getRoles()) {
+                for (Pair<IslandPermission, Boolean> perm : role.getPermissions()) {
+                    config.set("island.roles." + role.getIdentifier() + "." + perm.getX().getName(), perm.getY());
+                }
+            }
 
             config.save(f);
 

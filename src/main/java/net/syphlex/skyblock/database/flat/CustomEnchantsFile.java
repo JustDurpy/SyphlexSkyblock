@@ -10,7 +10,7 @@ public class CustomEnchantsFile extends SimpleConfig {
 
 
     public CustomEnchantsFile() {
-        super("customenchants.yml", false);
+        super("/customenchants.yml", false);
     }
 
     @SuppressWarnings("deprecation")
@@ -69,7 +69,7 @@ public class CustomEnchantsFile extends SimpleConfig {
                 " - TOOLS",
                 "-----------------------------------------------",
                 "Effects:",
-                " - POTION : 'POTION:%player%:%duration%:%amplifier%' - apply a potion effect",
+                " - POTION : 'POTION:%player%:%potion-effect%:%duration%:%amplifier%' - apply a potion effect",
                 " - LIGHTNING : 'LIGHTNING:%player%' - strike lightning",
                 " - INVINCIBLE : 'INVINCIBLE:%player%:%duration%' - make an entity invincible",
                 " - FIRE : 'FIRE:%player%:%duration%' - set an entity on fire",
@@ -89,6 +89,7 @@ public class CustomEnchantsFile extends SimpleConfig {
                 " - BLACKHOLE : 'BLACKHOLE:%victim%:%radius%:%damage%:%duration%' - create a blackhole at %player% or %victim%",
                 " - DURABILITY : 'DURABILITY:%amount%' - add durability to item with enchant",
                 " - TRAY : 'TRAY:%radius%:%blocks%' - mine out blocks in a certain radius",
+                " - REPLANT : 'REPLANT' - replants crops mined",
                 "").toString().replace(",", "\n"));
         config.options().copyHeader(true);
         config.options().copyDefaults(true);

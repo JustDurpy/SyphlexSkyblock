@@ -35,20 +35,32 @@ public class IslandHandler {
     private IslandFile islandFile;
     private IslandGrid grid;
 
+    public IslandHandler(){
+    }
+
     public void onEnable(){
-        Skyblock.get().getThreadHandler().fire(() -> {
-            this.islandFile = new IslandFile();
-            ArrayList<Island> islandList = this.islandFile.read();
 
-            this.grid = new IslandGrid(islandList.size() + 1);
 
-            for (Island island : islandList)
-                this.grid.insert(island, island.getId());
-        });
+        final long started = System.currentTimeMillis();
+
+        Skyblock.info("Reading all island data from flat file database...");
+
+        this.islandFile = new IslandFile();
+        ArrayList<Island> islandList = this.islandFile.read();
+
+        this.grid = new IslandGrid(islandList.size() + 1);
+
+        for (Island island : islandList)
+            this.grid.insert(island, island.getId());
+
+        Skyblock.info("Successfully inserted and loaded all islands into virtual grid in "
+                + (System.currentTimeMillis() - started)
+                + "ms . (size=" + this.grid.length() + "x" + this.grid.length() + ")"
+                + " (islands=" + islandList.size() + ")");
     }
 
     public void onDisable() {
-        Skyblock.get().getThreadHandler().fire(() -> {
+        //Skyblock.get().getThreadHandler().fire(() -> {
 
             for (File f : this.islandFile.getFile().listFiles())
                 f.delete();
@@ -60,7 +72,7 @@ public class IslandHandler {
                 }
             }
 
-        });
+        //});
     }
 
     private void deleteHolograms(Island island){
@@ -209,7 +221,7 @@ public class IslandHandler {
                 new MemberProfile(player.getUniqueId(), IslandRole.LEADER),
                 corner1, corner2, center);
 
-        island.setHome(island.getCenter().clone().add(0, 0.5, 0));
+        island.setHome(island.getCenter().clone());
 
         Skyblock.get().getSchematicHandler().pasteSchematic(
                 island, Skyblock.get().getSchematicHandler().getSchematic("default"));
@@ -220,6 +232,7 @@ public class IslandHandler {
 
         this.grid.insert(island, nextSpot);
 
+        profile.getMemberProfile().setRole(IslandRole.LEADER);
         profile.setIsland(island);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(Skyblock.get(), () -> {

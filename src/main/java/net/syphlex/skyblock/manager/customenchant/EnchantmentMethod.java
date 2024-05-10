@@ -8,6 +8,7 @@ import net.syphlex.skyblock.util.utilities.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -54,14 +55,16 @@ public class EnchantmentMethod {
             LivingEntity targetVar = null;
 
             if (entity == null) {
-                //Skyblock.log();("ERROR: " + this.enchantName + " enchantments applied to does not have a victim variable");
-                //Skyblock.log();("ERROR: automatically forwarding to player.");
+                //Skyblock.log("ERROR: " + this.enchantName + " enchantments applied to does not have a victim variable");
+                //Skyblock.log("ERROR: automatically forwarding to player.");
                 targetVar = player;
             }
+
             if (targetString.equalsIgnoreCase("%victim%")
                     || type.equalsIgnoreCase("mob_drop")) {
                 targetVar = entity;
             }
+
             if (targetString.equalsIgnoreCase("%player%")) {
                 targetVar = player;
             }
@@ -82,8 +85,22 @@ public class EnchantmentMethod {
 
                 String potionEffectString = args[2];
                 PotionEffectType potionEffect = PotionEffectType.getByName(potionEffectString);
-                int duration = Integer.parseInt(args[3]) * 20;
-                int amplifier = Integer.parseInt(args[4]) - 1;
+
+                int duration;
+                int amplifier;
+
+                if (!StringUtil.isNumber(args[3])) {
+                    duration = PotionEffect.INFINITE_DURATION;
+                } else {
+                    duration = Integer.parseInt(args[3]) * 20;
+                }
+
+                if (!StringUtil.isNumber(args[4])){
+                    Skyblock.log("ERROR: AMPLIFIER MUST BE A NUMBER FOR " + this.enchantName);
+                    return;
+                }
+
+                amplifier = Integer.parseInt(args[4]) - 1;
 
                 if (potionEffect == null) {
                     Skyblock.log("ERROR: INVALID POTION EFFECT FOR " + this.enchantName);
@@ -529,6 +546,67 @@ public class EnchantmentMethod {
                         }
                         ++x;
                     }
+                }
+            }
+            if (type.equalsIgnoreCase("replant")) {
+
+                if (event instanceof BlockBreakEvent) {
+
+                    BlockBreakEvent breakEvent = (BlockBreakEvent) event;
+
+                    final Block block = breakEvent.getBlock();
+
+                    if (!(block.getBlockData() instanceof Ageable))
+                        return;
+
+                    Ageable age = (Ageable) block.getBlockData();
+
+                    if (block.getType() == Material.SUGAR_CANE
+                            || block.getType() == Material.CACTUS) {
+
+                        Block blockUnder = block.getLocation().clone().add(0, -1, 0).getBlock();
+
+                        if (!blockUnder.getType().isSolid())
+                            return;
+                    }
+
+                    if (age.getAge() >= age.getMaximumAge()) {
+                        for (ItemStack i : block.getDrops())
+                            block.getWorld().dropItemNaturally(block.getLocation(), i);
+                    }
+
+                    breakEvent.setCancelled(true);
+                    age.setAge(0);
+                    block.setBlockData(age);
+                }
+                if (event instanceof BlockDamageEvent) {
+
+                    BlockDamageEvent damageEvent = (BlockDamageEvent) event;
+
+                    if (!args[1].equalsIgnoreCase("*")) {
+
+                        List<Material> materials = new ArrayList<>();
+
+                        for (int i = 1; i < args.length; i++) {
+                            Material m = PluginUtil.getMaterial(args[i], null);
+                            if (m == null) {
+                                Skyblock.log("ERROR: BLOCK MATERIAL IS UNKNOWN IN CONFIG FOR " + this.enchantName);
+                                continue;
+                            }
+                            materials.add(m);
+                        }
+
+                        if (materials.isEmpty()) {
+                            Skyblock.log("ERROR: NO BLOCKS FOUND IN CONFIG FOR " + this.enchantName);
+                            return;
+                        }
+
+                        for (Material m : materials) {
+                            if (damageEvent.getBlock().getType() == m)
+                                damageEvent.setInstaBreak(true);
+                        }
+                    }
+                    damageEvent.setInstaBreak(true);
                 }
             }
         }

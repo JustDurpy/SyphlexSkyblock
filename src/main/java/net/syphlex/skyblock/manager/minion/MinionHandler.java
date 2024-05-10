@@ -3,8 +3,11 @@ package net.syphlex.skyblock.manager.minion;
 import de.tr7zw.nbtapi.NBTItem;
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.manager.minion.impl.LumberJackMinion;
 import net.syphlex.skyblock.manager.minion.impl.MinerMinion;
+import net.syphlex.skyblock.manager.minion.impl.SlayerMinion;
 import net.syphlex.skyblock.util.ItemBuilder;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -47,10 +50,10 @@ public class MinionHandler {
                 spawn.add(0, 1, 0);
                 break;
             case SLAYER:
-                //minion = new SlayerMinion(type, level);
+                minion = new SlayerMinion(type, level);
                 break;
             case LUMBERJACK:
-                //minion = new LumberJackMinion(type, level);
+                minion = new LumberJackMinion(type, level);
                 break;
         }
         if (minion == null)
@@ -58,6 +61,30 @@ public class MinionHandler {
         minion.setOwner(player.getUniqueId());
         minion.placeMinion(spawn);
         this.minions.add(minion);
+    }
+
+    public void upgrade(Player p, Minion m){
+
+        int index = -1;
+
+        for (int i = 0; i < this.minions.size(); i++) {
+            if (this.minions.get(i).getUuid().equals(m.getUuid()))
+                index = i;
+        }
+
+        if (index == -1)
+            return;
+
+        int level = this.minions.get(index).getLevel();
+
+        if (level + 1 > this.minions.get(index).getData().getMaxLvl()) {
+            p.sendMessage(StringUtil.CC("&cThis minion is already at its max level."));
+            return;
+        }
+
+        this.minions.get(index).level = (this.minions.get(index).level + 1);
+        this.minions.get(index).updateData();
+        p.sendMessage(StringUtil.CC("&aSuccessfully upgraded your " + this.minions.get(index).getType().name() + " Minion"));
     }
 
     public ItemStack createMinionEgg(Minion.Type type){

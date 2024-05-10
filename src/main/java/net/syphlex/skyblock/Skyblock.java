@@ -1,10 +1,8 @@
 package net.syphlex.skyblock;
 
 import lombok.Getter;
-import net.syphlex.skyblock.cmd.IslandCmd;
-import net.syphlex.skyblock.cmd.MineCmd;
-import net.syphlex.skyblock.cmd.MinionCmd;
-import net.syphlex.skyblock.cmd.PluginCmd;
+import net.milkbowl.vault.economy.Economy;
+import net.syphlex.skyblock.cmd.*;
 import net.syphlex.skyblock.database.flat.PluginFile;
 import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
 import net.syphlex.skyblock.manager.customenchant.EnchantHandler;
@@ -20,6 +18,7 @@ import net.syphlex.skyblock.manager.scoreboard.ScoreboardHandler;
 import net.syphlex.skyblock.manager.thread.ThreadHandler;
 import net.syphlex.skyblock.listener.*;
 import net.syphlex.skyblock.util.VoidGenerator;
+import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
@@ -28,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ import java.util.logging.Level;
 public class Skyblock extends JavaPlugin {
 
     private static Skyblock instance;
+    private static Economy economy;
 
     private final ArrayList<SimpleConfig> configs = new ArrayList<>();
 
@@ -52,7 +53,6 @@ public class Skyblock extends JavaPlugin {
     private GuiHandler guiHandler;
     private MobCoinHandler mobCoinHandler;
     private EnchantHandler enchantHandler;
-
 
     @Override
     public void onLoad(){
@@ -73,6 +73,8 @@ public class Skyblock extends JavaPlugin {
 
         registerListeners();
         registerCmds();
+
+        setupEconomy();
     }
 
     @Override
@@ -86,6 +88,8 @@ public class Skyblock extends JavaPlugin {
         new IslandCmd();
         new MineCmd();
         new MinionCmd();
+        new EnchanterCmd();
+        new MobCoinsCmd();
     }
 
     private void registerListeners(){
@@ -95,6 +99,7 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new GuiListener(), this);
         pm.registerEvents(new MinionListener(), this);
+        pm.registerEvents(new CustomEnchantListener(), this);
     }
 
     private void load(){
@@ -120,6 +125,7 @@ public class Skyblock extends JavaPlugin {
 
     private void start(){
         this.threadHandler.onEnable();
+        this.settingsFile.read();
         this.islandHandler.onEnable();
         this.mineHandler.onEnable();
         this.dataHandler.onEnable();
@@ -127,7 +133,6 @@ public class Skyblock extends JavaPlugin {
         this.scoreboardHandler.onEnable();
         this.schematicHandler.onEnable();
         this.enchantHandler.onEnable();
-        this.settingsFile.read();
     }
 
     private void stop(){
@@ -138,6 +143,18 @@ public class Skyblock extends JavaPlugin {
         this.mineHandler.onDisable();
         this.islandHandler.onDisable();
         this.threadHandler.onDisable();
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
     }
 
     public Location getMainSpawn(){
@@ -157,6 +174,10 @@ public class Skyblock extends JavaPlugin {
 
     public static Skyblock get(){
         return instance;
+    }
+
+    public static Economy economy(){
+        return economy;
     }
 
     public static void log(Object log){

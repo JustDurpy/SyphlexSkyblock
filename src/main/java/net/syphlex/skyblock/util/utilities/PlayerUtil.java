@@ -30,4 +30,48 @@ public class PlayerUtil {
 
         return itemStack;
     }
+
+    public static void removeItem(Player player, ItemStack item, int amount) {
+        try {
+            boolean found = false;
+
+            if (player.getInventory().contains(item)) {
+                if (item.getAmount() <= amount) {
+                    player.getInventory().removeItem(item);
+                } else {
+                    item.setAmount(item.getAmount() - amount);
+                }
+                found = true;
+            }
+
+            if (!found) {
+                //ItemStack offHand = Objects.requireNonNull(player.getEquipment()).getItemInOffHand();
+
+                //if (offHand.isSimilar(item)) {
+                //    if ((amount - offHand.getAmount()) >= 0) {
+                //        player.getEquipment().setItemInOffHand(new ItemStack(Material.AIR, 1));
+                //    } else {
+                //        item.setAmount(offHand.getAmount() - amount);
+                //    }
+                //}
+            }
+
+        } catch (Exception e) {
+        }
+        //player.updateInventory();
+    }
+
+    public boolean isArmor(ItemStack item) {
+
+        if (item == null
+                || item.getType() == Material.AIR
+                || item.getAmount() <= 0)
+            return false;
+
+        String name = item.getType().name().toLowerCase();
+        return name.contains("helmet") || name.contains("shell")
+                || name.contains("cap") || name.contains("tunic")
+                || name.contains("chestplate") || name.contains("leggings")
+                || name.contains("boots");
+    }
 }

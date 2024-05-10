@@ -7,6 +7,8 @@ import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.utilities.PluginUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,20 +61,20 @@ public class MinerMinion extends Minion
                 Location l = position.getAsBukkit().clone().add(x, -1, z);
                 while (count < getLevel() && l.getBlock().getType() != Material.BEDROCK) {
                     count++;
-                    //if (hasChest()) {
-                    //    for (ItemStack i : l.getBlock().getDrops()) {
-                    //        Item item = l.getWorld().dropItem(l, i);
-                    //        getDrops().add(item);
-                    //        item.remove();
-                    //    }
-                    //    l.getBlock().breakNaturally(new ItemStack(Material.AIR));
-                    //} else {
+                    if (hasChest()) {
+                        for (ItemStack i : l.getBlock().getDrops()) {
+                            Item item = l.getWorld().dropItem(l, i);
+                            getDrops().add(item);
+                            item.remove();
+                        }
+                        l.getBlock().breakNaturally(new ItemStack(Material.AIR));
+                    } else {
                         l.getBlock().breakNaturally();
-                    //}
+                    }
                     l.getBlock().setType(Material.BEDROCK);
                 }
 
-                //sendItem();
+                sendItem();
                 if (l.getBlock().getType() != Material.BEDROCK)
                     bedrock = false;
             }

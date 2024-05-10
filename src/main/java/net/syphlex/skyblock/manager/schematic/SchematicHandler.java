@@ -19,12 +19,11 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class SchematicHandler {
 
-    private SchematicsFile schematicsFile;
+    private final SchematicsFile schematicsFile = new SchematicsFile();
     public SchematicPaster paster;
 
     public void onEnable(){
         this.paster = new FastAsyncWorldEdit();
-        this.schematicsFile = new SchematicsFile();
         this.schematicsFile.read();
     }
 

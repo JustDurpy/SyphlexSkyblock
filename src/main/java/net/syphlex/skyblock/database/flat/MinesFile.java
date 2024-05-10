@@ -68,6 +68,8 @@ public class MinesFile extends SimpleConfig {
 
             config.set("mines." + mine.getConfigName() + ".name", mine.getMineName());
             config.set("mines." + mine.getConfigName() + ".id", mine.getId());
+            config.set("mines." + mine.getConfigName() + ".corner1", mine.getCorner1().getAsString());
+            config.set("mines." + mine.getConfigName() + ".corner2", mine.getCorner2().getAsString());
 
             if (mine.getBlocks().size() < 1) return;
 
