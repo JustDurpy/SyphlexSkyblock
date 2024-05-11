@@ -29,6 +29,9 @@ public class IslandPermissionsGui extends SimpleGui {
         int i = 0;
         for (Pair<IslandPermission, Boolean> pair : role.getPermissions()) {
 
+            if (role == IslandRole.VISITOR && i > 5)
+                break;
+
             IslandPermission permission = pair.getX();
             boolean has = pair.getY();
 

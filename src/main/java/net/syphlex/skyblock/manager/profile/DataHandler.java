@@ -1,5 +1,6 @@
 package net.syphlex.skyblock.manager.profile;
 
+import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.ProfileFile;
 import net.syphlex.skyblock.manager.island.data.Island;
@@ -17,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DataHandler {
     private final Map<UUID, Profile> profileMap = new ConcurrentHashMap<>();
-    private final ProfileFile profileFile = new ProfileFile();
+    @Getter private final ProfileFile profileFile = new ProfileFile();
 
     public void onEnable(){
         for (Player p : Bukkit.getOnlinePlayers())

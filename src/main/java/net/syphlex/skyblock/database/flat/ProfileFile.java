@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class ProfileFile extends SimpleConfig {
 
@@ -86,6 +87,32 @@ public class ProfileFile extends SimpleConfig {
                 config.set("profile.island-role", profile.getMemberProfile().getRole().getIdentifier());
                 config.set("profile.mobcoins", profile.getMobCoins());
 
+                config.save(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public boolean isRecorded(UUID uuid){
+        File f = new File(getFile().getPath() + "/" + uuid.toString() + ".yml");
+        return f.exists();
+    }
+
+    public void set(UUID uuid, String path, Object o){
+        Skyblock.get().getThreadHandler().fire(() -> {
+            try {
+                if (!getFile().exists())
+                    getFile().mkdirs();
+
+                File f = new File(getFile().getPath() + "/" + uuid.toString() + ".yml");
+
+                if (!isRecorded(uuid))
+                    return;
+
+                FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+
+                config.set("profile." + path, o);
                 config.save(f);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -12,6 +12,8 @@ import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.MathHelper;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.data.Position;
+import net.syphlex.skyblock.util.utilities.StringUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -63,6 +65,14 @@ public class Island {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.center = center;
+    }
+
+    public void broadcast(Object o){
+        for (MemberProfile members : this.members) {
+            final Player p = Bukkit.getPlayer(members.getUuid());
+            if (p == null) continue;
+            p.sendMessage(StringUtil.CC(o.toString()));
+        }
     }
 
     public void refreshBorder(Player p, Color color){
