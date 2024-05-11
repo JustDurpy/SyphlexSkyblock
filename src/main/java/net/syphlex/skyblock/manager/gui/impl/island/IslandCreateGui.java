@@ -13,7 +13,10 @@ public class IslandCreateGui extends SimpleGui {
     public IslandCreateGui() {
         super("Create an Island", 27);
 
-        fill(new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(new ItemBuilder()
+                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
+                .setName(" ")
+                .build());
 
         setItem(new ItemBuilder()
                 .setMaterial(Material.LIME_CONCRETE)

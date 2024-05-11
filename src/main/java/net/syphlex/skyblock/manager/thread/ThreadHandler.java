@@ -7,7 +7,7 @@ public class ThreadHandler {
     private final int maxThreads;
 
     public ThreadHandler() {
-        this.maxThreads = Runtime.getRuntime().availableProcessors() * 2;
+        this.maxThreads = Runtime.getRuntime().availableProcessors();
     }
 
     public void fire(Runnable r) {

@@ -5,8 +5,7 @@ import net.syphlex.skyblock.manager.island.member.IslandRole;
 
 @Getter
 public enum IslandPermission {
-    PICKUP_ITEMS("Pick Up Items", "Allows the %island_role% role to pick up items."),
-    DROP_ITEMS("Drop Items", "Allows the %island_role% role to drop items."),
+    PICKUP_AND_DROP_ITEMS("Pick Up/Drop Items", "Allows the %island_role% role to pick up and drop items."),
     BLOCK_PLACE("Place Blocks", "Allows the %island_role% role to place blocks."),
     BLOCK_BREAK("Break Blocks", "Allows the %island_role% role to break blocks."),
     ACCESS_CONTAINERS("Access Containers", "Allows the %island_role% role to access containers."),

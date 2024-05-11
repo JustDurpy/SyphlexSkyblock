@@ -13,7 +13,10 @@ public class IslandDeleteGui extends SimpleGui {
     public IslandDeleteGui() {
         super("Delete Your Island", 27);
 
-        fill(new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(new ItemBuilder()
+                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
+                .setName(" ")
+                .build());
 
         setItem(new ItemBuilder()
                 .setMaterial(Material.RED_CONCRETE)

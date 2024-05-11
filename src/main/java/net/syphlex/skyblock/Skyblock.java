@@ -9,6 +9,7 @@ import net.syphlex.skyblock.manager.customenchant.EnchantHandler;
 import net.syphlex.skyblock.manager.gui.GuiHandler;
 import net.syphlex.skyblock.manager.island.IslandHandler;
 import net.syphlex.skyblock.manager.island.IslandUpgradeHandler;
+import net.syphlex.skyblock.manager.leaderboard.LeaderboardHandler;
 import net.syphlex.skyblock.manager.mine.MineHandler;
 import net.syphlex.skyblock.manager.minion.MinionHandler;
 import net.syphlex.skyblock.manager.mobcoin.MobCoinHandler;
@@ -18,7 +19,6 @@ import net.syphlex.skyblock.manager.scoreboard.ScoreboardHandler;
 import net.syphlex.skyblock.manager.thread.ThreadHandler;
 import net.syphlex.skyblock.listener.*;
 import net.syphlex.skyblock.util.VoidGenerator;
-import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
@@ -53,6 +53,7 @@ public class Skyblock extends JavaPlugin {
     private GuiHandler guiHandler;
     private MobCoinHandler mobCoinHandler;
     private EnchantHandler enchantHandler;
+    private LeaderboardHandler leaderboardHandler;
 
     @Override
     public void onLoad(){
@@ -121,6 +122,7 @@ public class Skyblock extends JavaPlugin {
         this.guiHandler = new GuiHandler();
         this.mobCoinHandler = new MobCoinHandler();
         this.enchantHandler = new EnchantHandler();
+        this.leaderboardHandler = new LeaderboardHandler();
     }
 
     private void start(){
@@ -133,9 +135,11 @@ public class Skyblock extends JavaPlugin {
         this.scoreboardHandler.onEnable();
         this.schematicHandler.onEnable();
         this.enchantHandler.onEnable();
+        this.leaderboardHandler.onEnable();
     }
 
     private void stop(){
+        this.leaderboardHandler.onDisable();
         this.schematicHandler.onDisable();
         this.scoreboardHandler.onDisable();
         this.minionHandler.onDisable();

@@ -32,7 +32,9 @@ public enum Messages {
     ISLAND_UPGRADE_INSUFFICIENT_FUNDS("&cError: You do not have enough money to purchase this upgrade."),
     ISLAND_UPGRADE_SUCCESS("&aYou have successfully upgraded your island!"),
     MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)"),
-    DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins.");
+    DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins."),
+    CALCULATE_ISLAND_WORTH("&7Recalculating all island data..."),
+    CALCULATE_ISLAND_WORTH_COMPLETE("\n&a&lSUCCESS! &7Recalculated all island data!\n");
 
     private String msg;
 

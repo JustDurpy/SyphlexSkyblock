@@ -18,7 +18,7 @@ public class ItemBuilder {
     private boolean unbreakable = false;
     private boolean glowing = false;
     private int amount = 1;
-    private ArrayList<Pair<Enchantment, Integer>> enchantments = new ArrayList<>();
+    private final ArrayList<Pair<Enchantment, Integer>> enchantments = new ArrayList<>();
 
     public ItemBuilder setName(String name){
         this.displayName = name;

@@ -24,7 +24,10 @@ public class IslandUpgradeGui extends SimpleGui {
 
         this.island = island;
 
-        fill(new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(new ItemBuilder()
+                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
+                .setName(" ")
+                .build());
 
         /*
         todo let player know if they can afford the upgrade IN THE GUI
@@ -192,6 +195,8 @@ public class IslandUpgradeGui extends SimpleGui {
                         "&f&m------------------------"
                 ))
                 .build());
+
+        setIslandPanelButton(22);
     }
 
     @Override
@@ -314,6 +319,9 @@ public class IslandUpgradeGui extends SimpleGui {
                  */
 
                 break;
+            //case 22:
+            //    Skyblock.get().getGuiHandler().openGui(profile, new IslandPanelGui());
+            //    break;
         }
     }
 }

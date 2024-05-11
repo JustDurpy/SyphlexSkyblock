@@ -43,7 +43,7 @@ public class IslandFile extends SimpleConfig {
             }
 
             String islandIdentifier = config.getString("island.identifier");
-            MemberProfile owner = new MemberProfile(
+            MemberProfile leader = new MemberProfile(
                     UUID.fromString(config.getString("island.leader")),
                     IslandRole.LEADER);
             Position corner1 = new Position(config.getString("island.corner1"));
@@ -67,6 +67,8 @@ public class IslandFile extends SimpleConfig {
                 }
             }
 
+            members.add(leader);
+
             ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
             for (String section : config.getStringList("island.stored-blocks")) {
                 IslandBlockData blockData = getIslandBlockDataFromString(section);
@@ -76,7 +78,7 @@ public class IslandFile extends SimpleConfig {
 
             int[] id = IslandUtil.getId(islandIdentifier);
 
-            Island island = new Island(id, islandIdentifier, owner, corner1, corner2, center, members, storedBlocks);
+            Island island = new Island(id, islandIdentifier, leader, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
             island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
             island.getUpgrades().setSpawnRateMult(spawnRate);
@@ -135,6 +137,7 @@ public class IslandFile extends SimpleConfig {
             List<String> uuids = new ArrayList<>();
             if (island.getMembers().size() > 0) {
                 for (MemberProfile profiles : island.getMembers()) {
+                    if (profiles.getRole() == IslandRole.LEADER) continue;
                     uuids.add(profiles.getUuid().toString() + ":" + profiles.getRole().getIdentifier());
                 }
             }

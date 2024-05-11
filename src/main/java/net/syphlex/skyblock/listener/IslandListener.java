@@ -40,7 +40,26 @@ public class IslandListener implements Listener {
 
         final Player p = (Player) e.getEntity();
 
+        if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
+            return;
 
+        final Profile profile = Skyblock.get().getDataHandler().get(p);
+
+        if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
+
+            final Island island = IslandUtil.getIslandAtLocation(p.getLocation());
+
+            if (island != null && island.getVisitorRole().hasPermission(IslandPermission.PICKUP_AND_DROP_ITEMS))
+                return;
+
+            e.setCancelled(true);
+            return;
+        }
+
+        if (!profile.getMemberProfile().getRole().hasPermission(IslandPermission.PICKUP_AND_DROP_ITEMS)) {
+            e.setCancelled(true);
+            return;
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -66,6 +85,22 @@ public class IslandListener implements Listener {
             return;
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
+
+        if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
+
+            final Island island = IslandUtil.getIslandAtLocation(p.getLocation());
+
+            if (island != null && island.getVisitorRole().hasPermission(IslandPermission.PICKUP_AND_DROP_ITEMS))
+                return;
+
+            e.setCancelled(true);
+            return;
+        }
+
+        if (!profile.getMemberProfile().getRole().hasPermission(IslandPermission.PICKUP_AND_DROP_ITEMS)) {
+            e.setCancelled(true);
+            return;
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

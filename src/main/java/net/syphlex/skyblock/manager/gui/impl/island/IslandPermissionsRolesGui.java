@@ -5,6 +5,7 @@ import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.simple.SimpleGui;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,7 +16,10 @@ public class IslandPermissionsRolesGui extends SimpleGui {
     public IslandPermissionsRolesGui() {
         super("Select A Role", 27);
 
-        fill(new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(new ItemBuilder()
+                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
+                .setName(" ")
+                .build());
 
         this.inventory.setItem(11, new ItemBuilder()
                 .setMaterial(Material.LIGHT_GRAY_DYE)
@@ -46,6 +50,9 @@ public class IslandPermissionsRolesGui extends SimpleGui {
                         "&7&o(( &f&oClick &7&oto edit island permissions for the &f&oModerator&7&o role ))",
                         ""))
                 .build());
+
+
+        setIslandPanelButton(22);
     }
 
     @Override
@@ -66,6 +73,9 @@ public class IslandPermissionsRolesGui extends SimpleGui {
             case 15:
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandPermissionsGui(profile.getIsland().getModeratorRole()));
                 break;
+            //case 22:
+            //    Skyblock.get().getGuiHandler().openGui(profile, new IslandPanelGui());
+            //    break;
         }
     }
 }

@@ -16,8 +16,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class IslandCmd extends SimpleCmd {
 
@@ -41,6 +39,7 @@ public class IslandCmd extends SimpleCmd {
         options.add("invite");
         options.add("join");
         options.add("leave");
+        options.add("top");
 
 
         if (args.length == 0) {
@@ -119,12 +118,15 @@ public class IslandCmd extends SimpleCmd {
                 case "join":
                     handleJoin(profile, args);
                     break;
+                case "top":
+                    Skyblock.get().getGuiHandler().openGui(profile, new IslandTopGui());
+                    break;
                 case "grid":
                     player.sendMessage(IslandUtil.printGrid());
                     break;
                 default:
                     if (profile.hasIsland()) {
-                        Skyblock.get().getGuiHandler().openGui(profile, new IslandGui());
+                        Skyblock.get().getGuiHandler().openGui(profile, new IslandPanelGui());
                     } else {
                         Skyblock.get().getGuiHandler().openGui(profile, new IslandCreateGui());
                     }
@@ -132,7 +134,7 @@ public class IslandCmd extends SimpleCmd {
             }
         } else {
             if (profile.hasIsland()) {
-                Skyblock.get().getGuiHandler().openGui(profile, new IslandGui());
+                Skyblock.get().getGuiHandler().openGui(profile, new IslandPanelGui());
             } else {
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandCreateGui());
             }

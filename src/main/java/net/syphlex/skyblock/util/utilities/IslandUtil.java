@@ -12,6 +12,9 @@ import java.util.UUID;
 @UtilityClass
 public class IslandUtil {
 
+    public Island getIsland(int[] id){
+        return Skyblock.get().getIslandHandler().getGrid().get(id);
+    }
     public int[] getId(String identifier) {
 
         if (identifier == null

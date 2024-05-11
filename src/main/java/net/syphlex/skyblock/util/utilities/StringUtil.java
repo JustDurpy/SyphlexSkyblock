@@ -3,7 +3,12 @@ package net.syphlex.skyblock.util.utilities;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.syphlex.skyblock.util.utilities.rainbow.HomogeneousRainbowException;
+import net.syphlex.skyblock.util.utilities.rainbow.InvalidColourException;
+import net.syphlex.skyblock.util.utilities.rainbow.NumberRangeException;
+import net.syphlex.skyblock.util.utilities.rainbow.Rainbow;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,43 @@ import java.util.regex.Pattern;
 
 @UtilityClass
 public class StringUtil {
+
+    public static final Pattern hexadecimalRegex = Pattern.compile("#[a-fA-F0-9]{6}");
+
+    public static ArrayList<String> createGradient(int count, String[] colours) {
+        Rainbow rainbow = new Rainbow();
+
+        try {
+            rainbow.setNumberRange(1, count);
+            rainbow.setSpectrum(colours);
+        } catch (HomogeneousRainbowException | InvalidColourException | NumberRangeException e) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> hexCodes = new ArrayList<String>();
+        for (int i = 1; i <= count; i++) {
+            hexCodes.add("#" + rainbow.colourAt(i));
+        }
+        return hexCodes;
+    }
+
+    public static String createGradFromString(String name, String[] colours) {
+        int count = name.length();
+        if (Math.min(count, colours.length) < 2) {
+            return name;
+        }
+
+        ArrayList<String> cols = createGradient(count, colours);
+
+        String colourCodes = "";
+        for (int i = 0; i < cols.size(); i++) {
+            colourCodes += net.md_5.bungee.api.ChatColor.of(cols.get(i)) + "" + name.charAt(i);
+        }
+        return colourCodes;
+    }
+
 
     public String CC(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
