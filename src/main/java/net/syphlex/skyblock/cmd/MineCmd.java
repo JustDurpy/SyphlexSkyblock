@@ -8,6 +8,7 @@ import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.config.Permissions;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,18 +23,41 @@ public class MineCmd extends SimpleCmd {
     @Override
     public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
         ArrayList<String> list = new ArrayList<>();
-        if (args.length == 1) {
-            list.add("create");
-            list.add("delete");
-            list.add("setpos1");
-            list.add("setpos2");
-            list.add("setspawn");
-            list.add("addblock");
-            list.add("delblock");
-            list.add("reset");
-            list.add("list");
-        }
+        ArrayList<String> options = new ArrayList<>();
 
+        options.add("create");
+        options.add("delete");
+        options.add("setpos1");
+        options.add("setpos2");
+        options.add("setspawn");
+        options.add("addblock");
+        options.add("delblock");
+        options.add("reset");
+        options.add("list");
+
+        if (args.length == 0) {
+            return options;
+        } else if (args.length == 1) {
+
+            for (String option : options) {
+                if (option.startsWith(args[0].toLowerCase()))
+                    list.add(option);
+            }
+
+            return list;
+        } else {
+            switch (args[0].toLowerCase()) {
+                case "setpos1":
+                case "setpos2":
+                case "setspawn":
+                case "reset":
+                    for (Mine mine : Skyblock.get().getMineHandler().getMines()) {
+                        if (mine.getMineName().toLowerCase().startsWith(args[1].toLowerCase()))
+                            list.add(mine.getMineName());
+                    }
+                    return list;
+            }
+        }
         return list;
     }
 

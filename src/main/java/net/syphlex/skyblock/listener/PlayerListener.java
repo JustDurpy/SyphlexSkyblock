@@ -111,7 +111,7 @@ public class PlayerListener implements Listener {
 
                     Location check = location.clone().add(x, y, z);
 
-                    if (!profile.getIsland().isStoredBlock(check)) {
+                    if (!profile.getIsland().isStoredBlock(check) || check.getBlock().getType() != block.getType()) {
                         continue;
                     }
 
