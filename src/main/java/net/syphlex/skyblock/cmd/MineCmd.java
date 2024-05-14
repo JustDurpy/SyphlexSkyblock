@@ -3,6 +3,7 @@ package net.syphlex.skyblock.cmd;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.mine.data.Mine;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
+import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.utilities.StringUtil;
@@ -66,6 +67,11 @@ public class MineCmd extends SimpleCmd {
 
         if (!Permissions.MINE_ADMIN.has(player) && !Permissions.ADMIN.has(player)) {
             Messages.NO_PERMISSION.send(player);
+            return;
+        }
+
+        if (!ConfigEnum.FEATURES_MINES.getAsBoolean()) {
+            Messages.FEATURE_DISABLED.send(player);
             return;
         }
 

@@ -4,9 +4,10 @@ main: net.syphlex.skyblock.Skyblock
 version: 0.1.1-BETA
 api-version: 1.13
 
-depend:
+softdepend:
   - PlaceholderAPI
-  - DecentHolograms
+
+depend:
   - NBTAPI
   - Vault
 
@@ -14,9 +15,6 @@ dependencies:
   server:
     PlaceholderAPI:
       # Load order is relative to the dependency. So here PlaceholderAPI loads before our plugin.
-      load: BEFORE
-      required: true
-    DecentHolograms:
       load: BEFORE
       required: true
     NBTAPI:

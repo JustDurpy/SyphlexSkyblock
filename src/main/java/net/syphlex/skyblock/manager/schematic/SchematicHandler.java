@@ -5,6 +5,7 @@ import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.SchematicsFile;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.schematic.paster.FastAsyncWorldEdit;
+import net.syphlex.skyblock.manager.schematic.paster.SchematicAsyncPaster;
 import net.syphlex.skyblock.manager.schematic.paster.SchematicPaster;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,7 +24,17 @@ public class SchematicHandler {
     public SchematicPaster paster;
 
     public void onEnable(){
-        this.paster = new FastAsyncWorldEdit();
+
+        if (Bukkit.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit-Core") == null) {
+            Skyblock.info("FastAsyncWorldEdit was not found!");
+            Skyblock.info("The plugin will be using its own schematic paster...");
+            Skyblock.info("NOTE: This may affect performance! We recommend using FastAsyncWorldEdit!");
+            paster = new SchematicAsyncPaster();
+        } else {
+            Skyblock.info("Successfully hooked into FastAsyncWorldEdit for schematic pasting!");
+            paster = new FastAsyncWorldEdit();
+        }
+
         this.schematicsFile.read();
     }
 

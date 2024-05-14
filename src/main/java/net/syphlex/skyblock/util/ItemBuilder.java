@@ -19,6 +19,8 @@ public class ItemBuilder {
     private boolean glowing = false;
     private int amount = 1;
     private final ArrayList<Pair<Enchantment, Integer>> enchantments = new ArrayList<>();
+    private final ArrayList<ItemFlag> itemFlagsToAdd = new ArrayList<>();
+    private final ArrayList<ItemFlag> itemFlagsToRemove = new ArrayList<>();
 
     public ItemBuilder setName(String name){
         this.displayName = name;
@@ -64,6 +66,16 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder addItemFlag(ItemFlag flag){
+        this.itemFlagsToAdd.add(flag);
+        return this;
+    }
+
+    public ItemBuilder removeItemFlag(ItemFlag flag){
+        this.itemFlagsToRemove.add(flag);
+        return this;
+    }
+
     public ItemStack build(){
         ItemStack item = new ItemStack(this.material, this.amount);
         ItemMeta meta = item.getItemMeta();
@@ -81,6 +93,18 @@ public class ItemBuilder {
         if (this.glowing) {
             meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        if (this.itemFlagsToAdd.size() > 0) {
+            for (ItemFlag flag : this.itemFlagsToAdd)
+                meta.addItemFlags(flag);
+        }
+
+        if (this.itemFlagsToRemove.size() > 0) {
+            for (ItemFlag flag : this.itemFlagsToRemove) {
+                if (!meta.hasItemFlag(flag)) continue;
+                meta.removeItemFlags(flag);
+            }
         }
 
         item.setItemMeta(meta);

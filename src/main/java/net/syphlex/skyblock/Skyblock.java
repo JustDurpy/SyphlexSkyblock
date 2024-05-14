@@ -63,16 +63,8 @@ public class Skyblock extends JavaPlugin {
     public void onEnable(){
         instance = this;
 
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            info("Successfully hooked into PlaceholderAPI!");
-            new Placeholder(this).register();
-        }
-
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            log("Vault is a required dependency and was not found! Shutting plugin down...");
-            Bukkit.getPluginManager().disablePlugin(this);
+        if (!dependencies())
             return;
-        }
 
         load();
         init();
@@ -111,6 +103,21 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new GuiListener(), this);
         pm.registerEvents(new MinionListener(), this);
         pm.registerEvents(new CustomEnchantListener(), this);
+    }
+
+    private boolean dependencies(){
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            info("Successfully hooked into PlaceholderAPI!");
+            new Placeholder(this).register();
+        }
+
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            log("Vault is a required dependency and was not found! Shutting plugin down...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return false;
+        }
+
+        return true;
     }
 
     private void load(){

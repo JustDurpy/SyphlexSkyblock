@@ -1,6 +1,5 @@
 package net.syphlex.skyblock.manager.island;
 
-import eu.decentsoftware.holograms.api.DHAPI;
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.database.flat.IslandFile;
@@ -60,33 +59,16 @@ public class IslandHandler {
     }
 
     public void onDisable() {
-        //Skyblock.get().getThreadHandler().fire(() -> {
-
             for (File f : this.islandFile.getFile().listFiles())
                 f.delete();
 
             for (int r = 0; r < this.grid.length(); r++) {
                 for (int c = 0; c < this.grid.width(r); c++) {
-                    //this.getGrid().getGrid()[r][c].getStoredBlockHolograms().forEach();
+                    if (this.grid.get(r, c) != null)
+                        this.grid.get(r, c).unloadHolograms();
                     this.islandFile.write(this.grid.get(r, c));
                 }
             }
-
-        //});
-    }
-
-    private void deleteHolograms(Island island){
-        for (IslandBlockData blockData : island.getStoredBlocks()) {
-            String identifier = island.getIdentifier().replace(";", "-");
-            String blockName = blockData.getBlockData().getMaterial().name();
-
-            String hologram = identifier + blockName;
-
-            if (DHAPI.getHologram(hologram) == null)
-                continue;
-
-            DHAPI.removeHologram(hologram);
-        }
     }
 
     private CompletableFuture<Void> deleteIslandBlocks(Island island, World world){
@@ -149,7 +131,7 @@ public class IslandHandler {
     }
 
     public CompletableFuture<Void> destroyIsland(Island island){
-        deleteHolograms(island);
+        island.unloadHolograms();
         return CompletableFuture.runAsync(() -> {
             //getRidOfPlayers(island).join();
             List<CompletableFuture<Void>> completableFutures = Arrays.asList(

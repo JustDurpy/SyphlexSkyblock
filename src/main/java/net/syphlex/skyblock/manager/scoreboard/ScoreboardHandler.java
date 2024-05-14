@@ -16,6 +16,10 @@ public class ScoreboardHandler {
     private BukkitTask task;
 
     public void onEnable(){
+
+        if (!ConfigEnum.SCOREBOARD_ENABLED.getAsBoolean())
+            return;
+
         this.task = new BukkitRunnable(){
             @Override
             public void run(){

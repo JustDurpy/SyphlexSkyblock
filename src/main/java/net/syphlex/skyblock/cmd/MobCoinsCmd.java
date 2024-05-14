@@ -2,6 +2,7 @@ package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import org.bukkit.Bukkit;
@@ -22,6 +23,11 @@ public class MobCoinsCmd extends SimpleCmd {
 
     @Override
     public void handleCmd(Player player, String[] args) {
+
+        if (!ConfigEnum.FEATURES_MOBCOINS.getAsBoolean()) {
+            Messages.FEATURE_DISABLED.send(player);
+            return;
+        }
 
         final Profile profile = Skyblock.get().getDataHandler().get(player);
 

@@ -8,6 +8,7 @@ import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import net.syphlex.skyblock.util.utilities.PluginUtil;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,7 @@ public class UpgradesFile extends SimpleConfig {
                     .setName(itemName)
                     .setGlowing(true)
                     .setLore(itemLore)
+                    .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                     .build(), itemSlot);
 
             switch (upgradeSection) {

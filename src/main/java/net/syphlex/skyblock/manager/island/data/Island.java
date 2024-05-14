@@ -138,6 +138,12 @@ public class Island {
         return sum;
     }
 
+    public void unloadHolograms(){
+        if (this.storedBlocks.size() == 0) return;
+        for (IslandBlockData blockData : this.storedBlocks)
+            blockData.getHologram().delete();
+    }
+
     public void setHome(Location location){
         this.home = new Position(
                 Skyblock.get().getIslandWorld(),
