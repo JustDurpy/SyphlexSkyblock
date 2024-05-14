@@ -46,7 +46,7 @@ public abstract class SimpleGui implements InventoryHolder {
         }
     }
 
-    @Getter private int islandPanelButtonSlot;
+    @Getter private int islandPanelButtonSlot = -1;
 
     public void setIslandPanelButton(int slot){
 

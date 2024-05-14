@@ -134,9 +134,9 @@ public class IslandHandler {
 
             for (Entity e : Skyblock.get().getIslandWorld().getNearbyEntities(
                     island.getCenter().getAsBukkit(Skyblock.get().getIslandWorld()),
-                    island.getUpgrades().getSize(),
+                    island.getUpgrades().getIslandSize().get(),
                     256,
-                    island.getUpgrades().getSize())) {
+                    island.getUpgrades().getIslandSize().get())) {
 
                 if (!(e instanceof Player))
                     continue;
@@ -247,15 +247,15 @@ public class IslandHandler {
 
         WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
         worldBorder.setCenter(island.getCenter().getX(), island.getCenter().getZ());
-        worldBorder.setSize(island.getUpgrades().getSize());
+        worldBorder.setSize(island.getUpgrades().getIslandSize().get());
 
         worldBorder.setDamageAmount(0);
         worldBorder.setDamageBuffer(0);
 
         if (color == Color.RED) {
-            worldBorder.setSize(island.getUpgrades().getSize() - 0.1D, 20000000L);
+            worldBorder.setSize(island.getUpgrades().getIslandSize().get() - 0.1D, 20000000L);
         } else if (color == Color.GREEN) {
-            worldBorder.setSize( island.getUpgrades().getSize() + 0.1D, 20000000L);
+            worldBorder.setSize( island.getUpgrades().getIslandSize().get() + 0.1D, 20000000L);
         }
 
         player.setWorldBorder(worldBorder);

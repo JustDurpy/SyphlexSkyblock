@@ -18,6 +18,7 @@ import net.syphlex.skyblock.manager.schematic.SchematicHandler;
 import net.syphlex.skyblock.manager.scoreboard.ScoreboardHandler;
 import net.syphlex.skyblock.manager.thread.ThreadHandler;
 import net.syphlex.skyblock.listener.*;
+import net.syphlex.skyblock.util.Placeholder;
 import net.syphlex.skyblock.util.VoidGenerator;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
 import net.syphlex.skyblock.util.config.ConfigEnum;
@@ -38,8 +39,6 @@ public class Skyblock extends JavaPlugin {
 
     private static Skyblock instance;
     private static Economy economy;
-
-    private final ArrayList<SimpleConfig> configs = new ArrayList<>();
 
     private ThreadHandler threadHandler;
     private SkyblockSettingsFile settingsFile;
@@ -63,6 +62,17 @@ public class Skyblock extends JavaPlugin {
     @Override
     public void onEnable(){
         instance = this;
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            info("Successfully hooked into PlaceholderAPI!");
+            new Placeholder(this).register();
+        }
+
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            log("Vault is a required dependency and was not found! Shutting plugin down...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         load();
         init();
@@ -128,6 +138,7 @@ public class Skyblock extends JavaPlugin {
     private void start(){
         this.threadHandler.onEnable();
         this.settingsFile.read();
+        this.upgradeHandler.onEnable();
         this.islandHandler.onEnable();
         this.mineHandler.onEnable();
         this.dataHandler.onEnable();

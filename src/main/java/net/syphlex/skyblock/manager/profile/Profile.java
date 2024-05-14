@@ -26,6 +26,7 @@ public class Profile {
     private Minion attachingChest = null;
 
     private int mobCoins;
+    private boolean respawnAtIsland = false;
 
     private final ArrayList<InviteRequest> inviteRequests = new ArrayList<>();
 

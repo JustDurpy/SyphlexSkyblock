@@ -32,7 +32,7 @@ public abstract class SimpleConfig {
 
         this.config = YamlConfiguration.loadConfiguration(this.file);
 
-        Skyblock.get().getConfigs().add(this);
+        //Skyblock.get().getConfigs().add(this);
     }
 
     public Object get(String path){

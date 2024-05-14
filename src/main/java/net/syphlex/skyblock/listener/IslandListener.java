@@ -18,10 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 
 public class IslandListener implements Listener {
@@ -32,7 +29,7 @@ public class IslandListener implements Listener {
         island location that way we don't have to loop through every island (cause lag)
          */
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDropItemEvent(EntityDropItemEvent e){
 
         if (!(e.getEntity() instanceof Player))
@@ -62,7 +59,7 @@ public class IslandListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPickUpItemEvent(EntityPickupItemEvent e){
 
         if (!(e.getEntity() instanceof Player)) {
@@ -161,11 +158,14 @@ public class IslandListener implements Listener {
         if (!WorldUtil.isWorld(l.getWorld(), Skyblock.get().getIslandWorld()))
             return;
 
+        if (e.getSpawner().getMaxNearbyEntities() != 2500)
+            e.getSpawner().setMaxNearbyEntities(2500);
+
         final Island island = IslandUtil.getIslandAtLocation(l);
 
         if (island == null) return;
 
-        final double multiplier = island.getUpgrades().getSpawnRateMult();
+        final double multiplier = island.getUpgrades().getSpawnRate().get();
 
         if (multiplier <= 1.0) return;
 
@@ -215,7 +215,7 @@ public class IslandListener implements Listener {
             e.setCancelled(true);
     }
 
-    @EventHandler(priority =  EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority =  EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDeathEvent(PlayerDeathEvent e){
 
         final Player p = e.getEntity();
@@ -225,6 +225,15 @@ public class IslandListener implements Listener {
 
         e.setKeepInventory(true);
         e.setKeepLevel(true);
+
+        p.spigot().respawn();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Skyblock.get(), () -> {
+            final Profile profile = Skyblock.get().getDataHandler().get(p);
+            if (!profile.hasIsland()) {
+                return;
+            }
+            profile.getIsland().teleport(p);
+        }, 1L);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -245,7 +254,7 @@ public class IslandListener implements Listener {
 
         if (e.getNewState().getType() == Material.STONE || e.getNewState().getType() == Material.COBBLESTONE) {
 
-            Material material = island.getUpgrades().getGenerator().generate().getMaterial();
+            Material material = Skyblock.get().getUpgradeHandler().getOreGenerator((int)island.getUpgrades().getGenerator().get()).generate().getMaterial();
 
             if (material == null)
                 material = Material.STONE;
@@ -484,7 +493,7 @@ public class IslandListener implements Listener {
                     continue;
 
                 // 2.5 is max
-                final double multiplier = island.getUpgrades().getHarvestMult();
+                final double multiplier = island.getUpgrades().getHarvest().get();
 
                 //if (multiplier <= 1.0) continue;
 
@@ -527,7 +536,7 @@ public class IslandListener implements Listener {
             if (island == null)
                 return;
 
-            final double multiplier = island.getUpgrades().getSpawnAmtMult();
+            final double multiplier = island.getUpgrades().getSpawnAmount().get();
 
             if (multiplier == 1.0) return;
 

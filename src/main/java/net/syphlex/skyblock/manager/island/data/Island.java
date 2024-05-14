@@ -34,7 +34,14 @@ public class Island {
     private Position home, warp;
     private List<MemberProfile> members = new ArrayList<>();
     private ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
-    private final IslandUpgradeData upgrades = new IslandUpgradeData();
+    private final IslandUpgradeData upgrades = new IslandUpgradeData(
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getIslandSizeUpgrade(),
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getSpawnRateUpgrade(),
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getSpawnAmountUpgrade(),
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getHarvestUpgrade(),
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getTeamSizeUpgrade(),
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getGeneratorUpgrade()
+    );
 
     private final ImmutableList<IslandRole> roles = ImmutableList.of(
             IslandRole.VISITOR,
@@ -177,7 +184,7 @@ public class Island {
     }
 
     public int getMinX(){
-        return MathHelper.floor_double(Math.min(corner1.getBlockX(), corner2.getBlockX()) - (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
+        return MathHelper.floor_double(Math.min(corner1.getBlockX(), corner2.getBlockX()) - (this.upgrades.getIslandSize().get()) - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble());
     }
 
     public int getMinY(){
@@ -185,11 +192,11 @@ public class Island {
     }
 
     public int getMinZ(){
-        return MathHelper.floor_double(Math.min(corner1.getBlockZ(), corner2.getBlockZ()) - (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
+        return MathHelper.floor_double(Math.min(corner1.getBlockZ(), corner2.getBlockZ()) - (this.upgrades.getIslandSize().get() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 
     public int getMaxX(){
-        return MathHelper.floor_double(Math.max(corner1.getBlockX(), corner2.getBlockX()) + (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
+        return MathHelper.floor_double(Math.max(corner1.getBlockX(), corner2.getBlockX()) + (this.upgrades.getIslandSize().get() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 
     public int getMaxY(){
@@ -197,6 +204,6 @@ public class Island {
     }
 
     public int getMaxZ(){
-        return MathHelper.floor_double(Math.max(corner1.getBlockZ(), corner2.getBlockZ()) + (this.upgrades.getSize() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
+        return MathHelper.floor_double(Math.max(corner1.getBlockZ(), corner2.getBlockZ()) + (this.upgrades.getIslandSize().get() - ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble()));
     }
 }

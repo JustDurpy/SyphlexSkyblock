@@ -1,7 +1,7 @@
 name: SyphlexSkyblock
 author: iDurpy
 main: net.syphlex.skyblock.Skyblock
-version: 0.0.78b
+version: 0.1.1-BETA
 api-version: 1.13
 
 depend:

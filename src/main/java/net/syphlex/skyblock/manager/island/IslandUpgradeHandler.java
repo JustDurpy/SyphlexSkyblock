@@ -2,7 +2,9 @@ package net.syphlex.skyblock.manager.island;
 
 import lombok.Getter;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.database.flat.UpgradesFile;
 import net.syphlex.skyblock.manager.island.block.SpecialBlockData;
+import net.syphlex.skyblock.manager.island.upgrade.UpgradeObject;
 import net.syphlex.skyblock.manager.island.upgrade.oregenerator.IslandOreGenerator;
 import org.bukkit.Material;
 
@@ -13,6 +15,12 @@ public class IslandUpgradeHandler {
 
     private final ArrayList<IslandOreGenerator> oreGenerators = new ArrayList<>();
     private final ArrayList<SpecialBlockData> specialBlocks = new ArrayList<>();
+    private UpgradesFile upgradesFile;
+
+    public void onEnable(){
+        this.upgradesFile = new UpgradesFile();
+        this.upgradesFile.read();
+    }
 
     public boolean isSpecialBlock(Material material){
         for (SpecialBlockData blockData : this.specialBlocks) {
@@ -51,6 +59,6 @@ public class IslandUpgradeHandler {
             if (generator.getTier() == tier)
                 return generator;
         }
-        return null;
+        return this.oreGenerators.get(0);
     }
 }

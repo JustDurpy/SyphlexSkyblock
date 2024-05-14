@@ -91,14 +91,22 @@ public class PlayerListener implements Listener {
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
 
-        if (!profile.hasIsland())
-            return;
-
         final Block block = e.getBlock();
         final Location location = block.getLocation();
 
-        if (!profile.getIsland().isInside(location))
+        if (!profile.hasIsland()) {
+            if (Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType())) {
+                e.setCancelled(true);
+            }
             return;
+        }
+
+        if (!profile.getIsland().isInside(location)) {
+            if (Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType())) {
+                e.setCancelled(true);
+            }
+            return;
+        }
 
         if (!Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType()))
             return;
@@ -174,14 +182,24 @@ public class PlayerListener implements Listener {
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
 
-        if (!profile.hasIsland())
-            return;
-
         final Block block = e.getBlock();
         final Location location = block.getLocation();
 
-        if (!profile.getIsland().isInside(location))
+        if (!profile.hasIsland()) {
+
+            if (Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType())) {
+                e.setCancelled(true);
+            }
+
             return;
+        }
+
+        if (!profile.getIsland().isInside(location)) {
+            if (Skyblock.get().getUpgradeHandler().isSpecialBlock(block.getType())) {
+                e.setCancelled(true);
+            }
+            return;
+        }
 
         final IslandBlockData blockData = profile.getIsland().getStoredBlock(location);
 

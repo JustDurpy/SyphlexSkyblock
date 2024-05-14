@@ -51,11 +51,12 @@ public class IslandFile extends SimpleConfig {
             Position home = new Position(config.getString("island.home"));
             Position center = new Position(config.getString("island.center"));
 
-            int generatorTier = config.getInt("island.upgrades.generator-tier");
-            double spawnRate = config.getDouble("island.upgrades.spawn-rate");
-            double spawnAmt = config.getDouble("island.upgrades.spawn-amt");
-            double harvestRate = config.getDouble("island.upgrades.harvest-rate");
-            double size = config.getDouble("island.upgrades.size");
+            int islandSize = config.getInt("island.upgrades.island-size");
+            int spawnRate = config.getInt("island.upgrades.spawn-rate");
+            int spawnAmount = config.getInt("island.upgrades.spawn-amount");
+            int harvest = config.getInt("island.upgrades.harvest");
+            int teamSize = config.getInt("island.upgrades.team-size");
+            int generator = config.getInt("island.upgrades.generator");
 
             ArrayList<MemberProfile> members = new ArrayList<>();
 
@@ -80,11 +81,12 @@ public class IslandFile extends SimpleConfig {
 
             Island island = new Island(id, islandIdentifier, leader, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
-            island.getUpgrades().setGenerator(Skyblock.get().getUpgradeHandler().getOreGenerator(generatorTier));
-            island.getUpgrades().setSpawnRateMult(spawnRate);
-            island.getUpgrades().setSpawnAmtMult(spawnAmt);
-            island.getUpgrades().setHarvestMult(harvestRate);
-            island.getUpgrades().setSize(size);
+            island.getUpgrades().getIslandSize().setLevel(islandSize);
+            island.getUpgrades().getSpawnRate().setLevel(spawnRate);
+            island.getUpgrades().getSpawnAmount().setLevel(spawnAmount);
+            island.getUpgrades().getHarvest().setLevel(harvest);
+            island.getUpgrades().getTeamSize().setLevel(teamSize);
+            island.getUpgrades().getGenerator().setLevel(generator);
 
             for (IslandRole role : island.getRoles()) {
                 for (IslandPermission permission : IslandPermission.values()) {
@@ -128,11 +130,12 @@ public class IslandFile extends SimpleConfig {
             config.set("island.center", island.getCenter().getAsString());
             config.set("island.home", island.getHome().getAsString());
 
-            config.set("island.upgrades.generator-tier", island.getUpgrades().getGenerator().getTier());
-            config.set("island.upgrades.spawn-rate", island.getUpgrades().getSpawnRateMult());
-            config.set("island.upgrades.spawn-amt", island.getUpgrades().getSpawnAmtMult());
-            config.set("island.upgrades.harvest-rate", island.getUpgrades().getHarvestMult());
-            config.set("island.upgrades.size", island.getUpgrades().getSize());
+            config.set("island.upgrades.island-size", island.getUpgrades().getIslandSize().getLevel());
+            config.set("island.upgrades.spawn-rate", island.getUpgrades().getSpawnRate().getLevel());
+            config.set("island.upgrades.spawn-amount", island.getUpgrades().getSpawnAmount().getLevel());
+            config.set("island.upgrades.harvest", island.getUpgrades().getHarvest().getLevel());
+            config.set("island.upgrades.team-size", island.getUpgrades().getTeamSize().getLevel());
+            config.set("island.upgrades.generator", island.getUpgrades().getGenerator().getLevel());
 
             List<String> uuids = new ArrayList<>();
             if (island.getMembers().size() > 0) {

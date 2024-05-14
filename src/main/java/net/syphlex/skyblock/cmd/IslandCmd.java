@@ -63,6 +63,9 @@ public class IslandCmd extends SimpleCmd {
                 case "invite":
                 case "join":
                 case "info":
+                case "kick":
+                case "kickvisitor":
+                case "ban":
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         if (p.getName().toLowerCase().startsWith(args[1].toLowerCase()))
                             list.add(p.getName());
@@ -194,7 +197,7 @@ public class IslandCmd extends SimpleCmd {
             Skyblock.get().getDataHandler().getProfileFile().set(target.getUniqueId(),
                     "island", "null");
             Skyblock.get().getDataHandler().getProfileFile().set(target.getUniqueId(),
-                    "island-role", "visitor");
+                    "island-role", IslandRole.VISITOR.getIdentifier());
 
             Messages.KICK_MEMBER.replace("%member%", target.getName()).send(profile);
             island.broadcast(Messages.KICK_MEMBER_BROADCAST
@@ -209,6 +212,7 @@ public class IslandCmd extends SimpleCmd {
          */
 
         final Player target = Bukkit.getPlayer(args[1]);
+        final Profile targetProfile = Skyblock.get().getDataHandler().get(target.getUniqueId());
 
         if (!island.isApartOfIsland(target.getUniqueId())) {
             Messages.NOT_APART_OF_ISLAND.send(profile);
@@ -219,6 +223,8 @@ public class IslandCmd extends SimpleCmd {
             Messages.NO_ISLAND_PERMISSION.send(profile);
             return;
         }
+
+        targetProfile.leaveIsland();
 
         Messages.KICK_MEMBER.replace("%member%", target.getName()).send(profile);
         island.broadcast(Messages.KICK_MEMBER_BROADCAST

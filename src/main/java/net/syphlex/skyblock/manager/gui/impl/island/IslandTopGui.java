@@ -58,7 +58,7 @@ public class IslandTopGui extends SimpleGui {
                             + "&f$" + String.format("%,d", (int)island.getWorth()),
                     StringUtil.parseHex(" ➥ ", "#2D0758")
                             + StringUtil.createGradFromString("Members: ", colors)
-                            + "&f" + island.getMembers().size() + "/" + island.getUpgrades().getMaxMembers(),
+                            + "&f" + island.getMembers().size() + "/" + island.getUpgrades().getTeamSize().get(),
                     "",
                     "&7&o(( Click to view island information ))",
                     ""

@@ -18,21 +18,30 @@ public enum ConfigEnum {
     DEFAULT_ISLAND_SPAWN_AMOUNT_RATE(1),
     DEFAULT_ISLAND_HARVESTRATE(1),
     DEFAULT_ISLAND_MAX_MEMBERS(4),
-    DEFAULT_ISLAND_GENERATOR_TIER(1),
+    DEFAULT_ISLAND_GENERATOR_TIER(0),
     DEFAULT_Y_POSITION(100),
-    SCOREBOARD_TITLE("&5&lSyphlex Skyblock"),
+    SCOREBOARD_TITLE("&5&lSyphlex &fSkyblock"),
     ISLAND_SCOREBOARD_LINES(Arrays.asList(
-            "&7&m-------------------",
+            "&f&m-------------------",
             "&5&lYou",
-            " &fMoney: &d$%vault_eco_balance_formatted%",
-            "&5&lIsland",
-            " &fLeader:%island_leader%",
+            " &d➥ &fMoney: &7$%vault_eco_balance_formatted%",
+            " &d➥ &fMob Coins: &7%skyblock_player_mobcoins%⛁",
             "",
-            "&7&m-------------------")),
+            "&5&lIsland",
+            " &d➥ &fLeader: &7%skyblock_island_leader%",
+            " &d➥ &fWorth: &7$%skyblock_island_worth%",
+            " &d➥ &fLevel: &7%skyblock_island_level%",
+            " &d➥ &fMembers: &7%skyblock_island_team_size%/%skyblock_island_max_team_size%",
+            " &d➥ &fSize: &7%skyblock_island_size%x%skyblock_island_size%",
+            "&f&m-------------------",
+            "&7play.syphlex.net")),
     NORMAL_SCOREBOARD(Arrays.asList(
-            "&7&m-------------------",
-            "&cNo island found.",
-            "&7&m-------------------"));
+            "&f&m---------------------",
+            "&7You do not have an island.",
+            "&7create an island to get started",
+            "&7by typing &n/island create.",
+            "&f&m---------------------",
+            "&7play.syphlex.net"));
 
     private Object object;
 

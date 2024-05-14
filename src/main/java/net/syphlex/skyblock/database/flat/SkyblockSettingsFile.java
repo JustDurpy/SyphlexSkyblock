@@ -256,8 +256,30 @@ public class SkyblockSettingsFile extends SimpleConfig {
     }
 
     private void generatorConfig(){
-        config.addDefault("generators.example.tier", 1);
-        config.addDefault("generators.example.name", "&6Example Generator");
+        /*
+        config.addDefault("generators.cannot-upgrade.gui-item.lore", Arrays.asList(
+                "",
+                "&cYou cannot upgrade your generator",
+                "&cbecause your island generator is",
+                "&calready at the maximum level.",
+                ""
+        ));
+        config.addDefault("generators.example.gui-item.name", "");
+        config.addDefault("generators.example.gui-item.material", "");
+        config.addDefault("generators.example.gui-item.slot", 0);
+        config.addDefault("generators.example.gui-item.lore", Arrays.asList(
+                "",
+                "&e&lOres",
+                " &6➥ &fCobblestone &7(80%)",
+                " &6➥ &fCoal Ore &7(20%)",
+                "",
+                "&7&o(( Left click to upgrade ))",
+                ""
+        ));
+
+         */
+        config.addDefault("generators.example.tier", 0);
+        config.addDefault("generators.example.name", "&7Stone Generator");
         config.addDefault("generators.example.blocks.1.material", "COBBLESTONE");
         config.addDefault("generators.example.blocks.1.chance", 80);
         config.addDefault("generators.example.blocks.2.material", "COAL_ORE");
