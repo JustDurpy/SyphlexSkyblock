@@ -18,6 +18,7 @@ public class IslandUpgradeData {
     private final UpgradeObject harvest;
     private final UpgradeObject teamSize;
     private final UpgradeObject generator;
+    private final UpgradeObject voidChest;
     private final ArrayList<UpgradeObject> list = new ArrayList<>();
 
     public IslandUpgradeData(UpgradeObject islandSize,
@@ -25,18 +26,21 @@ public class IslandUpgradeData {
                              UpgradeObject spawnAmount,
                              UpgradeObject harvest,
                              UpgradeObject teamSize,
-                             UpgradeObject generator){
+                             UpgradeObject generator,
+                             UpgradeObject voidChest){
         this.islandSize = islandSize;
         this.spawnRate = spawnRate;
         this.spawnAmount = spawnAmount;
         this.harvest = harvest;
         this.teamSize = teamSize;
         this.generator = generator;
+        this.voidChest = voidChest;
         list.add(this.islandSize);
         list.add(this.spawnRate);
         list.add(this.spawnAmount);
         list.add(this.harvest);
         list.add(this.teamSize);
         list.add(this.generator);
+        list.add(this.voidChest);
     }
 }

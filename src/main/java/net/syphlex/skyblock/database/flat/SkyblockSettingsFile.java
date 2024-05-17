@@ -251,8 +251,8 @@ public class SkyblockSettingsFile extends SimpleConfig {
 
     private void specialBlocksConfig(){
         config.addDefault("special-blocks", Arrays.asList(
-                "DIAMOND_BLOCK:10000:Diamond Blocks",
-                "IRON_BLOCK:5000:Iron Blocks"));
+                "DIAMOND_BLOCK:10000:&6&lX%amount% &e&lDIAMOND BLOCKS",
+                "IRON_BLOCK:5000:&6&lX%amount% &e&lIRON BLOCKS"));
     }
 
     private void generatorConfig(){

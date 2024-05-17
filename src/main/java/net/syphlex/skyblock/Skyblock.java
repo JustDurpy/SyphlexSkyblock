@@ -105,16 +105,24 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new CustomEnchantListener(), this);
     }
 
+    private boolean wildStackerHook = false;
+
     private boolean dependencies(){
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            info("Successfully hooked into PlaceholderAPI!");
-            new Placeholder(this).register();
-        }
 
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             log("Vault is a required dependency and was not found! Shutting plugin down...");
             Bukkit.getPluginManager().disablePlugin(this);
             return false;
+        }
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            info("Successfully found and hooked into PlaceholderAPI!");
+            new Placeholder(this).register();
+        }
+
+        if (getServer().getPluginManager().getPlugin("WildStacker") != null) {
+            info("Successfully found and hooked into WildStacker!");
+            this.wildStackerHook = true;
         }
 
         return true;

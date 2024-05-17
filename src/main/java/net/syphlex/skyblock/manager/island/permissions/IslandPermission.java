@@ -11,6 +11,7 @@ public enum IslandPermission {
     ACCESS_CONTAINERS("Access Containers", "Allows the %island_role% role to access containers."),
     INTERACT("Interact", "Allows the %island_role% role to interact with the island."),
     DAMAGE_ENTITIES("Damage Entities", "Allows the %island_role% role to damage entities."),
+    ACCESS_VOID_CHEST("Access Void Chest", "Allows the %island_role% role to access the island's void chest."),
     INVITE_MEMBER("Invite Players", "Allows the %island_role% to invite members."),
     KICK_MEMBER("Kick Members", "Allows the %island_role% to kick members."),
     KICK_VISITOR("Kick Visitors", "Allows the %island_role% role to kick visitors off the island."),

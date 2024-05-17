@@ -17,7 +17,7 @@ public class MobCoinsCmd extends SimpleCmd {
     }
 
     @Override
-    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+    public ArrayList<String> onTabComplete(Player player, String[] args) {
         return null;
     }
 
@@ -48,17 +48,15 @@ public class MobCoinsCmd extends SimpleCmd {
 
                 final Profile targetProfile = Skyblock.get().getDataHandler().get(target);
 
-                Messages.DISPLAY_MOB_COINS
+                profile.sendMessage(Messages.DISPLAY_MOB_COINS.get()
                         .replace("%player%", target.getName())
-                        .replace("%mobcoins%", String.format("%,d", targetProfile.getMobCoins()))
-                        .send(profile);
+                        .replace("%mobcoins%", String.format("%,d", targetProfile.getMobCoins())));
             }
 
         } else {
-            Messages.DISPLAY_MOB_COINS
+            profile.sendMessage(Messages.DISPLAY_MOB_COINS.get()
                     .replace("%player%", player.getName())
-                    .replace("%mobcoins%", String.format("%,d", profile.getMobCoins()))
-                    .send(profile);
+                    .replace("%mobcoins%", String.format("%,d", profile.getMobCoins())));
         }
     }
 

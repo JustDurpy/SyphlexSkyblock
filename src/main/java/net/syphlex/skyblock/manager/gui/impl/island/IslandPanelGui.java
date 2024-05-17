@@ -46,6 +46,11 @@ public class IslandPanelGui extends SimpleGui {
                 .setName(StringUtil.createGradFromString("Top Islands", colors))
                 .build());
 
+        this.inventory.setItem(13, new ItemBuilder()
+                .setMaterial(Material.CHEST)
+                .setName(StringUtil.createGradFromString("Void Chest", colors))
+                .build());
+
         this.inventory.setItem(14, new ItemBuilder()
                 .setMaterial(Material.BEACON)
                 .setName(StringUtil.createGradFromString("Island Upgrades", colors))
@@ -85,6 +90,9 @@ public class IslandPanelGui extends SimpleGui {
                 break;
             case 12:
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandTopGui());
+                break;
+            case 13:
+                profile.getPlayer().sendMessage("in development...");
                 break;
             case 14:
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandUpgradeGui(island));

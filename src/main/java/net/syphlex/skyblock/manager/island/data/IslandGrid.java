@@ -1,5 +1,7 @@
 package net.syphlex.skyblock.manager.island.data;
 
+import java.util.ArrayList;
+
 public class IslandGrid {
 
     private Island[][] grid;

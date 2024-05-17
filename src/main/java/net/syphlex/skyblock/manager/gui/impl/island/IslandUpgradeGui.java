@@ -111,6 +111,8 @@ public class IslandUpgradeGui extends SimpleGui {
             upgrade.setLevel(upgrade.getLevel() + 1);
 
             Skyblock.get().getGuiHandler().openGui(profile, new IslandUpgradeGui(island));
+
+            this.island.refreshBorder();
         }
     }
 }

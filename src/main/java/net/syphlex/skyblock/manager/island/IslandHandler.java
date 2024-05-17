@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 @Getter
 public class IslandHandler {
 
-    public final static double MINIMUM_Y_LIMIT = -64.0;
+    //public final static double MINIMUM_Y_LIMIT = -64.0;
     public final static double BUILD_HEIGHT = 256.0;
 
     private IslandFile islandFile;
@@ -38,7 +38,6 @@ public class IslandHandler {
     }
 
     public void onEnable(){
-
 
         final long started = System.currentTimeMillis();
 
@@ -59,6 +58,7 @@ public class IslandHandler {
     }
 
     public void onDisable() {
+
             for (File f : this.islandFile.getFile().listFiles())
                 f.delete();
 
@@ -120,8 +120,10 @@ public class IslandHandler {
                     256,
                     island.getUpgrades().getIslandSize().get())) {
 
-                if (!(e instanceof Player))
+                if (!(e instanceof Player)) {
+                    e.remove();
                     continue;
+                }
 
                 Player p = (Player)e;
                 p.teleport(Skyblock.get().getMainSpawn());
@@ -173,7 +175,7 @@ public class IslandHandler {
         //this.grid.getGrid()[id[0]][id[1]] = null;
     }
 
-    public void generateIsland(Profile profile) {
+    public void generateIsland(Profile profile, String schematic) {
 
         Player player = profile.getPlayer();
 
@@ -188,16 +190,16 @@ public class IslandHandler {
 
         Position center = new Position(Skyblock.get().getIslandWorld(),
                 ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5,
-                ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
+                ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble(),
                 ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5);
         Position corner1 = center.clone().add(
-                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
-                BUILD_HEIGHT - ConfigEnum.DEFAULT_Y_POSITION.getAsDouble(),
-                -ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
+                -ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d,
+                BUILD_HEIGHT - ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble(),
+                -ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d);
         Position corner2 = center.clone().add(
-                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d,
-                -ConfigEnum.DEFAULT_Y_POSITION.getAsDouble() + MINIMUM_Y_LIMIT,
-                ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble() / 2.0d);
+                ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d,
+                -ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble() + ConfigEnum.MINIMUM_Y_LIMIT.getAsDouble(),
+                ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d);
 
         Island island = new Island(nextSpot, IslandUtil.idToString(nextSpot),
                 new MemberProfile(player.getUniqueId(), IslandRole.LEADER),
@@ -206,11 +208,7 @@ public class IslandHandler {
         island.setHome(island.getCenter().clone());
 
         Skyblock.get().getSchematicHandler().pasteSchematic(
-                island, Skyblock.get().getSchematicHandler().getSchematic("default"));
-
-        //island.getCorner1().setBlock(Material.GLOWSTONE);
-        //island.getCorner2().setBlock(Material.GLOWSTONE);
-        //island.getCenter().setBlock(Material.BEDROCK);
+                island, Skyblock.get().getSchematicHandler().getSchematic(schematic));
 
         this.grid.insert(island, nextSpot);
 

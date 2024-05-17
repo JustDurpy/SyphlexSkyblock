@@ -1,6 +1,7 @@
 package net.syphlex.skyblock.util.hologram;
 
 import net.syphlex.skyblock.util.data.Position;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 
 import java.util.HashMap;
 
@@ -27,9 +28,9 @@ public class Hologram {
 
     public void updateLine(int line, String display){
         if (this.entries.get(line) != null) {
-            this.entries.get(line).update(display);
+            this.entries.get(line).update(StringUtil.CC(display));
         } else {
-            this.entries.put(line, new HologramLine(position.getAsBukkit().add(0, 0.28, 0), display));
+            this.entries.put(line, new HologramLine(position.getAsBukkit().add(0, 0.28, 0), StringUtil.CC(display)));
         }
     }
 

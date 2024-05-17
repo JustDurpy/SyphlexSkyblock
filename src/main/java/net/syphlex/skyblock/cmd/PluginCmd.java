@@ -15,7 +15,7 @@ public class PluginCmd extends SimpleCmd {
     }
 
     @Override
-    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+    public ArrayList<String> onTabComplete(Player player, String[] args) {
         return null;
     }
 

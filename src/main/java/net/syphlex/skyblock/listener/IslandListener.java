@@ -1,10 +1,14 @@
 package net.syphlex.skyblock.listener;
 
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.permissions.IslandPermission;
 import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
+import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
 import net.syphlex.skyblock.util.config.Messages;
 import org.bukkit.*;
@@ -21,6 +25,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.util.UUID;
+
 public class IslandListener implements Listener {
 
     /*
@@ -28,6 +34,74 @@ public class IslandListener implements Listener {
         is a part of an island FIRST, then we will check if their location is inside THEIR
         island location that way we don't have to loop through every island (cause lag)
          */
+
+    @EventHandler
+    public void onEntityDespawnEvent(EntityRemoveFromWorldEvent e) {
+
+        if (!(e.getEntity() instanceof Item))
+            return;
+
+        final Item item = (Item) e.getEntity();
+
+        if (item.getLocation().getY() > ConfigEnum.MINIMUM_Y_LIMIT.getAsDouble())
+            return;
+
+        final Island island = IslandUtil.getIslandAtXZ(
+                item.getLocation().getX(),
+                item.getLocation().getZ());
+
+        if (island == null)
+            return;
+
+        /*
+        If the server is using wild stacker we will use
+        the wild stacker entity stack on the item
+         */
+        if (Skyblock.get().isWildStackerHook()) {
+
+            // todo store to void chest
+
+            return;
+        }
+
+
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPistonExtendEvent(BlockPistonExtendEvent e){
+
+        if (!WorldUtil.isWorld(e.getBlock().getWorld(), Skyblock.get().getIslandWorld()))
+                return;
+
+        final Island island = IslandUtil.getIslandAtLocation(e.getBlock().getLocation());
+
+        if (island == null)
+            return;
+
+        for (Block b : e.getBlocks()) {
+
+            final Location l = b.getLocation();
+
+            /*
+            We are actually contracting it by '1' block
+            the dimensions of the island with the border
+            are a little fucky wucky, but its fine, it works.
+             */
+            if (!island.isInside(l, -2, -2)) {
+                e.setCancelled(true);
+                break;
+            }
+
+            /*
+            if (island.isInside(l, -2, -2)) {
+                Bukkit.broadcastMessage(StringUtil.CC("&ainside island! &r") + e.getBlock().getType().name() + " : " + b.getType().name());
+            } else {
+                Bukkit.broadcastMessage(StringUtil.CC("&coutside island! &r") + e.getBlock().getType().name() + " : " + b.getType().name());
+            }
+             */
+        }
+
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDropItemEvent(EntityDropItemEvent e){
@@ -41,6 +115,9 @@ public class IslandListener implements Listener {
             return;
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
+
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
 
         if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
 
@@ -83,6 +160,9 @@ public class IslandListener implements Listener {
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
 
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
+
         if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
 
             final Island island = IslandUtil.getIslandAtLocation(p.getLocation());
@@ -121,6 +201,9 @@ public class IslandListener implements Listener {
                 return;
 
             Profile profile = Skyblock.get().getDataHandler().get(p);
+
+            // admin mode will bypass all island restrictions
+            if (profile.isAdminMode()) return;
 
             if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
 
@@ -181,6 +264,19 @@ public class IslandListener implements Listener {
             spawner.setMaxSpawnDelay(maxDelay);
         if (spawner.getMinSpawnDelay() != minDelay)
             spawner.setMinSpawnDelay(minDelay);
+
+        /*
+        we want to check if the spawner is stacked, if it is we will multiply the spawner amount
+        by the stack amount
+         */
+        if (!Skyblock.get().getUpgradeHandler().isSpecialBlock(spawner.getType())
+                || spawner.getSpawnedType() == null)
+            return;
+
+        IslandBlockData blockData = island.getStoredBlock(spawner.getLocation());
+
+        for (int i = 0; i < blockData.getAmount() - 1; i++)
+            spawner.getWorld().spawnEntity(e.getEntity().getLocation(), spawner.getSpawnedType());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -206,6 +302,7 @@ public class IslandListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockSpreadEvent(BlockSpreadEvent e) {
+
         final Block block = e.getSource();
 
         if (!WorldUtil.isWorld(block.getWorld(), Skyblock.get().getIslandWorld()))
@@ -272,6 +369,9 @@ public class IslandListener implements Listener {
 
         Profile profile = Skyblock.get().getDataHandler().get(p);
 
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
+
         if (!profile.hasIsland() || !profile.getIsland().isInside(p.getLocation())) {
 
             Island island = IslandUtil.getIslandAtLocation(p.getLocation());
@@ -309,6 +409,9 @@ public class IslandListener implements Listener {
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
 
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
+
         /*
         if (!profile.hasIsland()) {
             e.setCancelled(true);
@@ -344,6 +447,9 @@ public class IslandListener implements Listener {
             return;
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
+
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
 
         if (!profile.hasIsland() || !profile.getIsland().isInside(block.getLocation())) {
 
@@ -410,6 +516,9 @@ public class IslandListener implements Listener {
 
             final Profile profile = Skyblock.get().getDataHandler().get(p);
 
+            // admin mode will bypass all island restrictions
+            if (profile.isAdminMode()) return;
+
             if (!profile.hasIsland() && !profile.getIsland().isInside(p.getLocation())) {
 
                 Island island = IslandUtil.getIslandAtLocation(p.getLocation());
@@ -447,6 +556,9 @@ public class IslandListener implements Listener {
 
         final Profile profile = Skyblock.get().getDataHandler().get(p);
 
+        // admin mode will bypass all island restrictions
+        if (profile.isAdminMode()) return;
+
         if (!profile.hasIsland()) {
             e.setCancelled(true);
             //Messages.INTERACT_NOT_ON_OWN_ISLAND.send(profile);
@@ -464,12 +576,19 @@ public class IslandListener implements Listener {
     public void onPlayerMoveEvent(PlayerMoveEvent e) {
         final Player p = e.getPlayer();
         final Location l = p.getLocation();
-        if (l.getY() < -64.0 && WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld())) {
+
+        if (!WorldUtil.isWorld(p.getWorld(), Skyblock.get().getIslandWorld()))
+            return;
+
+        if (l.getY() < ConfigEnum.MINIMUM_Y_LIMIT.getAsDouble()) {
+
             final Island island = IslandUtil.getIslandAtXZ(l.getBlockX(), l.getBlockZ());
-            if (island == null) return;
+            if (island == null)
+                return;
+
             island.teleport(p);
             p.setFallDistance(0);
-            p.setNoDamageTicks(60); // 3 SECONDS
+            p.setNoDamageTicks(100); // 5 SECONDS
         }
     }
 

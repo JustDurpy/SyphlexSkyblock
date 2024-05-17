@@ -31,7 +31,7 @@ public class SchematicsFile extends SimpleConfig {
                 continue;
             }
 
-            this.schematicFiles.put(file.getName().substring(0, index - 1), file);
+            this.schematicFiles.put(file.getName(), file);
         }
     }
 

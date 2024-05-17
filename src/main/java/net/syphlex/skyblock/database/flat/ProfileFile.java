@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class ProfileFile extends SimpleConfig {
 
@@ -94,7 +95,7 @@ public class ProfileFile extends SimpleConfig {
         });
     }
 
-    public boolean isRecorded(UUID uuid){
+    public boolean isRecorded(UUID uuid) {
         File f = new File(getFile().getPath() + "/" + uuid.toString() + ".yml");
         return f.exists();
     }

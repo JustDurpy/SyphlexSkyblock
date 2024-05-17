@@ -8,6 +8,7 @@ import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
 import net.syphlex.skyblock.manager.minion.Minion;
+import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
@@ -26,7 +27,7 @@ public class Profile {
     private Minion attachingChest = null;
 
     private int mobCoins;
-    private boolean respawnAtIsland = false;
+    private boolean respawnAtIsland = false, adminMode = false;
 
     private final ArrayList<InviteRequest> inviteRequests = new ArrayList<>();
 
@@ -48,6 +49,8 @@ public class Profile {
         this.island = island;
         this.island.getMembers().add(this.memberProfile);
         this.island.teleport(this.player);
+
+        this.inviteRequests.clear();
     }
 
     public void leaveIsland(){
@@ -65,6 +68,10 @@ public class Profile {
         this.memberProfile.setRole(IslandRole.VISITOR);
 
         this.player.teleport(Skyblock.get().getMainSpawn());
+    }
+
+    public void sendMessage(String msg){
+        this.player.sendMessage(StringUtil.CC(msg));
     }
 
     public InviteRequest getIslandInvite(Island island){

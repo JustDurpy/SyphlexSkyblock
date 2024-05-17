@@ -53,4 +53,8 @@ public class UpgradeObject {
     public double getNextValue(){
         return this.values[this.level + 1];
     }
+
+    public UpgradeObject clone(){
+        return new UpgradeObject(this.enabled, this.costs, this.values, this.guiItem);
+    }
 }

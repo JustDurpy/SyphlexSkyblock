@@ -41,7 +41,7 @@ public enum Messages {
     MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)"),
     DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins."),
     CALCULATE_ISLAND_WORTH("&7Recalculating all island data..."),
-    CALCULATE_ISLAND_WORTH_COMPLETE("\n&a&lSUCCESS! &7Recalculated all island data!\n"),
+    CALCULATE_ISLAND_WORTH_COMPLETE("&a&lSUCCESS! &7Recalculated all island data!"),
     FEATURE_DISABLED("&cError: That feature is currently disabled.");
 
     private String msg;
@@ -62,29 +62,13 @@ public enum Messages {
         p.sendMessage(get());
     }
 
-    public Messages replace(String s1, Object s2) {
-        //this.msg = this.msg.replace(s1, String.valueOf(s2));
-        try {
-            String msg = this.msg.replace(s1, String.valueOf(s2));
-            Messages message = (Messages) this.clone();
-            message.set(msg);
-            return message;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return this;
-    }
+    /*
+    todo fix the 'replace' and 'usage' as they are one time use
+    and for some reason replace the string completely
+     */
 
     public Messages usage(String usage) {
-        //this.msg = this.msg.replace("%usage%", usage);
-        try {
-            String msg = this.msg.replace("%usage%", usage);
-            Messages message = (Messages) this.clone();
-            message.set(msg);
-            return message;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        this.msg.replace("%usage%", usage);
         return this;
     }
 

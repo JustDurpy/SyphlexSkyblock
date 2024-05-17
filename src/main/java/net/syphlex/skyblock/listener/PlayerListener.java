@@ -74,9 +74,8 @@ public class PlayerListener implements Listener {
         e.getItem().remove();
         profile.setMobCoins(profile.getMobCoins() + 1);
 
-        Messages.MOB_COIN_COLLECTED
-                .replace("%mobcoins%", String.format("%,d", profile.getMobCoins()))
-                .send(profile);
+        profile.sendMessage(Messages.MOB_COIN_COLLECTED.get()
+                .replace("%mobcoins%", String.format("%,d", profile.getMobCoins())));
         e.setCancelled(true);
     }
 
@@ -189,10 +188,10 @@ public class PlayerListener implements Listener {
 
             e.setCancelled(true);
             e.setExpToDrop(0);
-            e.setDropItems(false);
+            //e.setDropItems(false);
             if (p.getGameMode() == GameMode.SURVIVAL) {
                 e.getBlock().getDrops().clear();
-                e.getBlock().getDrops().add(new ItemStack(blockData.getBlockData().getMaterial(), 1));
+                block.getWorld().dropItemNaturally(location, new ItemStack(blockData.getBlockData().getMaterial(), 1));
             }
             blockData.setAmount(blockData.getAmount() - 1);
 

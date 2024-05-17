@@ -1,11 +1,12 @@
 name: SyphlexSkyblock
 author: iDurpy
 main: net.syphlex.skyblock.Skyblock
-version: 0.1.1-BETA
+version: 0.1.3-BETA
 api-version: 1.13
 
 softdepend:
   - PlaceholderAPI
+  - WildStacker
 
 depend:
   - NBTAPI

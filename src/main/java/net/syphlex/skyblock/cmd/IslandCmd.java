@@ -8,6 +8,8 @@ import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.permissions.IslandPermission;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
 import net.syphlex.skyblock.manager.profile.Profile;
+import net.syphlex.skyblock.util.config.ConfigEnum;
+import net.syphlex.skyblock.util.config.Permissions;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.simple.SimpleCmd;
 import net.syphlex.skyblock.util.config.Messages;
@@ -27,7 +29,7 @@ public class IslandCmd extends SimpleCmd {
     }
 
     @Override
-    public ArrayList<String> onTabComplete(CommandSender sender, String[] args){
+    public ArrayList<String> onTabComplete(Player player, String[] args){
         ArrayList<String> list = new ArrayList<>();
         ArrayList<String> options = new ArrayList<>();
 
@@ -35,6 +37,7 @@ public class IslandCmd extends SimpleCmd {
         options.add("create");
         options.add("delete");
         options.add("info");
+        options.add("settings");
         options.add("upgrade");
         options.add("permissions");
         options.add("sethome");
@@ -46,6 +49,12 @@ public class IslandCmd extends SimpleCmd {
         options.add("kick");
         options.add("kickvisitor");
         options.add("ban");
+        options.add("visit");
+        options.add("warp");
+
+        if (Permissions.ADMIN.has(player)) {
+            options.add("admin");
+        }
 
 
         if (args.length == 0) {
@@ -66,6 +75,8 @@ public class IslandCmd extends SimpleCmd {
                 case "kick":
                 case "kickvisitor":
                 case "ban":
+                case "visit":
+                case "warp":
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         if (p.getName().toLowerCase().startsWith(args[1].toLowerCase()))
                             list.add(p.getName());
@@ -99,6 +110,9 @@ public class IslandCmd extends SimpleCmd {
                     player.sendMessage(StringUtil.CC(" &7* &e/island &fleave"));
                     player.sendMessage("");
                     break;
+                case "admin":
+                    handleAdmin(profile);
+                    break;
                 case "create":
                     handleCreate(profile);
                     break;
@@ -112,11 +126,18 @@ public class IslandCmd extends SimpleCmd {
                 case "upgrades":
                     handleUpgrades(profile);
                     break;
+                case "settings":
+                    // todo settings
+                    break;
                 case "permissions":
                     handlePermissions(profile);
                     break;
                 case "home":
                     handleHome(profile);
+                    break;
+                case "visit":
+                case "warp":
+                    handleVisit(profile, args);
                     break;
                 case "invite":
                     handleInvite(profile, args);
@@ -159,6 +180,74 @@ public class IslandCmd extends SimpleCmd {
         }
     }
 
+    private void handleAdmin(Profile profile){
+
+        if (!Permissions.ADMIN.has(profile) && !profile.getPlayer().isOp()) {
+            Messages.NO_PERMISSION.send(profile);
+            return;
+        }
+
+        profile.setAdminMode(!profile.isAdminMode());
+        profile.sendMessage((profile.isAdminMode()
+                ? "&aYour admin mode is now enabled."
+                : "&cYour admin mode is now disabled."));
+    }
+
+    private void handleVisit(Profile profile, String[] args){
+
+        OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+        if (target.isOnline()) {
+
+            final Profile targetProfile = Skyblock.get().getDataHandler().get(target.getPlayer());
+            final Island island = targetProfile.getIsland();
+
+            if (island == null) {
+                Messages.ISLAND_NOT_FOUND.send(profile);
+                return;
+            }
+
+            island.teleport(profile.getPlayer());
+            return;
+        }
+
+        if (!Skyblock.get().getDataHandler().getProfileFile().isRecorded(target.getUniqueId())) {
+            Messages.ISLAND_NOT_FOUND.send(profile);
+            return;
+        }
+
+        Island toVisit = null;
+
+        for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
+            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().length(); c++) {
+
+                Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
+
+                if (island == null) continue;
+                if (toVisit != null) break;
+
+                if (island.getLeader().getUuid().equals(target.getUniqueId())) {
+                    toVisit = island;
+                    break;
+                }
+
+                for (MemberProfile members : island.getMembers()) {
+                    if (members.getUuid().equals(target)) {
+                        toVisit = island;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (toVisit == null) {
+            Messages.ISLAND_NOT_FOUND.send(profile);
+            return;
+        }
+
+        toVisit.teleport(profile.getPlayer());
+    }
+
     private void handleKick(Profile profile, String[] args) {
 
         if (!profile.hasIsland()) {
@@ -199,11 +288,12 @@ public class IslandCmd extends SimpleCmd {
             Skyblock.get().getDataHandler().getProfileFile().set(target.getUniqueId(),
                     "island-role", IslandRole.VISITOR.getIdentifier());
 
-            Messages.KICK_MEMBER.replace("%member%", target.getName()).send(profile);
-            island.broadcast(Messages.KICK_MEMBER_BROADCAST
+            profile.sendMessage(Messages.KICK_MEMBER.get()
+                    .replace("%member%", target.getName()));
+
+            island.broadcast(Messages.KICK_MEMBER_BROADCAST.get()
                     .replace("%member%", target.getName())
-                    .replace("%player%", profile.getPlayer().getName())
-                    .get());
+                    .replace("%player%", profile.getPlayer().getName()));
             return;
         }
 
@@ -226,11 +316,12 @@ public class IslandCmd extends SimpleCmd {
 
         targetProfile.leaveIsland();
 
-        Messages.KICK_MEMBER.replace("%member%", target.getName()).send(profile);
-        island.broadcast(Messages.KICK_MEMBER_BROADCAST
+        profile.sendMessage(Messages.KICK_MEMBER.get()
+                .replace("%member%", target.getName()));
+
+        island.broadcast(Messages.KICK_MEMBER_BROADCAST.get()
                 .replace("%member%", target.getName())
-                .replace("%player%", profile.getPlayer().getName())
-                .get());
+                .replace("%player%", profile.getPlayer().getName()));
     }
 
     private void handleBan(Profile profile, String[] args){
@@ -247,12 +338,12 @@ public class IslandCmd extends SimpleCmd {
                 return;
             }
 
-            profile.getPlayer().sendMessage(profile.getPlayer().getName() + "'s island:");
-            profile.getPlayer().sendMessage("Members: ");
+            profile.sendMessage(profile.getPlayer().getName() + "'s island:");
+            profile.sendMessage("Members: ");
             for (MemberProfile memberProfile : profile.getIsland().getMembers()) {
-                profile.getPlayer().sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
+                profile.sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
             }
-            profile.getPlayer().sendMessage("Worth: $" + profile.getIsland().getWorth());
+            profile.sendMessage("Worth: $" + profile.getIsland().getWorth());
         } else {
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
@@ -275,12 +366,12 @@ public class IslandCmd extends SimpleCmd {
                 return;
             }
 
-            profile.getPlayer().sendMessage(target.getName() + "'s island:");
-            profile.getPlayer().sendMessage("Members: ");
+            profile.sendMessage(target.getName() + "'s island:");
+            profile.sendMessage("Members: ");
             for (MemberProfile memberProfile : targetIsland.getMembers()) {
-                profile.getPlayer().sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
+                profile.sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
             }
-            profile.getPlayer().sendMessage("Worth: $" + targetIsland.getWorth());
+            profile.sendMessage("Worth: $" + targetIsland.getWorth());
         }
     }
 
@@ -347,7 +438,7 @@ public class IslandCmd extends SimpleCmd {
         Island island = request.getIsland();
 
         profile.joinIsland(island);
-        profile.getPlayer().sendMessage("You have joined " + island.getLeader().getUsername() + "'s island.");
+        profile.sendMessage("You have joined " + island.getLeader().getUsername() + "'s island.");
     }
 
     private void handleLeave(Profile profile){
@@ -414,8 +505,11 @@ public class IslandCmd extends SimpleCmd {
         InviteRequest request = new InviteRequest(island, targetProfile);
         targetProfile.getInviteRequests().add(request);
 
-        Messages.SENT_ISLAND_INVITE.replace("%player%", target.getName()).send(profile);
-        Messages.RECEIVED_ISLAND_INVITE.replace("%player%", profile.getPlayer().getName()).send(targetProfile);
+        profile.sendMessage(Messages.SENT_ISLAND_INVITE.get()
+                .replace("%player%", target.getName()));
+
+        targetProfile.sendMessage(Messages.RECEIVED_ISLAND_INVITE.get()
+                .replace("%player%", profile.getPlayer().getName()));
     }
 
     private void handleHome(Profile profile){
@@ -438,7 +532,7 @@ public class IslandCmd extends SimpleCmd {
     }
 
     private void handleCreate(Profile profile){
-        Skyblock.get().getIslandHandler().generateIsland(profile);
+        Skyblock.get().getIslandHandler().generateIsland(profile, ConfigEnum.DEFAULT_SCHEMATIC_NAME.getAsString());
     }
 
     @Override

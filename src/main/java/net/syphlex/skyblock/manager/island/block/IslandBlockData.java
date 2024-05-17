@@ -19,7 +19,7 @@ public class IslandBlockData {
         this.blockData = blockData;
         this.amount = amount;
 
-        this.hologram = new Hologram(position.clone().add(0, 0.5, 0));
+        this.hologram = new Hologram(position.clone().add(0.5, -0.5, 0.5));
         this.hologram.updateLine(0, StringUtil.CC(blockData.getDisplayName()
                 .replace("%amount%", String.valueOf(amount))));
     }

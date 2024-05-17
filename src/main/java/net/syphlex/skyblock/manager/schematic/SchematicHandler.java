@@ -25,7 +25,7 @@ public class SchematicHandler {
 
     public void onEnable(){
 
-        if (Bukkit.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit-Core") == null) {
+        if (Bukkit.getServer().getPluginManager().getPlugin("FastAsyncWorldEdit") == null) {
             Skyblock.info("FastAsyncWorldEdit was not found!");
             Skyblock.info("The plugin will be using its own schematic paster...");
             Skyblock.info("NOTE: This may affect performance! We recommend using FastAsyncWorldEdit!");

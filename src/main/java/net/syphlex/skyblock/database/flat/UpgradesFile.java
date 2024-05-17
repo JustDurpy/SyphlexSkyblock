@@ -19,7 +19,8 @@ public class UpgradesFile extends SimpleConfig {
 
     private UpgradeObject harvestUpgrade, spawnRateUpgrade,
             spawnAmountUpgrade, islandSizeUpgrade,
-            teamSizeUpgrade, generatorUpgrade;
+            teamSizeUpgrade, generatorUpgrade,
+            voidChestUpgrade;
 
     private final ArrayList<String> maxedOutLore = new ArrayList<>();
 
@@ -36,6 +37,7 @@ public class UpgradesFile extends SimpleConfig {
         double[] islandSizeCosts, islandSizeValues;
         double[] teamSizeCosts, teamSizeValues;
         double[] generatorCosts, generatorValues;
+        double[] voidChestCosts, voidChestValues;
 
         for (String upgradeSection : config.getConfigurationSection("upgrades").getKeys(false)) {
 
@@ -75,7 +77,7 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    harvestValues[0] = ConfigEnum.DEFAULT_ISLAND_HARVESTRATE.getAsDouble();
+                    harvestValues[0] = ConfigEnum.STARTING_ISLAND_HARVEST_RATE.getAsDouble();
 
                     this.harvestUpgrade = new UpgradeObject(enabled, harvestCosts, harvestValues, guiItem);
                     break;
@@ -95,7 +97,7 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    spawnRateValues[0] = ConfigEnum.DEFAULT_ISLAND_SPAWNRATE.getAsDouble();
+                    spawnRateValues[0] = ConfigEnum.STARTING_ISLAND_SPAWN_RATE.getAsDouble();
 
                     this.spawnRateUpgrade = new UpgradeObject(enabled, spawnRateCosts, spawnRateValues, guiItem);
                     break;
@@ -115,7 +117,7 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    spawnAmountValues[0] = ConfigEnum.DEFAULT_ISLAND_SPAWN_AMOUNT_RATE.getAsDouble();
+                    spawnAmountValues[0] = ConfigEnum.STARTING_ISLAND_SPAWN_AMOUNT.getAsDouble();
 
                     this.spawnAmountUpgrade = new UpgradeObject(enabled, spawnAmountCosts, spawnAmountValues, guiItem);
                     break;
@@ -135,7 +137,7 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    islandSizeValues[0] = ConfigEnum.DEFAULT_ISLAND_SIZE.getAsDouble();
+                    islandSizeValues[0] = ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble();
 
                     this.islandSizeUpgrade = new UpgradeObject(enabled, islandSizeCosts, islandSizeValues, guiItem);
                     break;
@@ -155,7 +157,7 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    teamSizeValues[0] = ConfigEnum.DEFAULT_ISLAND_MAX_MEMBERS.getAsInteger();
+                    teamSizeValues[0] = ConfigEnum.STARTING_ISLAND_TEAM_SIZE.getAsInteger();
 
                     this.teamSizeUpgrade = new UpgradeObject(enabled, teamSizeCosts, teamSizeValues, guiItem);
                     break;
@@ -175,9 +177,29 @@ public class UpgradesFile extends SimpleConfig {
                     }
 
                     // sets the default value for the upgrade
-                    generatorValues[0] = ConfigEnum.DEFAULT_ISLAND_GENERATOR_TIER.getAsDouble();
+                    generatorValues[0] = ConfigEnum.STARTING_ISLAND_GENERATOR_TIER.getAsDouble();
 
                     this.generatorUpgrade = new UpgradeObject(enabled, generatorCosts, generatorValues, guiItem);
+                    break;
+                case "void-chest":
+
+                    voidChestCosts = new double[i+1];
+                    voidChestValues = new double[i+1];
+
+                    for (String levelSection : config.getConfigurationSection("upgrades." + upgradeSection + ".levels").getKeys(false)) {
+
+                        int level = Integer.parseInt(levelSection);
+                        double cost = config.getDouble("upgrades." + upgradeSection + ".levels." + levelSection + ".cost");
+                        double value = config.getDouble("upgrades." + upgradeSection + ".levels." + levelSection + ".value");
+
+                        voidChestCosts[level] = cost;
+                        voidChestValues[level] = value;
+                    }
+
+                    // sets the default value for the upgrade
+                    voidChestValues[0] = ConfigEnum.STARTING_ISLAND_VOID_CHEST_SIZE.getAsInteger();
+
+                    this.voidChestUpgrade = new UpgradeObject(enabled, voidChestCosts, voidChestValues, guiItem);
                     break;
             }
         }
@@ -374,6 +396,39 @@ public class UpgradesFile extends SimpleConfig {
         ));
         config.addDefault("upgrades.generator.levels.1.value", 1);
         config.addDefault("upgrades.generator.levels.1.cost", 10000);
+
+        config.addDefault("upgrades.void-chest.enabled", true);
+        config.addDefault("upgrades.void-chest.gui-item.name", "&e&lVoid Chest Upgrade &7(Lvl %level%)");
+        config.addDefault("upgrades.void-chest.gui-item.material", "CHEST");
+        config.addDefault("upgrades.void-chest.gui-item.slot", 13);
+        config.addDefault("upgrades.void-chest.gui-item.lore", Arrays.asList(
+                "&f&m------------------------",
+                "",
+                "&e&lDescription",
+                "  &fItems that fall into the void",
+                "  &fwill be stored into a private",
+                "  &fisland chest. Upgrade the size",
+                "  &fof this chest to hold more items.",
+                "",
+                " &6➥ &e&lSize: &f%upgrade%x%upgrade% Slots",
+                " &6➥ &e&lNext Size: &f%next_upgrade%x%next_upgrade% Slots",
+                "",
+                "&e&lSizes",
+                " &6- &f9 Slots",
+                " &6- &f18 Slots",
+                " &6- &f27 Slots",
+                "",
+                " &6➥ &e&lUpgrade Cost: &f$%cost%",
+                "",
+                "&7&o(( Left click to upgrade ))",
+                "",
+                "&f&m------------------------"));
+        config.addDefault("upgrades.void-chest.levels.1.value", 9);
+        config.addDefault("upgrades.void-chest.levels.1.cost", 30000);
+        config.addDefault("upgrades.void-chest.levels.2.value", 18);
+        config.addDefault("upgrades.void-chest.levels.2.cost", 45000);
+        config.addDefault("upgrades.void-chest.levels.3.value", 27);
+        config.addDefault("upgrades.void-chest.levels.3.cost", 50000);
 
         save();
     }

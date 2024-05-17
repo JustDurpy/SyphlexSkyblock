@@ -18,7 +18,7 @@ public class MinionCmd extends SimpleCmd {
     }
 
     @Override
-    public ArrayList<String> onTabComplete(CommandSender sender, String[] args) {
+    public ArrayList<String> onTabComplete(Player player, String[] args) {
         ArrayList<String> list = new ArrayList<>();
         return list;
     }

@@ -3,6 +3,7 @@ package net.syphlex.skyblock.util.utilities;
 import lombok.experimental.UtilityClass;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.mine.data.MineBlockData;
+import net.syphlex.skyblock.manager.profile.Profile;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -13,6 +14,11 @@ import java.util.Random;
 
 @UtilityClass
 public class PluginUtil {
+
+    public void broadcast(Object o){
+        for (Profile profile : Skyblock.get().getDataHandler().getMap().values())
+            profile.sendMessage(o.toString());
+    }
 
     public double distanceXZ(Location l1, Location l2){
         return Math.sqrt(Math.pow(l2.getX() - l1.getX(), 2.0) + Math.pow(l2.getZ() - l1.getZ(), 2.0));
