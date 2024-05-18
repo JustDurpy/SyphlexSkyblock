@@ -34,6 +34,7 @@ public class Island {
     private final Position corner1, corner2, center;
     private Position home, warp;
     private List<MemberProfile> members = new ArrayList<>();
+    private List<MemberProfile> bannedPlayers = new ArrayList<>();
     private ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
     private final IslandUpgradeData upgrades = new IslandUpgradeData(
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getIslandSizeUpgrade().clone(),
