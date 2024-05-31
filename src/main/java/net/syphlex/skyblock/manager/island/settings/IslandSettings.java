@@ -2,22 +2,17 @@ package net.syphlex.skyblock.manager.island.settings;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandBorderColor;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandSetting;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandTimeLock;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandWeatherLock;
 
 @Getter
-public enum IslandSettings {
-    ALLOW_VISITORS("Allow Visitors", true),
-    WEATHER_OFF("No Weather", false),
-    ALWAYS_DAY("Always Day", false),
-    ALWAYS_NIGHT("Always Night", false),
-    ISLAND_BORDER_BLUE("Blue Island Border", true),
-    ISLAND_BORDER_RED("Red Island Border", false),
-    ISLAND_BORDER_GREEN("Green Island Border", false);
+@Setter
+public class IslandSettings {
 
-    private final String identifier;
-    @Setter private boolean enabled;
-
-    IslandSettings(String identifier, boolean enabled){
-        this.identifier = identifier;
-        this.enabled = enabled;
-    }
+    private final IslandSetting allowVisitors = new IslandSetting("Allow Visitors", true);
+    private IslandTimeLock timeLock = IslandTimeLock.NONE;
+    private IslandWeatherLock weatherLock = IslandWeatherLock.NONE;
+    private IslandBorderColor islandBorderColor = IslandBorderColor.BLUE;
 }

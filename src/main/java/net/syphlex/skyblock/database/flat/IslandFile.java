@@ -7,6 +7,9 @@ import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.permissions.IslandPermission;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandBorderColor;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandTimeLock;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandWeatherLock;
 import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.data.Position;
@@ -58,6 +61,11 @@ public class IslandFile extends SimpleConfig {
             int teamSize = config.getInt("island.upgrades.team-size");
             int generator = config.getInt("island.upgrades.generator");
 
+            boolean allowVisitors = config.getBoolean("island.settings.allow-visitors");
+            IslandBorderColor borderColor = IslandBorderColor.of(config.getString("island.settings.border-color"));
+            IslandTimeLock timeLock = IslandTimeLock.of(config.getString("island.settings.time-lock"));
+            IslandWeatherLock weatherLock = IslandWeatherLock.of(config.getString("island.settings.weather-lock"));
+
             ArrayList<MemberProfile> members = new ArrayList<>();
 
             if (config.getStringList("island.members").size() > 0) {
@@ -81,12 +89,18 @@ public class IslandFile extends SimpleConfig {
 
             Island island = new Island(id, islandIdentifier, leader, corner1, corner2, center, members, storedBlocks);
             island.setHome(home);
+
             island.getUpgrades().getIslandSize().setLevel(islandSize);
             island.getUpgrades().getSpawnRate().setLevel(spawnRate);
             island.getUpgrades().getSpawnAmount().setLevel(spawnAmount);
             island.getUpgrades().getHarvest().setLevel(harvest);
             island.getUpgrades().getTeamSize().setLevel(teamSize);
             island.getUpgrades().getGenerator().setLevel(generator);
+
+            island.getSettings().getAllowVisitors().setEnabled(allowVisitors);
+            island.getSettings().setIslandBorderColor(borderColor);
+            island.getSettings().setTimeLock(timeLock);
+            island.getSettings().setWeatherLock(weatherLock);
 
             for (IslandRole role : island.getRoles()) {
                 for (IslandPermission permission : IslandPermission.values()) {
@@ -136,6 +150,11 @@ public class IslandFile extends SimpleConfig {
             config.set("island.upgrades.harvest", island.getUpgrades().getHarvest().getLevel());
             config.set("island.upgrades.team-size", island.getUpgrades().getTeamSize().getLevel());
             config.set("island.upgrades.generator", island.getUpgrades().getGenerator().getLevel());
+
+            config.set("island.settings.allow-visitors", island.getSettings().getAllowVisitors().get());
+            config.set("island.settings.border-color", island.getSettings().getIslandBorderColor().name());
+            config.set("island.settings.time-lock", island.getSettings().getTimeLock().name());
+            config.set("island.settings.weather-lock", island.getSettings().getWeatherLock().name());
 
             List<String> uuids = new ArrayList<>();
             if (island.getMembers().size() > 0) {

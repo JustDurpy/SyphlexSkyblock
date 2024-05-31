@@ -7,6 +7,7 @@ import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
+import net.syphlex.skyblock.manager.island.settings.IslandSettings;
 import net.syphlex.skyblock.manager.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.MathHelper;
@@ -49,6 +50,8 @@ public class Island {
     /*
     TODO make island border color in here under "settings"
      */
+
+    private final IslandSettings settings = new IslandSettings();
 
     private final ImmutableList<IslandRole> roles = ImmutableList.of(
             IslandRole.VISITOR,
@@ -105,11 +108,10 @@ public class Island {
     /**
      *
      * @param p - refreshes the island border for 'player'
-     * @param color - color of the border
      */
-    public void refreshBorder(Player p, Color color){
+    public void refreshBorder(Player p){
         Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
-        Skyblock.get().getIslandHandler().generateIslandBorder(this, p, color);
+        Skyblock.get().getIslandHandler().generateIslandBorder(this, p, this.settings.getIslandBorderColor().getColor());
     }
 
     /**
@@ -122,7 +124,7 @@ public class Island {
                     || !isInside(p.getLocation()))
                 continue;
 
-            refreshBorder(p, Color.BLUE);
+            refreshBorder(p);
         }
     }
 

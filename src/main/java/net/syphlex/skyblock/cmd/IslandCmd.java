@@ -2,6 +2,7 @@ package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.impl.island.*;
+import net.syphlex.skyblock.manager.gui.impl.island.settings.IslandSettingsGui;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
@@ -40,6 +41,7 @@ public class IslandCmd extends SimpleCmd {
         options.add("settings");
         options.add("upgrade");
         options.add("permissions");
+        options.add("settings");
         options.add("sethome");
         options.add("home");
         options.add("invite");
@@ -104,6 +106,7 @@ public class IslandCmd extends SimpleCmd {
                     player.sendMessage(StringUtil.CC(" &7* &e/island &finfo <island>"));
                     player.sendMessage(StringUtil.CC(" &7* &e/island &fupgrades"));
                     player.sendMessage(StringUtil.CC(" &7* &e/island &fpermissions"));
+                    player.sendMessage(StringUtil.CC(" &7* &e/island &fsettings"));
                     player.sendMessage(StringUtil.CC(" &7* &e/island &fhome"));
                     player.sendMessage(StringUtil.CC(" &7* &e/island &finvite <player>"));
                     player.sendMessage(StringUtil.CC(" &7* &e/island &fjoin <island/player>"));
@@ -131,6 +134,10 @@ public class IslandCmd extends SimpleCmd {
                     break;
                 case "permissions":
                     handlePermissions(profile);
+                    break;
+                case "settings":
+                case "setting":
+                    handleSettings(profile);
                     break;
                 case "home":
                     handleHome(profile);
@@ -246,6 +253,16 @@ public class IslandCmd extends SimpleCmd {
         }
 
         toVisit.teleport(profile.getPlayer());
+    }
+
+    private void handleSettings(Profile profile){
+
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
+
+        Skyblock.get().getGuiHandler().openGui(profile, new IslandSettingsGui());
     }
 
     private void handleKick(Profile profile, String[] args) {

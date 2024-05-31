@@ -221,6 +221,8 @@ public class IslandHandler {
 
         profile.getPlayer().sendMessage(Messages.ISLAND_CREATE.get()
                 .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
+
+        profile.getPlayer().sendMessage("" + island.getUpgrades().getIslandSize().getLevel());
     }
 
     public void generateIslandBorder(Island island, Player player, Color color) {

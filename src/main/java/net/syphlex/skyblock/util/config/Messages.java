@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 public enum Messages {
     USAGE("&cUsage: /%usage%"),
     NO_PERMISSION("&cError: You do not have permission to issue this."),
+    RANK_REQUIRED("&cError: It seems that your rank does not have permission for this. You may purchase a rank for perks and more at &estore.syphlex.net&c."),
     PLAYER_NOT_FOUND("&cError: That player is not online."),
     NO_RECORD_OF_PLAYER("&cError: There was no record of that player found."),
     ISLAND_CREATE("&aYou have successfully created an island. (%time%ms)"),
@@ -38,6 +39,9 @@ public enum Messages {
     WAIT_INVITE("&cError: You must wait before inviting this player again."),
     ISLAND_UPGRADE_INSUFFICIENT_FUNDS("&cError: You do not have enough money to purchase this upgrade."),
     ISLAND_UPGRADE_SUCCESS("&aYou have successfully upgraded your island!"),
+    ISLAND_SETTING_ENABLED("&aYou have enabled this setting for your island."),
+    ISLAND_SETTING_DISABLED("&cYou have disabled this setting for your island."),
+    ISLAND_SETTING_BORDER_CHANGE("&aYou have changed the color of your island border to %color%&a."),
     MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)"),
     DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins."),
     CALCULATE_ISLAND_WORTH("&7Recalculating all island data..."),

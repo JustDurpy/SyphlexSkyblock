@@ -5,7 +5,12 @@ import org.bukkit.entity.Player;
 
 public enum Permissions {
     ADMIN("skyblock.admin"),
-    MINE_ADMIN("skyblock.mine.admin");
+    MINE_ADMIN("skyblock.mine.admin"),
+    ISLAND_SETTINGS_ALWAYS_DAY("skyblock.island.settings.alwaysday"),
+    ISLAND_SETTINGS_ALWAYS_NIGHT("skyblock.island.settings.alwaysnight"),
+    ISLAND_SETTINGS_BLUE_BORDER("skyblock.island.settings.blueborder"),
+    ISLAND_SETTINGS_RED_BORDER("skyblock.island.settings.redborder"),
+    ISLAND_SETTINGS_GREEN_BORDER("skyblock.island.settings.greenborder");
 
     private String permission;
 
