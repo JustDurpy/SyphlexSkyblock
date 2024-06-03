@@ -2,7 +2,6 @@ package net.syphlex.skyblock.manager.gui;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.syphlex.skyblock.manager.gui.impl.enchanter.EnchanterGui;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.inventory.Inventory;
@@ -13,10 +12,6 @@ import java.util.Map;
 public class GuiHandler {
 
     private final Map<Profile, SimpleGui> guicache = new HashMap<>();
-
-    @Getter
-    @Setter
-    private EnchanterGui enchanterGui;
 
     public void openGui(Profile profile, SimpleGui gui){
         guicache.remove(profile);

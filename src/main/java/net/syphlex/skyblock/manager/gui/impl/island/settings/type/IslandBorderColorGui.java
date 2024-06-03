@@ -28,7 +28,10 @@ public class IslandBorderColorGui extends SimpleGui {
 
         final Profile profile = e.getProfile();
 
-        if (!profile.isIslandLeader()) return;
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
 
         final Island island = profile.getIsland();
 

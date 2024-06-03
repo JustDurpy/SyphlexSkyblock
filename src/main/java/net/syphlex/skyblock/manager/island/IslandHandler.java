@@ -34,9 +34,6 @@ public class IslandHandler {
     private IslandFile islandFile;
     private IslandGrid grid;
 
-    public IslandHandler(){
-    }
-
     public void onEnable(){
 
         final long started = System.currentTimeMillis();
@@ -223,24 +220,6 @@ public class IslandHandler {
                 .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
 
         profile.getPlayer().sendMessage("" + island.getUpgrades().getIslandSize().getLevel());
-    }
-
-    public void generateIslandBorder(Island island, Player player, Color color) {
-
-        WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
-        worldBorder.setCenter(island.getCenter().getX(), island.getCenter().getZ());
-        worldBorder.setSize(island.getUpgrades().getIslandSize().get());
-
-        worldBorder.setDamageAmount(0);
-        worldBorder.setDamageBuffer(0);
-
-        if (color == Color.RED) {
-            worldBorder.setSize(island.getUpgrades().getIslandSize().get() - 0.1D, 20000000L);
-        } else if (color == Color.GREEN) {
-            worldBorder.setSize( island.getUpgrades().getIslandSize().get() + 0.1D, 20000000L);
-        }
-
-        player.setWorldBorder(worldBorder);
     }
 
     public void degenerateIslandBorder(Player player){

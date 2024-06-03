@@ -15,10 +15,7 @@ import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ public class Island {
     private final Position corner1, corner2, center;
     private Position home, warp;
     private List<MemberProfile> members = new ArrayList<>();
-    private List<MemberProfile> bannedPlayers = new ArrayList<>();
+    private List<String> bannedPlayers = new ArrayList<>();
     private ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
     private final IslandUpgradeData upgrades = new IslandUpgradeData(
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getIslandSizeUpgrade().clone(),
@@ -46,10 +43,6 @@ public class Island {
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getGeneratorUpgrade().clone(),
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getVoidChestUpgrade().clone()
     );
-
-    /*
-    TODO make island border color in here under "settings"
-     */
 
     private final IslandSettings settings = new IslandSettings();
 
@@ -95,6 +88,14 @@ public class Island {
 
     /**
      *
+     * @param target - ban a visitor from visiting the island
+     */
+    public void banVisitor(OfflinePlayer target){
+        this.bannedPlayers.add(target.getUniqueId().toString());
+    }
+
+    /**
+     *
      * @param o - object to broadcast to all island members
      */
     public void broadcast(Object o){
@@ -111,7 +112,7 @@ public class Island {
      */
     public void refreshBorder(Player p){
         Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
-        Skyblock.get().getIslandHandler().generateIslandBorder(this, p, this.settings.getIslandBorderColor().getColor());
+        generateIslandBorder(p);
     }
 
     /**
@@ -167,7 +168,28 @@ public class Island {
             bukkit.add(0, 0.5, 0);
 
         player.teleport(bukkit);
-        Skyblock.get().getIslandHandler().generateIslandBorder(this, player, Color.BLUE);
+        generateIslandBorder(player);
+    }
+
+    public void generateIslandBorder(Player player) {
+
+        double size = this.upgrades.getIslandSize().get();
+        Color color = this.settings.getIslandBorderColor().getColor();
+
+        WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
+        worldBorder.setCenter(this.center.getX(), this.center.getZ());
+        worldBorder.setSize(size);
+
+        worldBorder.setDamageAmount(0);
+        worldBorder.setDamageBuffer(0);
+
+        if (color == Color.RED) {
+            worldBorder.setSize(size - 0.1D, 20000000L);
+        } else if (color == Color.GREEN) {
+            worldBorder.setSize( size + 0.1D, 20000000L);
+        }
+
+        player.setWorldBorder(worldBorder);
     }
 
     public MemberProfile getMember(UUID uuid){

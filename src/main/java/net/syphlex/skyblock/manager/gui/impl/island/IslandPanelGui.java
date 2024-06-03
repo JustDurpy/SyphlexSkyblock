@@ -1,6 +1,7 @@
 package net.syphlex.skyblock.manager.gui.impl.island;
 
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.manager.gui.impl.island.settings.IslandSettingsGui;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.profile.Profile;
@@ -19,15 +20,6 @@ public class IslandPanelGui extends SimpleGui {
                 .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
                 .setName(" ")
                 .build());
-
-        /*
-
-        Island home
-        Island upgrades
-        Island permissions
-        Island settings
-
-         */
 
         String[] colors = new String[]{"#A482F8", "#580EAA"};
 
@@ -101,7 +93,7 @@ public class IslandPanelGui extends SimpleGui {
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandPermissionsRolesGui());
                 break;
             case 16:
-                profile.getPlayer().sendMessage("in development...");
+                Skyblock.get().getGuiHandler().openGui(profile, new IslandSettingsGui());
                 break;
         }
 

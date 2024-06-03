@@ -5,14 +5,11 @@ import net.milkbowl.vault.economy.Economy;
 import net.syphlex.skyblock.cmd.*;
 import net.syphlex.skyblock.database.flat.PluginFile;
 import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
-import net.syphlex.skyblock.manager.customenchant.EnchantHandler;
 import net.syphlex.skyblock.manager.gui.GuiHandler;
 import net.syphlex.skyblock.manager.island.IslandHandler;
 import net.syphlex.skyblock.manager.island.IslandUpgradeHandler;
 import net.syphlex.skyblock.manager.leaderboard.LeaderboardHandler;
 import net.syphlex.skyblock.manager.mine.MineHandler;
-import net.syphlex.skyblock.manager.minion.MinionHandler;
-import net.syphlex.skyblock.manager.mobcoin.MobCoinHandler;
 import net.syphlex.skyblock.manager.profile.DataHandler;
 import net.syphlex.skyblock.manager.schematic.SchematicHandler;
 import net.syphlex.skyblock.manager.scoreboard.ScoreboardHandler;
@@ -42,16 +39,14 @@ public class Skyblock extends JavaPlugin {
 
     private ThreadHandler threadHandler;
     private SkyblockSettingsFile settingsFile;
+    private PluginFile pluginFile;
     private SchematicHandler schematicHandler;
     private IslandUpgradeHandler upgradeHandler;
     private IslandHandler islandHandler;
     private MineHandler mineHandler;
     private DataHandler dataHandler;
-    private MinionHandler minionHandler;
     private ScoreboardHandler scoreboardHandler;
     private GuiHandler guiHandler;
-    private MobCoinHandler mobCoinHandler;
-    private EnchantHandler enchantHandler;
     private LeaderboardHandler leaderboardHandler;
 
     @Override
@@ -63,10 +58,11 @@ public class Skyblock extends JavaPlugin {
     public void onEnable(){
         instance = this;
 
+        load();
+
         if (!dependencies())
             return;
 
-        load();
         init();
         start();
 
@@ -90,9 +86,6 @@ public class Skyblock extends JavaPlugin {
         new PluginCmd();
         new IslandCmd();
         new MineCmd();
-        new MinionCmd();
-        new EnchanterCmd();
-        new MobCoinsCmd();
     }
 
     private void registerListeners(){
@@ -101,8 +94,6 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new IslandListener(), this);
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new GuiListener(), this);
-        pm.registerEvents(new MinionListener(), this);
-        pm.registerEvents(new CustomEnchantListener(), this);
     }
 
     private boolean wildStackerHook = false;
@@ -129,8 +120,8 @@ public class Skyblock extends JavaPlugin {
     }
 
     private void load(){
-        PluginFile pluginFile = new PluginFile();
-        pluginFile.read();
+        this.pluginFile = new PluginFile();
+        this.pluginFile.read();
 
         this.settingsFile = new SkyblockSettingsFile();
     }
@@ -141,12 +132,9 @@ public class Skyblock extends JavaPlugin {
         this.islandHandler = new IslandHandler();
         this.mineHandler = new MineHandler();
         this.dataHandler = new DataHandler();
-        this.minionHandler = new MinionHandler();
         this.scoreboardHandler = new ScoreboardHandler();
         this.schematicHandler = new SchematicHandler();
         this.guiHandler = new GuiHandler();
-        this.mobCoinHandler = new MobCoinHandler();
-        this.enchantHandler = new EnchantHandler();
         this.leaderboardHandler = new LeaderboardHandler();
     }
 
@@ -157,10 +145,8 @@ public class Skyblock extends JavaPlugin {
         this.islandHandler.onEnable();
         this.mineHandler.onEnable();
         this.dataHandler.onEnable();
-        this.minionHandler.onEnable();
         this.scoreboardHandler.onEnable();
         this.schematicHandler.onEnable();
-        this.enchantHandler.onEnable();
         this.leaderboardHandler.onEnable();
     }
 
@@ -168,7 +154,6 @@ public class Skyblock extends JavaPlugin {
         this.leaderboardHandler.onDisable();
         this.schematicHandler.onDisable();
         this.scoreboardHandler.onDisable();
-        this.minionHandler.onDisable();
         this.dataHandler.onDisable();
         this.mineHandler.onDisable();
         this.islandHandler.onDisable();

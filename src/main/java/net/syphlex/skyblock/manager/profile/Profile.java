@@ -7,8 +7,6 @@ import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
-import net.syphlex.skyblock.manager.minion.Minion;
-import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
@@ -24,7 +22,6 @@ public class Profile {
     private FastBoard scoreboard;
 
     private Island island = null;
-    private Minion attachingChest = null;
 
     private int mobCoins;
     private boolean respawnAtIsland = false, adminMode = false;

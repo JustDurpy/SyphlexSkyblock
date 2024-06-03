@@ -54,7 +54,7 @@ public class DataHandler {
             if (island == null)
                 return;
 
-            Skyblock.get().getIslandHandler().generateIslandBorder(island, player, Color.BLUE);
+            island.generateIslandBorder(player);
         }, 1L);
     }
 

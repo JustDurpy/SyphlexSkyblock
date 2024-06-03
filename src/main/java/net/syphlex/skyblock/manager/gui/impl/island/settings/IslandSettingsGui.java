@@ -35,6 +35,8 @@ public class IslandSettingsGui extends SimpleGui {
                 .setMaterial(Material.REPEATER)
                 .setName("&dExtra Settings")
                 .build());
+
+        setIslandPanelButton(22);
     }
 
     @Override
@@ -43,9 +45,9 @@ public class IslandSettingsGui extends SimpleGui {
         final Profile p = e.getProfile();
 
         switch (e.getSlot()) {
-            case 11:
+            case 10:
                 break;
-            case 15:
+            case 14:
                 Skyblock.get().getGuiHandler().openGui(p, new IslandBorderColorGui());
                 break;
         }

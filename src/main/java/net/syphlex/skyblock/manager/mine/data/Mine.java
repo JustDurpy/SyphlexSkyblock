@@ -19,7 +19,7 @@ public class Mine {
     private Position pos1, pos2, corner1, corner2, spawn;
     private final List<MineBlockData> blocks;
 
-    public Mine(int id, String mineName, List<MineBlockData> blockData, PositionPosition corner1, Position corner2, Position spawn){
+    public Mine(int id, String mineName, List<MineBlockData> blockData, Position corner1, Position corner2, Position spawn){
         this.id = id;
         this.mineName = mineName;
         this.blocks = blockData;

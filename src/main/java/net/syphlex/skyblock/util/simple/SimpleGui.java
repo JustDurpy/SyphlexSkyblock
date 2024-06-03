@@ -62,4 +62,9 @@ public abstract class SimpleGui implements InventoryHolder {
                 .build());
     }
 
+    public SimpleGui addMenuItems(final ArrayList<GuiItem> items){
+        this.guiItems.addAll(items);
+        return this;
+    }
+
 }

@@ -129,9 +129,6 @@ public class IslandCmd extends SimpleCmd {
                 case "upgrades":
                     handleUpgrades(profile);
                     break;
-                case "settings":
-                    // todo settings
-                    break;
                 case "permissions":
                     handlePermissions(profile);
                     break;
@@ -342,9 +339,72 @@ public class IslandCmd extends SimpleCmd {
     }
 
     private void handleBan(Profile profile, String[] args){
+
+        final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+        if (!profile.hasIsland()) {
+            Messages.NOT_APART_OF_ISLAND.send(profile);
+            return;
+        }
+
+        final Island island = profile.getIsland();
+
+        if (!profile.getMemberProfile().getRole().hasPermission(IslandPermission.BAN_VISITOR)) {
+            Messages.NO_ISLAND_PERMISSION.send(profile);
+            return;
+        }
+
+        if (island.isApartOfIsland(target.getUniqueId())) {
+            Messages.CANT_BAN_MEMBER_OF_ISLAND.send(profile);
+            return;
+        }
+
+        island.banVisitor(target);
+
+        Messages.BAN_VISITOR.send(profile);
+        island.broadcast(Messages.BAN_VISITOR_BROADCAST.get()
+                .replace("%player%", profile.getPlayer().getName())
+                .replace("%visitor%", target.getName()));
+
+        if (target.isOnline()) {
+            Player p = target.getPlayer();
+            p.teleport(Skyblock.get().getMainSpawn());
+            Messages.BANNED_FROM_ISLAND.send(p);
+        }
     }
 
     private void handleKickVisitor(Profile profile, String[] args){
+
+        if (!profile.hasIsland()){
+            Messages.NOT_APART_OF_ISLAND.send(profile);
+            return;
+        }
+
+        final Player target = Bukkit.getPlayer(args[1]);
+
+        if (target == null){
+            Messages.PLAYER_NOT_FOUND.send(target);
+            return;
+        }
+
+        final Island island = profile.getIsland();
+        final Profile targetProfile = Skyblock.get().getDataHandler().get(target);
+
+        if (!profile.getMemberProfile().getRole().hasPermission(IslandPermission.KICK_VISITOR)) {
+            Messages.NO_ISLAND_PERMISSION.send(profile);
+            return;
+        }
+
+        if (island.isApartOfIsland(target.getUniqueId())) {
+            Messages.CANT_VISITOR_KICK_MEMBER_FROM_ISLAND.send(profile);
+            return;
+        }
+
+        Messages.KICK_VISITOR.send(profile);
+        island.broadcast(Messages.KICK_VISITOR_BROADCAST.get()
+                .replace("%visitor%", target.getName())
+                .replace("%player%", profile.getPlayer().getName()));
+        target.teleport(Skyblock.get().getMainSpawn());
     }
 
     private void handleInfo(Profile profile, String[] args){

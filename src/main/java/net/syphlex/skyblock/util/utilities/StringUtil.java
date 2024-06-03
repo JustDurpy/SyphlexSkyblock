@@ -55,6 +55,48 @@ public class StringUtil {
         return colourCodes;
     }
 
+    @SuppressWarnings("all")
+    public String parseConfigHex(String message) {
+
+        ArrayList<String> colors = new ArrayList<>();
+
+        for (int j = 0; j < message.length(); j++) {
+
+            int lastStart = -5; // impossible value idk
+
+            int start = -1;
+            int end = -1;
+
+            for (int i = 0; i < message.length(); i++) {
+                char c = message.charAt(i);
+
+                if (c == '{') {
+                    start = i;
+                } else if (c == '}') {
+                    end = i;
+                    if (start != -1) break;
+                }
+            }
+
+            if (start > end || start == -1 || end == -1) continue;
+
+            if ()
+
+            colors.add(message.substring(start, end));
+        }
+
+        if (colors.size() == 1)
+            return parseHex(message, colors.get(0));
+
+        String[] colorsArray = new String[colors.size()];
+        int i = 0;
+        for (String color : colors) {
+            colorsArray[i] = color;
+            i++;
+        }
+
+        return createGradFromString(message, colorsArray);
+    }
 
     public String CC(String s){
         return ChatColor.translateAlternateColorCodes('&', s);

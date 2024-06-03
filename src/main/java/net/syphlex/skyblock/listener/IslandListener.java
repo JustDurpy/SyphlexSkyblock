@@ -484,7 +484,7 @@ public class IslandListener implements Listener {
                 return;
 
             //Skyblock.get().getIslandHandler().degenerateIslandBorder(p);
-            Skyblock.get().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
+            island.generateIslandBorder(p);
             return;
         }
 
@@ -501,7 +501,7 @@ public class IslandListener implements Listener {
             if (island == null)
                 return;
 
-            Skyblock.get().getIslandHandler().generateIslandBorder(island, p, Color.BLUE);
+            island.generateIslandBorder(p);
         }
     }
 
