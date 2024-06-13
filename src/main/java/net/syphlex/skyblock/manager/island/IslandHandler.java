@@ -156,11 +156,19 @@ public class IslandHandler {
             return;
         }
 
+        if (Skyblock.get().getCooldownHandler().getIslandDeleteCooldown().isUnderCooldown(profile.getPlayer().getUniqueId())) {
+            Skyblock.get().getCooldownHandler().getIslandDeleteCooldown().sendUnderCooldown(profile);
+            return;
+        }
+
         degenerateIsland(profile.getIsland());
         profile.setIsland(null);
 
         profile.getPlayer().sendMessage(Messages.ISLAND_DELETE.get()
                 .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
+
+        // start island deletion cooldown
+        Skyblock.get().getCooldownHandler().getIslandDeleteCooldown().start(profile.getPlayer().getUniqueId());
     }
 
     public void degenerateIsland(Island island){
@@ -180,6 +188,12 @@ public class IslandHandler {
 
         if (profile.getIsland() != null) {
             Messages.ALREADY_HAS_ISLAND.send(profile);
+            return;
+        }
+
+        // if player is still under a cooldown, dont continue.
+        if (Skyblock.get().getCooldownHandler().getIslandCreateCooldown().isUnderCooldown(player.getUniqueId())) {
+            Skyblock.get().getCooldownHandler().getIslandCreateCooldown().sendUnderCooldown(profile);
             return;
         }
 
@@ -218,6 +232,9 @@ public class IslandHandler {
 
         profile.getPlayer().sendMessage(Messages.ISLAND_CREATE.get()
                 .replace("%time%", String.valueOf(System.currentTimeMillis() - started)));
+
+        // start island creation cooldown timer
+        Skyblock.get().getCooldownHandler().getIslandCreateCooldown().start(player.getUniqueId());
     }
 
     public void degenerateIslandBorder(Player player){

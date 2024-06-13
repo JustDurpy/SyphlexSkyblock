@@ -21,23 +21,21 @@ public class PluginCmd extends SimpleCmd {
 
     @Override
     public void handleCmd(Player player, String[] args) {
-
-        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            player.sendMessage(StringUtil.CC("&aReloading all configs..."));
-            Skyblock.get().onDisable();
-            Skyblock.get().onEnable();
-            //Skyblock.get().start();
-            player.sendMessage(StringUtil.CC("&aSuccessfully reloaded the plugin!"));
-        }
+        handle(player, args);
     }
 
     @Override
     public void handleServerCmd(CommandSender sender, String[] args) {
+        handle(sender, args);
+    }
+
+    private void handle(CommandSender sender, String[] args){
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            sender.sendMessage(StringUtil.CC("&aReloading all configs..."));
-            Skyblock.get().onDisable();
-            Skyblock.get().onEnable();
-            sender.sendMessage(StringUtil.CC("&aSuccessfully reloaded the plugin!"));
+            sender.sendMessage("i dont work yet pfft, /reload, plugman reload me, or restart your sever.");
+            //sender.sendMessage(StringUtil.CC("&aReloading all configs..."));
+            //Skyblock.get().onDisable();
+            //Skyblock.get().onEnable();
+            //sender.sendMessage(StringUtil.CC("&aSuccessfully reloaded the plugin!"));
         }
     }
 }

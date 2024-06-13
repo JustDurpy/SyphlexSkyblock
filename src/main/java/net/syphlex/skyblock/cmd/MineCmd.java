@@ -273,6 +273,7 @@ public class MineCmd extends SimpleCmd {
         Mine mine = Skyblock.get().getMineHandler().getMine(name);
 
         if (mine == null) {
+            Messages.MINE_DOES_NOT_EXIST.send(player);
             player.sendMessage("That mine does not exist.");
             return;
         }
@@ -297,7 +298,7 @@ public class MineCmd extends SimpleCmd {
         Mine mine = Skyblock.get().getMineHandler().getMine(name);
 
         if (mine == null) {
-            player.sendMessage("That mine does not exist.");
+            Messages.MINE_DOES_NOT_EXIST.send(player);
             return;
         }
 

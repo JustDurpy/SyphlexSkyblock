@@ -70,6 +70,7 @@ public enum Messages {
     MINE_SET_SPAWN("&aYou have set the spawn position for %mine%."),
     MINE_ADD_BLOCK("&aYou have added %block% with a chance of %chance%% to %mine%."),
     MINE_DEL_BLOCK("&aYou have removed %block% from %mine%."),
+    UNDER_COOLDOWN("&cError: You must wait %time_left% seconds to do this again as you are under a cooldown."),
     FEATURE_DISABLED("&cError: That feature is currently disabled.");
 
     private String msg;

@@ -17,6 +17,10 @@ import java.util.List;
 @Getter
 public class UpgradesFile extends SimpleConfig {
 
+    /*
+    TODO make menu config for the upgrades menu, then make it to where each upgrade can have 'x' desired levels
+     */
+
     private UpgradeObject harvestUpgrade, spawnRateUpgrade,
             spawnAmountUpgrade, islandSizeUpgrade,
             teamSizeUpgrade, generatorUpgrade;

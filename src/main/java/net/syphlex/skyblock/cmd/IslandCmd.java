@@ -49,6 +49,9 @@ public class IslandCmd extends SimpleCmd {
         options.add("invite");
         options.add("join");
         options.add("leave");
+        options.add("promote");
+        options.add("demote");
+        options.add("setleader");
         options.add("top");
         options.add("kick");
         options.add("kickvisitor");
@@ -60,7 +63,6 @@ public class IslandCmd extends SimpleCmd {
         if (Permissions.ADMIN.has(player)) {
             options.add("admin");
         }
-
 
         if (args.length == 0) {
             return options;
@@ -86,6 +88,20 @@ public class IslandCmd extends SimpleCmd {
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         if (p.getName().toLowerCase().startsWith(args[1].toLowerCase()))
                             list.add(p.getName());
+                    }
+                    return list;
+                case "promote":
+                case "demote":
+                case "setleader":
+
+                    final Profile profile = Skyblock.get().getDataHandler().get(player);
+
+                    if (!profile.hasIsland())
+                        return list;
+
+                    for (MemberProfile member : profile.getIsland().getMembers()) {
+                        if (member.getUsername().toLowerCase().startsWith(args[1].toLowerCase()))
+                            list.add(member.getUsername());
                     }
                     return list;
             }

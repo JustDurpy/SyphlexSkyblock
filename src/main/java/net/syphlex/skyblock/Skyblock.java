@@ -5,6 +5,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.syphlex.skyblock.cmd.*;
 import net.syphlex.skyblock.database.flat.PluginFile;
 import net.syphlex.skyblock.database.flat.SkyblockSettingsFile;
+import net.syphlex.skyblock.manager.cooldown.CooldownHandler;
 import net.syphlex.skyblock.manager.gui.GuiHandler;
 import net.syphlex.skyblock.manager.island.IslandHandler;
 import net.syphlex.skyblock.manager.island.IslandUpgradeHandler;
@@ -47,6 +48,7 @@ public class Skyblock extends JavaPlugin {
     private DataHandler dataHandler;
     private ScoreboardHandler scoreboardHandler;
     private GuiHandler guiHandler;
+    private CooldownHandler cooldownHandler;
     private LeaderboardHandler leaderboardHandler;
 
     @Override
@@ -137,6 +139,7 @@ public class Skyblock extends JavaPlugin {
         this.scoreboardHandler = new ScoreboardHandler();
         this.schematicHandler = new SchematicHandler();
         this.guiHandler = new GuiHandler();
+        this.cooldownHandler = new CooldownHandler();
         this.leaderboardHandler = new LeaderboardHandler();
     }
 
