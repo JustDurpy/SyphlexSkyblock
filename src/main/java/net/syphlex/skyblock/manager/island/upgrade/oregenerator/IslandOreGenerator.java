@@ -11,17 +11,17 @@ import java.util.Random;
 @Getter
 public class IslandOreGenerator {
 
-    private final int tier;
+    private final int id;
     private final String name;
     private final ArrayList<OreGeneratorBlockData> blocks = new ArrayList<>();
 
-    public IslandOreGenerator(final int tier, final String name){
-        this.tier = tier;
+    public IslandOreGenerator(final int id, final String name){
+        this.id = id;
         this.name = name;
     }
 
     public String getName(){
-        return StringUtil.CC(this.name);
+        return this.name;
     }
 
     public OreGeneratorBlockData generate(){

@@ -1,14 +1,11 @@
 package net.syphlex.skyblock.util.utilities;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import net.md_5.bungee.api.ChatColor;
 import net.syphlex.skyblock.util.utilities.rainbow.HomogeneousRainbowException;
 import net.syphlex.skyblock.util.utilities.rainbow.InvalidColourException;
 import net.syphlex.skyblock.util.utilities.rainbow.NumberRangeException;
 import net.syphlex.skyblock.util.utilities.rainbow.Rainbow;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @UtilityClass
+@SuppressWarnings("all")
 public class StringUtil {
 
     public static final Pattern hexadecimalRegex = Pattern.compile("#[a-fA-F0-9]{6}");
@@ -55,47 +53,22 @@ public class StringUtil {
         return colourCodes;
     }
 
-    @SuppressWarnings("all")
-    public String parseConfigHex(String message) {
+    public String HexCC(String message){
+        // Translate standard color codes
+        String translatedMessage = ChatColor.translateAlternateColorCodes('&', message.replace("{", "&").replace("}", ""));
 
-        ArrayList<String> colors = new ArrayList<>();
+        // Translate hex color codes
+        Pattern hexPattern = Pattern.compile("\\{#([A-Fa-f0-9]{6})}");
+        Matcher matcher = hexPattern.matcher(translatedMessage);
+        StringBuffer buffer = new StringBuffer();
 
-        for (int j = 0; j < message.length(); j++) {
-
-            int lastStart = -5; // impossible value idk
-
-            int start = -1;
-            int end = -1;
-
-            for (int i = 0; i < message.length(); i++) {
-                char c = message.charAt(i);
-
-                if (c == '{') {
-                    start = i;
-                } else if (c == '}') {
-                    end = i;
-                    if (start != -1) break;
-                }
-            }
-
-            if (start > end || start == -1 || end == -1) continue;
-
-            if ()
-
-            colors.add(message.substring(start, end));
+        while (matcher.find()) {
+            String hexColor = matcher.group(1);
+            matcher.appendReplacement(buffer, ChatColor.of("#" + hexColor).toString());
         }
+        matcher.appendTail(buffer);
 
-        if (colors.size() == 1)
-            return parseHex(message, colors.get(0));
-
-        String[] colorsArray = new String[colors.size()];
-        int i = 0;
-        for (String color : colors) {
-            colorsArray[i] = color;
-            i++;
-        }
-
-        return createGradFromString(message, colorsArray);
+        return CC(buffer.toString());
     }
 
     public String CC(String s){

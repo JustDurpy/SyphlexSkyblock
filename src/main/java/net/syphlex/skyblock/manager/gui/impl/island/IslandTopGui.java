@@ -2,9 +2,13 @@ package net.syphlex.skyblock.manager.gui.impl.island;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
+import net.syphlex.skyblock.manager.gui.type.GuiItem;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.leaderboard.LeaderData;
+import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.ItemBuilder;
+import net.syphlex.skyblock.util.config.ConfigMenu;
+import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.utilities.StringUtil;
@@ -12,18 +16,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class IslandTopGui extends SimpleGui {
-    public IslandTopGui() {
-        super("Top Islands", 27);
 
-        fill(new ItemBuilder()
-                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
-                .setName(" ")
-                .build());
+    private final ArrayList<Pair<Integer, Island>> slotCache = new ArrayList<>();
+
+    public IslandTopGui() {
+        super(ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getMenuTitle(),
+                ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getMenuSize());
+
+        fill(ConfigMenu.TOP_ISLANDS_MENU);
 
         int slot = 0;
         int size = Math.min(10, Skyblock.get().getLeaderboardHandler().getTopIslands().getSize()-1);
@@ -43,13 +50,32 @@ public class IslandTopGui extends SimpleGui {
 
             if (island == null) continue;
 
-            ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta = (SkullMeta) item.getItemMeta();
+            GuiItem guiItem = ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getItems().get(0);
 
-            String title = (i + 1) + ". " + island.getLeader().getUsername();
-            String[] colors = new String[]{"#A482F8", "#580EAA"};
+            if (guiItem == null) {
+                // todo setup error system with codes for error catching
+                return;
+            }
 
-            meta.setDisplayName(StringUtil.CC("&l" + StringUtil.createGradFromString(title, colors)));
+            if (guiItem.id() == 99) break;
+
+            ItemStack item = guiItem.item();
+            ItemMeta meta = item.getItemMeta();
+
+            //String title = (i + 1) + ". " + island.getLeader().getUsername();
+            //String[] colors = new String[]{"#A482F8", "#580EAA"};
+
+            meta.setDisplayName(StringUtil.HexCC(item.getItemMeta().getDisplayName()
+                    .replace("%position%",
+                            String.valueOf((i+1)))
+                    .replace("%leader_name%",
+                            island.getLeader().getUsername())));
+
+            //meta.setDisplayName(StringUtil.CC("&l" + StringUtil.createGradFromString(title, colors)));
+            meta.getLore().replaceAll(s -> s.replace("%worth%", String.format("%,d", (int)island.getWorth()))
+                    .replace("%team_size%", String.valueOf(island.getMembers().size()))
+                    .replace("%max_team_size%", String.valueOf(island.getUpgrades().getTeamSize().getAsInt())));
+           /*
             meta.setLore(StringUtil.CC(Arrays.asList(
                     "",
                     StringUtil.createGradFromString("Information:", colors),
@@ -63,17 +89,55 @@ public class IslandTopGui extends SimpleGui {
                     "&7&o(( Click to view island information ))",
                     ""
             )));
-            meta.setOwnerProfile(Bukkit.getOfflinePlayer(island.getLeader().getUuid()).getPlayerProfile());
-            item.setItemMeta(meta);
+            */
+            if (item.getType() == Material.PLAYER_HEAD) {
+                SkullMeta skullMeta = (SkullMeta)meta;
+                skullMeta.setOwnerProfile(Bukkit.getOfflinePlayer(island.getLeader().getUuid()).getPlayerProfile());
+                item.setItemMeta(skullMeta);
+            } else {
+                item.setItemMeta(meta);
+            }
             inventory.setItem(slot, item);
+            this.slotCache.add(new Pair<>(slot, island));
             //slots.add(new Pair<>(slot, clan));
             slot--;
         }
 
-        setIslandPanelButton(22);
+        for (GuiItem guiItem : ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getItems()) {
+            if (guiItem.id() == 0) continue;
+            setItem(guiItem.item(), guiItem.slot());
+        }
+    }
+
+    @Override
+    public void onCloseEvent(){
+        this.slotCache.clear();
     }
 
     @Override
     public void onClickEvent(ClickEvent e) {
+
+        final Profile profile = e.getProfile();
+
+        for (Pair<Integer, Island> pair : this.slotCache) {
+
+            if (e.getSlot() != pair.getX()) continue;
+
+            final Island island = pair.getY();
+
+            if (island == null) continue;
+
+            Skyblock.get().getGuiHandler().openGui(profile, new IslandInfoGui(island));
+            break;
+        }
+
+        for (GuiItem guiItem : ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getItems()) {
+
+            if (e.getSlot() != guiItem.slot()) continue;
+
+            if (guiItem.hasCmd())
+                profile.getPlayer().performCommand(guiItem.command());
+            break;
+        }
     }
 }

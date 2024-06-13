@@ -39,13 +39,6 @@ public class MineHandler {
         });
     }
 
-    public Mine getMine(int id){
-        for (Mine mine : this.mines)
-            if (mine.getId() == id)
-                return mine;
-        return null;
-    }
-
     public Mine getMine(String name){
         for (Mine mine : this.mines)
             if (mine.getMineName().equalsIgnoreCase(name))
@@ -61,7 +54,7 @@ public class MineHandler {
         return CompletableFuture.runAsync(() -> {
             List<CompletableFuture<Void>> completableFutures = Arrays.asList(
                     // todo get rid of players inside the mine so they dont suffocate
-                    refillMine(mine, mine.getCorner1().getWorld())
+                    refillMine(mine, mine.getSpawn().getWorld())
             );
             for (CompletableFuture<Void> future : completableFutures)
                 future.join();

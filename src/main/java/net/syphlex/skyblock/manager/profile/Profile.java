@@ -3,10 +3,14 @@ package net.syphlex.skyblock.manager.profile;
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.cmd.IslandCmd;
+import net.syphlex.skyblock.manager.gui.impl.island.IslandPanelGui;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.request.InviteRequest;
+import net.syphlex.skyblock.util.config.ConfigMenu;
+import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.board.FastBoard;
 import net.syphlex.skyblock.util.config.ConfigEnum;
@@ -34,6 +38,22 @@ public class Profile {
 
         this.scoreboard = new FastBoard(player);
         this.scoreboard.updateTitle(StringUtil.CC(ConfigEnum.SCOREBOARD_TITLE.getAsString()));
+    }
+
+    public void openIslandPanel(){
+
+        if (!hasIsland()) {
+            Messages.DOES_NOT_HAVE_ISLAND.send(this);
+            return;
+        }
+
+        if (!ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().isEnabled()) {
+            this.player.closeInventory();
+            IslandCmd.handleHelp(this.player);
+            return;
+        }
+
+        Skyblock.get().getGuiHandler().openGui(this, new IslandPanelGui());
     }
 
     public void joinIsland(Island island){
@@ -68,7 +88,7 @@ public class Profile {
     }
 
     public void sendMessage(String msg){
-        this.player.sendMessage(StringUtil.CC(msg));
+        this.player.sendMessage(StringUtil.HexCC(msg));
     }
 
     public InviteRequest getIslandInvite(Island island){

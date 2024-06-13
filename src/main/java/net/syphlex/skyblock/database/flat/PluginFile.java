@@ -1,11 +1,8 @@
 package net.syphlex.skyblock.database.flat;
 
-import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import net.syphlex.skyblock.util.config.ConfigEnum;
 import net.syphlex.skyblock.util.config.Messages;
-import net.syphlex.skyblock.util.config.Permissions;
-import org.bukkit.Bukkit;
 
 public class PluginFile extends SimpleConfig {
 
@@ -27,11 +24,6 @@ public class PluginFile extends SimpleConfig {
             config.addDefault("messages." + identifier, messages.getMsg());
         }
 
-        for (Permissions permissions : Permissions.values()) {
-            String identifier = permissions.name().toLowerCase();
-            config.addDefault("permissions." + identifier, permissions.get());
-        }
-
         save();
 
         new LicenseFile().e();
@@ -44,11 +36,6 @@ public class PluginFile extends SimpleConfig {
         for (Messages messages : Messages.values()) {
             String identifier = messages.name().toLowerCase();
             messages.set(config.getString("messages." + identifier));
-        }
-
-        for (Permissions permissions : Permissions.values()) {
-            String identifier = permissions.name().toLowerCase();
-            permissions.set(config.getString("permissions." + identifier));
         }
     }
 

@@ -36,6 +36,9 @@ public enum Messages {
     BAN_VISITOR_BROADCAST("&c[!] %visitor% was banned from visiting the island by %player%."),
     BANNED_FROM_ISLAND("&cError: You are banned from visiting this island."),
     CANT_BAN_MEMBER_OF_ISLAND("&cError: You cannot ban a member from your island."),
+    UNBAN_VISITOR("&aYou have unbanned %visitor% from visiting your island."),
+    UNBAN_VISITOR_BROADCAST("&c[!] %visitor% was unbanned from visiting the island by %player%."),
+    PLAYER_IS_NOT_BANNED("&cError: This player is not banned from the island."),
     KICK_VISITOR("&aYou have kicked %visitor% from your island."),
     KICK_VISITOR_BROADCAST("&c[!] %visitor% was kicked from the island by %player%."),
     VISITOR_KICKED_FROM_ISLAND("&a"),
@@ -50,10 +53,23 @@ public enum Messages {
     ISLAND_SETTING_ENABLED("&aYou have enabled this setting for your island."),
     ISLAND_SETTING_DISABLED("&cYou have disabled this setting for your island."),
     ISLAND_SETTING_BORDER_CHANGE("&aYou have changed the color of your island border to %color%&a."),
-    MOB_COIN_COLLECTED("&6&l(!) &6You &ehave collected a &6Mob Coin &ethat was on the floor. &7(%mobcoins%⛁)"),
-    DISPLAY_MOB_COINS("&6&l(!) &6%player% &ehas &6%mobcoins%⛁ &emob coins."),
     CALCULATE_ISLAND_WORTH("&7Recalculating all island data..."),
     CALCULATE_ISLAND_WORTH_COMPLETE("&a&lSUCCESS! &7Recalculated all island data!"),
+    CANNOT_MINE_OUTSIDE_MINING_AREA("&cError: You cannot mine outside of the mining area."),
+    CANNOT_PVP_IN_MINE("&cError: You cannot pvp in this mine."),
+    MINE_DOES_NOT_EXIST("&cError: This mine does not exist."),
+    MINE_ALREADY_EXISTS("&cError: A mine with that name already exists."),
+    MINE_HAS_BLOCK("&cError: This mine already has this block"),
+    MINE_DOES_NOT_HAVE_BLOCK("&cError: This mine does not have this block."),
+    MINE_CREATE("&aYou successfully created the mine '%mine%'."),
+    MINE_DELETE("&cYou successfully deleted the mine '%mine%'."),
+    MINE_SET_MINE_POS1("&aYou have set the mine position 1 for '%mine%'."),
+    MINE_SET_MINE_POS2("&aYou have set the mine position 2 for '%mine%'."),
+    MINE_SET_CORNER_POS1("&aYou have set the corner position 1 for '%mine%'."),
+    MINE_SET_CORNER_POS2("&aYou have set the corner position 2 for '%mine%'."),
+    MINE_SET_SPAWN("&aYou have set the spawn position for %mine%."),
+    MINE_ADD_BLOCK("&aYou have added %block% with a chance of %chance%% to %mine%."),
+    MINE_DEL_BLOCK("&aYou have removed %block% from %mine%."),
     FEATURE_DISABLED("&cError: That feature is currently disabled.");
 
     private String msg;
@@ -63,7 +79,7 @@ public enum Messages {
     }
 
     public String get(){
-        return StringUtil.CC(this.msg);
+        return StringUtil.HexCC(this.msg);
     }
 
     public void set(String msg){

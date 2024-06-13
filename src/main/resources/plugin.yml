@@ -1,7 +1,7 @@
 name: SyphlexSkyblock
 author: iDurpy
 main: net.syphlex.skyblock.Skyblock
-version: 1.1.6-BETA
+version: 2.0.0-BETA
 api-version: 1.13
 
 softdepend:
@@ -9,7 +9,6 @@ softdepend:
   - WildStacker
 
 depend:
-  - NBTAPI
   - Vault
 
 dependencies:
@@ -31,9 +30,3 @@ commands:
     aliases: [is]
   mine:
     aliases: [mines]
-  minion:
-    aliases: [minions]
-  enchanter:
-    aliases: [ce, customenchants, customenchantment, customenchant]
-  mobcoins:
-    aliases: [mc, mobcoin]

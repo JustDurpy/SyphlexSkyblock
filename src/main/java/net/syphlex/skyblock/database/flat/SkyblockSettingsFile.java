@@ -58,10 +58,9 @@ public class SkyblockSettingsFile extends SimpleConfig {
     private void readGeneratorConfig(){
         for (String section : config.getConfigurationSection("generators").getKeys(false)) {
 
-            int tier = config.getInt("generators." + section + ".tier");
-            String name = config.getString("generators." + section + ".name");
+            int id = config.getInt("generators." + section + ".id");
 
-            IslandOreGenerator generator = new IslandOreGenerator(tier, name);
+            IslandOreGenerator generator = new IslandOreGenerator(id, section);
 
             for (String blockSec : config.getConfigurationSection("generators." + section + ".blocks").getKeys(false)) {
                 String materialName = config.getString("generators." + section + ".blocks." + blockSec + ".material");
@@ -74,12 +73,14 @@ public class SkyblockSettingsFile extends SimpleConfig {
     }
 
     private void specialBlocksConfig(){
-        config.addDefault("special-blocks", Arrays.asList(
-                "DIAMOND_BLOCK:10000:&6&lX%amount% &e&lDIAMOND BLOCKS",
-                "IRON_BLOCK:5000:&6&lX%amount% &e&lIRON BLOCKS"));
+        if (config.get("special-blocks") == null || config.getConfigurationSection("special-blocks") == null) {
+            config.addDefault("special-blocks", Arrays.asList(
+                    "DIAMOND_BLOCK:10000:&6&lX%amount% &e&lDIAMOND BLOCKS",
+                    "IRON_BLOCK:5000:&6&lX%amount% &e&lIRON BLOCKS"));
+        }
     }
 
-    private void generatorConfig(){
+    private void generatorConfig() {
         /*
         config.addDefault("generators.cannot-upgrade.gui-item.lore", Arrays.asList(
                 "",
@@ -100,13 +101,16 @@ public class SkyblockSettingsFile extends SimpleConfig {
                 "&7&o(( Left click to upgrade ))",
                 ""
         ));
-
          */
-        config.addDefault("generators.example.tier", 0);
-        config.addDefault("generators.example.name", "&7Stone Generator");
-        config.addDefault("generators.example.blocks.1.material", "COBBLESTONE");
-        config.addDefault("generators.example.blocks.1.chance", 80);
-        config.addDefault("generators.example.blocks.2.material", "COAL_ORE");
-        config.addDefault("generators.example.blocks.2.chance", 20);
+
+        if (config.get("generators") == null || config.getConfigurationSection("generators") == null) {
+            config.addDefault("generators.example.id", 0);
+            config.addDefault("generators.example.blocks.1.material", "COBBLESTONE");
+            config.addDefault("generators.example.blocks.1.chance", 80);
+            config.addDefault("generators.example.blocks.2.material", "COAL_ORE");
+            config.addDefault("generators.example.blocks.2.chance", 15);
+            config.addDefault("generators.example.blocks.3.material", "IRON_ORE");
+            config.addDefault("generators.example.blocks.3.chance", 5);
+        }
     }
 }

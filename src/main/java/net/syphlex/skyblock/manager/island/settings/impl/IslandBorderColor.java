@@ -11,42 +11,26 @@ import org.bukkit.Material;
 
 @Getter
 public enum IslandBorderColor {
-    BLUE("&bBlue Island Border",
-            Permissions.ISLAND_SETTINGS_BLUE_BORDER.get(),
-            new GuiItem(new ItemBuilder()
-                    .setMaterial(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                    .setName("&bBlue Island Border")
-                    .build(), 11),
-            Color.BLUE),
-    GREEN("&aGreen Island Border",
-            Permissions.ISLAND_SETTINGS_GREEN_BORDER.get(),
-            new GuiItem(new ItemBuilder()
-                    .setMaterial(Material.LIME_STAINED_GLASS_PANE)
-                    .setName("&aGreen Island Border")
-                    .build(), 13),
-            Color.GREEN),
-    RED("&cRed Island Border",
-            Permissions.ISLAND_SETTINGS_RED_BORDER.get(),
-            new GuiItem(new ItemBuilder()
-                    .setMaterial(Material.RED_STAINED_GLASS_PANE)
-                    .setName("&cRed Island Border")
-                    .build(), 15),
-            Color.RED);
+    BLUE(0, Permissions.ISLAND_SETTINGS_BLUE_BORDER.get()),
+    GREEN(1, Permissions.ISLAND_SETTINGS_RED_BORDER.get()),
+    RED(2, Permissions.ISLAND_SETTINGS_GREEN_BORDER.get());
 
-    private final String identifier, permission;
-    private final GuiItem guiItem;
-    private final Color color;
-    @Setter private boolean toggled;
+    private final int id;
+    private final String permission;
 
-    IslandBorderColor(String identifier, String permission, GuiItem guiItem, Color color){
-        this.identifier = identifier;
+    IslandBorderColor(int id, String permission){
+        this.id = id;
         this.permission = permission;
-        this.guiItem = guiItem;
-        this.color = color;
     }
 
     public static IslandBorderColor of(String identifier){
         if (identifier == null) return BLUE;
         return valueOf(identifier);
+    }
+
+    public static IslandBorderColor find(int id){
+        for (IslandBorderColor var : IslandBorderColor.values())
+            if (var.getId() == id) return BLUE;
+        return BLUE;
     }
 }

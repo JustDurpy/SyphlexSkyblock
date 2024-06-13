@@ -21,7 +21,8 @@ public enum IslandRole {
             new Pair<>(IslandPermission.INVITE_MEMBER, false),
             new Pair<>(IslandPermission.KICK_MEMBER, false),
             new Pair<>(IslandPermission.KICK_VISITOR, false),
-            new Pair<>(IslandPermission.BAN_VISITOR, false))),
+            new Pair<>(IslandPermission.BAN_VISITOR, false),
+            new Pair<>(IslandPermission.UNBAN_VISITOR, false))),
     MEMBER("Member", Arrays.asList(
             new Pair<>(IslandPermission.PICKUP_AND_DROP_ITEMS, true),
             new Pair<>(IslandPermission.BLOCK_PLACE, true),
@@ -33,7 +34,8 @@ public enum IslandRole {
             new Pair<>(IslandPermission.INVITE_MEMBER, false),
             new Pair<>(IslandPermission.KICK_MEMBER, false),
             new Pair<>(IslandPermission.KICK_VISITOR, false),
-            new Pair<>(IslandPermission.BAN_VISITOR, false))),
+            new Pair<>(IslandPermission.BAN_VISITOR, false),
+            new Pair<>(IslandPermission.UNBAN_VISITOR, false))),
     MODERATOR("Moderator", Arrays.asList(
             new Pair<>(IslandPermission.PICKUP_AND_DROP_ITEMS, true),
             new Pair<>(IslandPermission.BLOCK_PLACE, true),
@@ -45,7 +47,8 @@ public enum IslandRole {
             new Pair<>(IslandPermission.INVITE_MEMBER, true),
             new Pair<>(IslandPermission.KICK_MEMBER, true),
             new Pair<>(IslandPermission.KICK_VISITOR, true),
-            new Pair<>(IslandPermission.BAN_VISITOR, true))),
+            new Pair<>(IslandPermission.BAN_VISITOR, true),
+            new Pair<>(IslandPermission.UNBAN_VISITOR, true))),
     LEADER("Leader", Arrays.asList(
             new Pair<>(IslandPermission.PICKUP_AND_DROP_ITEMS, true),
             new Pair<>(IslandPermission.BLOCK_PLACE, true),
@@ -57,7 +60,8 @@ public enum IslandRole {
             new Pair<>(IslandPermission.INVITE_MEMBER, true),
             new Pair<>(IslandPermission.KICK_MEMBER, true),
             new Pair<>(IslandPermission.KICK_VISITOR, true),
-            new Pair<>(IslandPermission.BAN_VISITOR, true)));
+            new Pair<>(IslandPermission.BAN_VISITOR, true),
+            new Pair<>(IslandPermission.UNBAN_VISITOR, true)));
 
     private final String identifier;
     private final ArrayList<Pair<IslandPermission, Boolean>> permissions = new ArrayList<>();

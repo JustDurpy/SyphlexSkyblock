@@ -14,34 +14,35 @@ import java.util.Random;
 @Getter
 public class Mine {
 
-    private final int id;
     private final String mineName;
-    private Position pos1, pos2, corner1, corner2, spawn;
+    private String displayName = "", permission = "none";
+    private Position minePos1, minePos2, areaCorner1, areaCorner2, spawn;
     private final List<MineBlockData> blocks;
+    private boolean pvp = false;
 
-    public Mine(int id, String mineName, List<MineBlockData> blockData, Position corner1, Position corner2, Position spawn){
-        this.id = id;
+    public Mine(String mineName, String displayName, String permission,
+                List<MineBlockData> blockData, Position areaCorner1, Position areaCorner2,
+                Position minePos1, Position minePos2, Position spawn, boolean pvp){
         this.mineName = mineName;
+        this.displayName = displayName;
+        this.permission = permission;
         this.blocks = blockData;
-        this.corner1 = corner1;
-        this.corner2 = corner2;
+        this.areaCorner1 = areaCorner1;
+        this.areaCorner2 = areaCorner2;
+        this.minePos1 = minePos1;
+        this.minePos2 = minePos2;
         this.spawn = spawn;
+        this.pvp = pvp;
     }
 
-    public Mine(int id, String mineName, List<MineBlockData> blockData){
-        this.id = id;
+    public Mine(String mineName, List<MineBlockData> blockData){
         this.mineName = mineName;
         this.blocks = blockData;
     }
 
-    public Mine(int id, String mineName){
-        this.id = id;
+    public Mine(String mineName){
         this.mineName = mineName;
         this.blocks = new ArrayList<>();
-    }
-
-    public String getConfigName(){
-        return this.mineName + this.id;
     }
 
     public boolean hasBlock(Material material){
@@ -78,27 +79,45 @@ public class Mine {
                 && location.getX() <= getMaxX() && location.getY() <= getMaxY() && location.getZ() <= getMaxZ();
     }
 
+    public boolean isInsideMiningArea(Location l){
+
+        final int minX = Math.min(this.minePos1.getBlockX(), this.minePos2.getBlockX());
+        final int minY = Math.min(this.minePos1.getBlockY(), this.minePos2.getBlockZ());
+        final int minZ = Math.min(this.minePos1.getBlockZ(), this.minePos2.getBlockZ());
+
+        final int maxX = Math.max(this.minePos1.getBlockX(), this.minePos2.getBlockX());
+        final int maxY = Math.max(this.minePos1.getBlockY(), this.minePos2.getBlockY());
+        final int maxZ = Math.max(this.minePos1.getBlockZ(), this.minePos2.getBlockZ());
+
+        final int blockX = l.getBlockX();
+        final int blockY = l.getBlockY();
+        final int blockZ = l.getBlockZ();
+
+        return blockX >= minX && blockY >= minY && blockZ >= minZ
+                && blockX <= maxX && blockY <= maxY && blockZ <= maxZ;
+    }
+
     public int getMaxX(){
-        return Math.max(corner1.getBlockX(), corner2.getBlockX());
+        return Math.max(this.areaCorner1.getBlockX(), this.areaCorner2.getBlockX());
     }
 
     public int getMaxY(){
-        return Math.max(corner1.getBlockY(), corner2.getBlockY());
+        return Math.max(this.areaCorner1.getBlockY(), this.areaCorner2.getBlockY());
     }
 
     public int getMaxZ(){
-        return Math.max(corner1.getBlockZ(), corner2.getBlockZ());
+        return Math.max(this.areaCorner1.getBlockZ(), this.areaCorner2.getBlockZ());
     }
 
     public int getMinX(){
-        return Math.min(corner1.getBlockX(), corner2.getBlockX());
+        return Math.min(this.areaCorner1.getBlockX(), this.areaCorner2.getBlockX());
     }
 
     public int getMinY(){
-        return Math.min(corner1.getBlockY(), corner2.getBlockY());
+        return Math.min(this.areaCorner1.getBlockY(), this.areaCorner2.getBlockY());
     }
 
     public int getMinZ(){
-        return Math.min(corner1.getBlockZ(), corner2.getBlockZ());
+        return Math.min(this.areaCorner1.getBlockZ(), this.areaCorner2.getBlockZ());
     }
 }

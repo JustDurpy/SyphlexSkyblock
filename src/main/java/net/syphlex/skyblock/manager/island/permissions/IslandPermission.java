@@ -15,7 +15,8 @@ public enum IslandPermission {
     INVITE_MEMBER("Invite Players", "Allows the %island_role% to invite members."),
     KICK_MEMBER("Kick Members", "Allows the %island_role% to kick members."),
     KICK_VISITOR("Kick Visitors", "Allows the %island_role% role to kick visitors off the island."),
-    BAN_VISITOR("Ban Visitors", "Allows the %island_role% role to ban players from visiting the island.");
+    BAN_VISITOR("Ban Visitors", "Allows the %island_role% role to ban players from visiting the island."),
+    UNBAN_VISITOR("Unban Visitors", "Allows the %island_role% role to unban players from visiting the island.");
 
 
     private final String name, description;

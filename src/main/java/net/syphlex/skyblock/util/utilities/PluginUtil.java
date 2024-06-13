@@ -7,6 +7,7 @@ import net.syphlex.skyblock.manager.profile.Profile;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,13 @@ import java.util.Random;
 
 @UtilityClass
 public class PluginUtil {
+
+    public boolean isValidItem(ItemStack item){
+        return item != null
+                && item.getType() != Material.AIR
+                && item.getAmount() > 0;
+    }
+
 
     public void broadcast(Object o){
         for (Profile profile : Skyblock.get().getDataHandler().getMap().values())

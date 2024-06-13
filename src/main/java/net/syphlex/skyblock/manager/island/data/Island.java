@@ -8,10 +8,12 @@ import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
 import net.syphlex.skyblock.manager.island.settings.IslandSettings;
+import net.syphlex.skyblock.manager.island.settings.impl.IslandBorderColor;
 import net.syphlex.skyblock.manager.island.upgrade.IslandUpgradeData;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.MathHelper;
 import net.syphlex.skyblock.util.config.ConfigEnum;
+import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.data.Position;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import net.syphlex.skyblock.util.utilities.WorldUtil;
@@ -40,8 +42,7 @@ public class Island {
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getSpawnAmountUpgrade().clone(),
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getHarvestUpgrade().clone(),
             Skyblock.get().getUpgradeHandler().getUpgradesFile().getTeamSizeUpgrade().clone(),
-            Skyblock.get().getUpgradeHandler().getUpgradesFile().getGeneratorUpgrade().clone(),
-            Skyblock.get().getUpgradeHandler().getUpgradesFile().getVoidChestUpgrade().clone()
+            Skyblock.get().getUpgradeHandler().getUpgradesFile().getGeneratorUpgrade().clone()
     );
 
     private final IslandSettings settings = new IslandSettings();
@@ -56,6 +57,7 @@ public class Island {
                   MemberProfile leader, Position corner1,
                   Position corner2, Position center,
                   ArrayList<MemberProfile> members,
+                  ArrayList<String> bannedPlayers,
                   ArrayList<IslandBlockData> storedBlocks){
         this.id = id;
         this.identifier = identifier;
@@ -64,6 +66,7 @@ public class Island {
         this.corner2 = corner2;
         this.center = center;
         this.members = members;
+        this.bannedPlayers = bannedPlayers;
         this.storedBlocks = storedBlocks;
     }
 
@@ -162,6 +165,12 @@ public class Island {
      * @param player - player to teleport
      */
     public void teleport(Player player) {
+
+        if (isBanned(player)) {
+            Messages.BANNED_FROM_ISLAND.send(player);
+            return;
+        }
+
         Location bukkit = home.getAsBukkit(Skyblock.get().getIslandWorld());
 
         while (bukkit.getBlock().getType() != Material.AIR)
@@ -174,7 +183,7 @@ public class Island {
     public void generateIslandBorder(Player player) {
 
         double size = this.upgrades.getIslandSize().get();
-        Color color = this.settings.getIslandBorderColor().getColor();
+        IslandBorderColor color = this.settings.getIslandBorderColor();
 
         WorldBorder worldBorder = Bukkit.getServer().createWorldBorder();
         worldBorder.setCenter(this.center.getX(), this.center.getZ());
@@ -183,9 +192,9 @@ public class Island {
         worldBorder.setDamageAmount(0);
         worldBorder.setDamageBuffer(0);
 
-        if (color == Color.RED) {
+        if (color == IslandBorderColor.RED) {
             worldBorder.setSize(size - 0.1D, 20000000L);
-        } else if (color == Color.GREEN) {
+        } else if (color == IslandBorderColor.GREEN) {
             worldBorder.setSize( size + 0.1D, 20000000L);
         }
 
@@ -234,6 +243,15 @@ public class Island {
                 return blockData;
         }
         return null;
+    }
+
+    /**
+     *
+     * @param target
+     * @return
+     */
+    public boolean isBanned(OfflinePlayer target){
+        return this.bannedPlayers.contains(target.getUniqueId().toString());
     }
 
     /**

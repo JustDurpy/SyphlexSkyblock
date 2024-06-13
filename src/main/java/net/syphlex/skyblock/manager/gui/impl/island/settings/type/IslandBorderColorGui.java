@@ -7,20 +7,22 @@ import net.syphlex.skyblock.manager.island.settings.IslandSettings;
 import net.syphlex.skyblock.manager.island.settings.impl.IslandBorderColor;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.ItemBuilder;
+import net.syphlex.skyblock.util.config.ConfigMenu;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.config.Permissions;
 import net.syphlex.skyblock.util.simple.SimpleGui;
+import net.syphlex.skyblock.util.utilities.PluginUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class IslandBorderColorGui extends SimpleGui {
     public IslandBorderColorGui() {
-        super("Island Border Color", 27);
+        super(ConfigMenu.ISLAND_BORDER_COLOR_MENU.getMenuSetting().getMenuTitle(),
+                ConfigMenu.ISLAND_BORDER_COLOR_MENU.getMenuSetting().getMenuSize());
 
-        fill(new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
+        fill(ConfigMenu.ISLAND_BORDER_COLOR_MENU);
 
-        for (IslandBorderColor color : IslandBorderColor.values())
-            this.inventory.setItem(color.getGuiItem().slot(), color.getGuiItem().item());
+        setItems(ConfigMenu.ISLAND_BORDER_COLOR_MENU.getMenuSetting().getItems());
     }
 
     @Override
@@ -35,19 +37,30 @@ public class IslandBorderColorGui extends SimpleGui {
 
         final Island island = profile.getIsland();
 
-        for (IslandBorderColor color : IslandBorderColor.values()) {
+        for (GuiItem guiItem : ConfigMenu.ISLAND_BORDER_COLOR_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != color.getGuiItem().slot())
+            if (e.getSlot() != guiItem.slot()) continue;
+
+            ItemStack item = guiItem.item();
+
+            if (!PluginUtil.isValidItem(item))
                 continue;
+
+            if (guiItem.id() == 99) {
+                profile.openIslandPanel();
+                break;
+            }
+
+            IslandBorderColor color = IslandBorderColor.find(guiItem.id());
 
             if (!profile.getPlayer().hasPermission(color.getPermission())) {
                 Messages.RANK_REQUIRED.send(profile);
-                continue;
+                break;
             }
 
             island.getSettings().setIslandBorderColor(color);
             island.refreshBorder();
-            closeInventory(profile.getPlayer());
+            break;
         }
     }
 }

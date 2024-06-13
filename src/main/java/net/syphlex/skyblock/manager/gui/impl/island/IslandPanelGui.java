@@ -2,61 +2,23 @@ package net.syphlex.skyblock.manager.gui.impl.island;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.IslandSettingsGui;
+import net.syphlex.skyblock.manager.gui.impl.island.upgrades.IslandUpgradeGui;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
-import net.syphlex.skyblock.manager.island.data.Island;
+import net.syphlex.skyblock.manager.gui.type.GuiItem;
 import net.syphlex.skyblock.manager.profile.Profile;
-import net.syphlex.skyblock.util.ItemBuilder;
+import net.syphlex.skyblock.util.config.ConfigMenu;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.simple.SimpleGui;
-import net.syphlex.skyblock.util.utilities.StringUtil;
-import org.bukkit.Material;
 
 public class IslandPanelGui extends SimpleGui {
 
     public IslandPanelGui() {
-        super("Island Panel", 27);
+        super(ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().getMenuTitle(),
+                ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().getMenuSize());
 
-        fill(new ItemBuilder()
-                .setMaterial(Material.BLACK_STAINED_GLASS_PANE)
-                .setName(" ")
-                .build());
+        fill(ConfigMenu.ISLAND_PANEL_MENU);
 
-        String[] colors = new String[]{"#A482F8", "#580EAA"};
-
-        this.inventory.setItem(10, new ItemBuilder()
-                .setMaterial(Material.GRASS_BLOCK)
-                .setName(StringUtil.createGradFromString("Island Home", colors))
-                .build());
-
-        this.inventory.setItem(11, new ItemBuilder()
-                .setMaterial(Material.BOOK)
-                .setName(StringUtil.createGradFromString("Island Information", colors))
-                .build());
-
-        this.inventory.setItem(12, new ItemBuilder()
-                .setMaterial(Material.DIAMOND)
-                .setName(StringUtil.createGradFromString("Top Islands", colors))
-                .build());
-
-        this.inventory.setItem(13, new ItemBuilder()
-                .setMaterial(Material.CHEST)
-                .setName(StringUtil.createGradFromString("Void Chest", colors))
-                .build());
-
-        this.inventory.setItem(14, new ItemBuilder()
-                .setMaterial(Material.BEACON)
-                .setName(StringUtil.createGradFromString("Island Upgrades", colors))
-                .build());
-
-        this.inventory.setItem(15, new ItemBuilder()
-                .setMaterial(Material.PAPER)
-                .setName(StringUtil.createGradFromString("Island Permissions", colors))
-                .build());
-
-        this.inventory.setItem(16, new ItemBuilder()
-                .setMaterial(Material.REPEATER)
-                .setName(StringUtil.createGradFromString("Island Settings", colors))
-                .build());
+        setItems(ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().getItems());
     }
 
     @Override
@@ -69,33 +31,45 @@ public class IslandPanelGui extends SimpleGui {
             return;
         }
 
-        final Island island = profile.getIsland();
+        for (GuiItem guiItem : ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().getItems()) {
 
-        switch (e.getSlot()) {
-            case 10:
+            if (e.getSlot() != guiItem.slot()) continue;
+
+            handleClick(profile, guiItem.id());
+            break;
+        }
+    }
+
+    private void handleClick(Profile profile, int id){
+        switch (id) {
+            case 0:
                 closeInventory(profile.getPlayer());
                 profile.getIsland().teleport(profile.getPlayer());
                 Messages.TELEPORTED_TO_ISLAND.send(profile);
                 break;
-            case 11:
+            case 1:
                 profile.getPlayer().sendMessage("in development...");
                 break;
-            case 12:
+            case 2:
+                if (!ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().isEnabled()) {
+                    Messages.FEATURE_DISABLED.send(profile);
+                    break;
+                }
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandTopGui());
                 break;
-            case 13:
-                profile.getPlayer().sendMessage("in development...");
+            case 3:
+                Skyblock.get().getGuiHandler().openGui(profile, new IslandUpgradeGui(profile.getIsland()));
                 break;
-            case 14:
-                Skyblock.get().getGuiHandler().openGui(profile, new IslandUpgradeGui(island));
-                break;
-            case 15:
+            case 4:
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandPermissionsRolesGui());
                 break;
-            case 16:
+            case 5:
+                if (!ConfigMenu.ISLAND_SETTINGS_MENU.getMenuSetting().isEnabled()) {
+                    Messages.FEATURE_DISABLED.send(profile);
+                    break;
+                }
                 Skyblock.get().getGuiHandler().openGui(profile, new IslandSettingsGui());
                 break;
         }
-
     }
 }

@@ -60,8 +60,9 @@ public class Skyblock extends JavaPlugin {
 
         load();
 
-        if (!dependencies())
+        if (!dependencies()) {
             return;
+        }
 
         init();
         start();
@@ -94,6 +95,7 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new IslandListener(), this);
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new GuiListener(), this);
+        pm.registerEvents(new MineListener(), this);
     }
 
     private boolean wildStackerHook = false;
@@ -147,11 +149,13 @@ public class Skyblock extends JavaPlugin {
         this.dataHandler.onEnable();
         this.scoreboardHandler.onEnable();
         this.schematicHandler.onEnable();
+        this.guiHandler.onEnable();
         this.leaderboardHandler.onEnable();
     }
 
     private void stop(){
         this.leaderboardHandler.onDisable();
+        this.guiHandler.onDisable();
         this.schematicHandler.onDisable();
         this.scoreboardHandler.onDisable();
         this.dataHandler.onDisable();

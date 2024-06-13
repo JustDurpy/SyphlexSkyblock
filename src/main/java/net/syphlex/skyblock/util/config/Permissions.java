@@ -6,11 +6,15 @@ import org.bukkit.entity.Player;
 public enum Permissions {
     ADMIN("skyblock.admin"),
     MINE_ADMIN("skyblock.mine.admin"),
-    ISLAND_SETTINGS_ALWAYS_DAY("skyblock.island.settings.alwaysday"),
-    ISLAND_SETTINGS_ALWAYS_NIGHT("skyblock.island.settings.alwaysnight"),
-    ISLAND_SETTINGS_BLUE_BORDER("skyblock.island.settings.blueborder"),
-    ISLAND_SETTINGS_RED_BORDER("skyblock.island.settings.redborder"),
-    ISLAND_SETTINGS_GREEN_BORDER("skyblock.island.settings.greenborder");
+    ISLAND_SETTINGS_BLUE_BORDER("skyblock.island.settings.border.blue"),
+    ISLAND_SETTINGS_RED_BORDER("skyblock.island.settings.border.red"),
+    ISLAND_SETTINGS_GREEN_BORDER("skyblock.island.settings.border.green"),
+    ISLAND_SETTINGS_WEATHER_SUNNY("skyblock.island.settings.weather.sunny"),
+    ISLAND_SETTINGS_WEATHER_RAINY("skyblock.island.settings.weather.rainy"),
+    ISLAND_SETTINGS_TIME_SUNRISE("skyblock.island.settings.time.sunrise"),
+    ISLAND_SETTINGS_TIME_DAY("skyblock.island.settings.time.day"),
+    ISLAND_SETTINGS_TIME_SUNSET("skyblock.island.settings.time.sunset"),
+    ISLAND_SETTINGS_TIME_NIGHT("skyblock.island.settings.time.night");
 
     private String permission;
 

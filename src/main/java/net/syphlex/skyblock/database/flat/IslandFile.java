@@ -40,7 +40,7 @@ public class IslandFile extends SimpleConfig {
 
             FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
-            if (config.get("island") == null) {
+            if (config.getConfigurationSection("island") == null || config.get("island") == null) {
                 f.delete();
                 continue;
             }
@@ -67,6 +67,8 @@ public class IslandFile extends SimpleConfig {
             IslandWeatherLock weatherLock = IslandWeatherLock.of(config.getString("island.settings.weather-lock"));
 
             ArrayList<MemberProfile> members = new ArrayList<>();
+            ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
+            ArrayList<String> bannedPlayers = new ArrayList<>();
 
             if (config.getStringList("island.members").size() > 0) {
                 for (String uuid : config.getStringList("island.members")) {
@@ -78,7 +80,10 @@ public class IslandFile extends SimpleConfig {
 
             members.add(leader);
 
-            ArrayList<IslandBlockData> storedBlocks = new ArrayList<>();
+            if (config.getStringList("island.banned-players").size() > 0){
+                bannedPlayers.addAll(config.getStringList("island.banned-players"));
+            }
+
             for (String section : config.getStringList("island.stored-blocks")) {
                 IslandBlockData blockData = getIslandBlockDataFromString(section);
                 if (blockData.isNull()) continue;
@@ -87,7 +92,7 @@ public class IslandFile extends SimpleConfig {
 
             int[] id = IslandUtil.getId(islandIdentifier);
 
-            Island island = new Island(id, islandIdentifier, leader, corner1, corner2, center, members, storedBlocks);
+            Island island = new Island(id, islandIdentifier, leader, corner1, corner2, center, members, bannedPlayers, storedBlocks);
             island.setHome(home);
 
             island.getUpgrades().getIslandSize().setLevel(islandSize);

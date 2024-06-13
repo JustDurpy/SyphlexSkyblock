@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.upgrades;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.type.GuiItem;
@@ -10,15 +10,12 @@ import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import net.syphlex.skyblock.util.utilities.StringUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IslandUpgradeGui extends SimpleGui {
@@ -83,7 +80,9 @@ public class IslandUpgradeGui extends SimpleGui {
         final Profile profile = e.getProfile();
         final Player p = profile.getPlayer();
 
+        int i = -1;
         for (UpgradeObject upgrade : this.island.getUpgrades().getList()) {
+            i++;
 
             if (!upgrade.isEnabled())
                 continue;
@@ -92,6 +91,12 @@ public class IslandUpgradeGui extends SimpleGui {
 
             if (e.getSlot() != guiItem.slot())
                 continue;
+
+            // should be generator menu
+            if (i == this.island.getUpgrades().getList().size() - 1) {
+                Skyblock.get().getGuiHandler().openGui(profile, new IslandOreGeneratorGui(profile, this.island));
+                break;
+            }
 
             // upgrade is maxed out
             if (!upgrade.canUpgrade()) {

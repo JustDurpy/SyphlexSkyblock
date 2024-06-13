@@ -54,9 +54,17 @@ public class IslandUpgradeHandler {
         return null;
     }
 
-    public IslandOreGenerator getOreGenerator(int tier){
+    public IslandOreGenerator getOreGenerator(int id){
         for (IslandOreGenerator generator : this.oreGenerators) {
-            if (generator.getTier() == tier)
+            if (generator.getId() == id)
+                return generator;
+        }
+        return this.oreGenerators.get(0);
+    }
+
+    public IslandOreGenerator getOreGenerator(String name){
+        for (IslandOreGenerator generator : this.oreGenerators) {
+            if (generator.getName().equalsIgnoreCase(name))
                 return generator;
         }
         return this.oreGenerators.get(0);
