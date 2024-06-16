@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.database.flat.ProfileFile;
 import net.syphlex.skyblock.manager.island.block.IslandBlockData;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
@@ -87,6 +88,36 @@ public class Island {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.center = center;
+    }
+
+    public void setLeader(MemberProfile profile){
+
+        Player playerLeader = Bukkit.getPlayer(this.leader.getUuid());
+        Player playerTarget = Bukkit.getPlayer(profile.getUuid());
+
+        if (playerLeader != null) {
+            playerLeader.sendMessage(Messages.PROMOTED_ISLAND_MEMBER.get()
+                    .replace("%player%", profile.getUsername())
+                    .replace("%role%", IslandRole.LEADER.getIdentifier()));
+        }
+
+        if (playerTarget != null) {
+            playerTarget.sendMessage(Messages.ISLAND_MEMBER_GOT_PROMOTED.get()
+                    .replace("%role%", IslandRole.LEADER.getIdentifier()));
+        }
+
+        broadcast(Messages.PROMOTED_ISLAND_MEMBER_BROADCAST.get()
+                .replace("%player%", profile.getUsername())
+                .replace("%leader%", this.leader.getUsername())
+                .replace("%role%", IslandRole.LEADER.getIdentifier()));
+
+        // first we will set the old leader to 'member'
+        this.leader.setRole(IslandRole.MEMBER);
+
+        // then apply leader role to the new leader
+        // and set the island leader to the new leader
+        profile.setRole(IslandRole.LEADER);
+        this.leader = profile;
     }
 
     /**

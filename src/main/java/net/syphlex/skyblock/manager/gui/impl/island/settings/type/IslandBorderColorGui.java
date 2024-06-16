@@ -39,19 +39,19 @@ public class IslandBorderColorGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.ISLAND_BORDER_COLOR_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
-            ItemStack item = guiItem.item();
+            ItemStack item = guiItem.getItem();
 
             if (!PluginUtil.isValidItem(item))
                 continue;
 
-            if (guiItem.id() == 99) {
+            if (guiItem.getId() == 99) {
                 profile.openIslandPanel();
                 break;
             }
 
-            IslandBorderColor color = IslandBorderColor.find(guiItem.id());
+            IslandBorderColor color = IslandBorderColor.find(guiItem.getId());
 
             if (!profile.getPlayer().hasPermission(color.getPermission())) {
                 Messages.RANK_REQUIRED.send(profile);

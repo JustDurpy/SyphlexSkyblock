@@ -85,7 +85,7 @@ public class IslandListener implements Listener {
             /*
             We are actually contracting it by '1' block
             the dimensions of the island with the border
-            are a little fucky wucky, but its fine, it works.
+            are a little fucky wucky, but it's fine, it works.
              */
             if (!island.isInside(l, -2, -2)) {
                 e.setCancelled(true);
@@ -93,6 +93,9 @@ public class IslandListener implements Listener {
             }
 
             /*
+
+            this is just a debug of like how tf this island border works
+
             if (island.isInside(l, -2, -2)) {
                 Bukkit.broadcastMessage(StringUtil.CC("&ainside island! &r") + e.getBlock().getType().name() + " : " + b.getType().name());
             } else {
@@ -646,6 +649,8 @@ public class IslandListener implements Listener {
         /*
         Handles island mob spawn amount upgrade
          */
+
+        // todo update/fix this (outdated/hardcoded)
 
         if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL
                 || e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {

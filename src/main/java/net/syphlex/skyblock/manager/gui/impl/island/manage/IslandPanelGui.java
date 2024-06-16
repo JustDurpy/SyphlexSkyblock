@@ -1,6 +1,9 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.manage;
 
 import net.syphlex.skyblock.Skyblock;
+import net.syphlex.skyblock.manager.gui.impl.island.extra.IslandInfoGui;
+import net.syphlex.skyblock.manager.gui.impl.island.extra.IslandTopGui;
+import net.syphlex.skyblock.manager.gui.impl.island.permissions.IslandPermissionsRolesGui;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.IslandSettingsGui;
 import net.syphlex.skyblock.manager.gui.impl.island.upgrades.IslandUpgradeGui;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
@@ -33,9 +36,9 @@ public class IslandPanelGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.ISLAND_PANEL_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
-            handleClick(profile, guiItem.id());
+            handleClick(profile, guiItem.getId());
             break;
         }
     }
@@ -48,7 +51,13 @@ public class IslandPanelGui extends SimpleGui {
                 Messages.TELEPORTED_TO_ISLAND.send(profile);
                 break;
             case 1:
-                profile.getPlayer().sendMessage("in development...");
+
+                if (!ConfigMenu.ISLAND_INFORMATION_MENU.getMenuSetting().isEnabled()) {
+                    Messages.FEATURE_DISABLED.send(profile);
+                    break;
+                }
+
+                Skyblock.get().getGuiHandler().openGui(profile, new IslandInfoGui(profile.getIsland()));
                 break;
             case 2:
                 if (!ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().isEnabled()) {

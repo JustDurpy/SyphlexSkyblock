@@ -42,7 +42,7 @@ public class ScoreboardHandler {
         for (String l : (island
                 ? ConfigEnum.ISLAND_SCOREBOARD_LINES.getAsList()
                 : ConfigEnum.NORMAL_SCOREBOARD.getAsList()))
-            board.add(StringUtil.CC(PlaceholderAPI.setPlaceholders(profile.getPlayer(), l)));
+            board.add(StringUtil.HexCC(PlaceholderAPI.setPlaceholders(profile.getPlayer(), l)));
 
         return board;
     }

@@ -184,6 +184,8 @@ public class IslandHandler {
 
         Player player = profile.getPlayer();
 
+        File schemFile = Skyblock.get().getSchematicHandler().getSchematic(schematic);
+
         long started = System.currentTimeMillis();
 
         if (profile.getIsland() != null) {
@@ -199,18 +201,21 @@ public class IslandHandler {
 
         int[] nextSpot = this.grid.getNextSpot();
 
+        final double distanceApart = ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble();
+        final double startingSize = ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble();
+
         Position center = new Position(Skyblock.get().getIslandWorld(),
-                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5,
+                distanceApart * nextSpot[0] + 0.5,
                 ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble(),
-                ConfigEnum.ISLAND_DISTANCE_APART.getAsDouble() * nextSpot[0] + 0.5);
+                distanceApart * nextSpot[0] + 0.5);
         Position corner1 = center.clone().add(
-                -ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d,
+                -startingSize / 2.0d,
                 BUILD_HEIGHT - ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble(),
-                -ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d);
+                -startingSize / 2.0d);
         Position corner2 = center.clone().add(
-                ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d,
+                startingSize / 2.0d,
                 -ConfigEnum.DEFAULT_STARTING_Y_POSITION.getAsDouble() + ConfigEnum.MINIMUM_Y_LIMIT.getAsDouble(),
-                ConfigEnum.STARTING_ISLAND_SIZE.getAsDouble() / 2.0d);
+                startingSize / 2.0d);
 
         Island island = new Island(nextSpot, IslandUtil.idToString(nextSpot),
                 new MemberProfile(player.getUniqueId(), IslandRole.LEADER),
@@ -218,8 +223,7 @@ public class IslandHandler {
 
         island.setHome(island.getCenter().clone());
 
-        Skyblock.get().getSchematicHandler().pasteSchematic(
-                island, Skyblock.get().getSchematicHandler().getSchematic(schematic));
+        Skyblock.get().getSchematicHandler().pasteSchematic(island, schemFile);
 
         this.grid.insert(island, nextSpot);
 

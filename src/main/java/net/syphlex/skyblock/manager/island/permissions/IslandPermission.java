@@ -5,6 +5,7 @@ import net.syphlex.skyblock.manager.island.member.IslandRole;
 
 @Getter
 public enum IslandPermission {
+    // todo test & fix bug with being able to drop items but not pickup interestingly
     PICKUP_AND_DROP_ITEMS("Pick Up/Drop Items", "Allows the %island_role% role to pick up and drop items."),
     BLOCK_PLACE("Place Blocks", "Allows the %island_role% role to place blocks."),
     BLOCK_BREAK("Break Blocks", "Allows the %island_role% role to break blocks."),

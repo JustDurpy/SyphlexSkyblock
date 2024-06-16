@@ -1,19 +1,15 @@
 package net.syphlex.skyblock.manager.gui.impl.island.settings;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.manager.gui.impl.island.IslandPanelGui;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.type.IslandBorderColorGui;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.type.IslandTimeLockGui;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.type.IslandWeatherLockGui;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.manager.gui.type.GuiItem;
 import net.syphlex.skyblock.manager.profile.Profile;
-import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.config.ConfigMenu;
 import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.simple.SimpleGui;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 public class IslandSettingsGui extends SimpleGui {
 
@@ -33,9 +29,9 @@ public class IslandSettingsGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.ISLAND_SETTINGS_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
-            switch (guiItem.id()) {
+            switch (guiItem.getId()) {
 
                 case 0:
 

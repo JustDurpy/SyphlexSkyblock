@@ -30,7 +30,7 @@ public enum IslandBorderColor {
 
     public static IslandBorderColor find(int id){
         for (IslandBorderColor var : IslandBorderColor.values())
-            if (var.getId() == id) return BLUE;
+            if (var.getId() == id) return var;
         return BLUE;
     }
 }

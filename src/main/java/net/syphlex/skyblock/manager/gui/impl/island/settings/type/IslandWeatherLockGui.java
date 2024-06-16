@@ -7,6 +7,7 @@ import net.syphlex.skyblock.manager.island.settings.impl.IslandWeatherLock;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.config.ConfigMenu;
 import net.syphlex.skyblock.util.config.Messages;
+import net.syphlex.skyblock.util.config.Permissions;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 
 public class IslandWeatherLockGui extends SimpleGui {
@@ -16,8 +17,7 @@ public class IslandWeatherLockGui extends SimpleGui {
 
         fill(ConfigMenu.WEATHER_LOCK_MENU);
 
-        for (GuiItem guiItem : ConfigMenu.WEATHER_LOCK_MENU.getMenuSetting().getItems())
-            this.inventory.setItem(guiItem.slot(), guiItem.item());
+        setItems(ConfigMenu.WEATHER_LOCK_MENU.getMenuSetting().getItems());
     }
 
     @Override
@@ -34,18 +34,19 @@ public class IslandWeatherLockGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.WEATHER_LOCK_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
-            /*
-            todo make user require a permission
-             */
+            if (!Permissions.getPermEnum(guiItem.getPermission()).has(profile)) {
+                Messages.NO_PERMISSION.send(profile);
+                return;
+            }
 
-            if (guiItem.id() == 99) {
+            if (guiItem.getId() == 99) {
                 profile.openIslandPanel();
                 return;
             }
 
-            island.getSettings().setWeatherLock(IslandWeatherLock.find(guiItem.id()));
+            island.getSettings().setWeatherLock(IslandWeatherLock.find(guiItem.getId()));
             break;
         }
     }

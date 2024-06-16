@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.extra;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
@@ -6,7 +6,6 @@ import net.syphlex.skyblock.manager.gui.type.GuiItem;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.leaderboard.LeaderData;
 import net.syphlex.skyblock.manager.profile.Profile;
-import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.config.ConfigMenu;
 import net.syphlex.skyblock.util.data.Pair;
 import net.syphlex.skyblock.util.simple.SimpleGui;
@@ -14,13 +13,11 @@ import net.syphlex.skyblock.util.utilities.IslandUtil;
 import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class IslandTopGui extends SimpleGui {
 
@@ -57,9 +54,9 @@ public class IslandTopGui extends SimpleGui {
                 return;
             }
 
-            if (guiItem.id() == 99) break;
+            if (guiItem.getId() == 99) break;
 
-            ItemStack item = guiItem.item();
+            ItemStack item = guiItem.getItem();
             ItemMeta meta = item.getItemMeta();
 
             //String title = (i + 1) + ". " + island.getLeader().getUsername();
@@ -104,8 +101,8 @@ public class IslandTopGui extends SimpleGui {
         }
 
         for (GuiItem guiItem : ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getItems()) {
-            if (guiItem.id() == 0) continue;
-            setItem(guiItem.item(), guiItem.slot());
+            if (guiItem.getId() == 0) continue;
+            setItem(guiItem.getItem(), guiItem.getSlot());
         }
     }
 
@@ -133,10 +130,10 @@ public class IslandTopGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
             if (guiItem.hasCmd())
-                profile.getPlayer().performCommand(guiItem.command());
+                profile.getPlayer().performCommand(guiItem.getCommand());
             break;
         }
     }

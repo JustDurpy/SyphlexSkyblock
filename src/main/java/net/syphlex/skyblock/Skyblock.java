@@ -100,7 +100,7 @@ public class Skyblock extends JavaPlugin {
         pm.registerEvents(new MineListener(), this);
     }
 
-    private boolean wildStackerHook = false;
+    private boolean wildStackerHook = false, placeholderAPIHook = false;
 
     private boolean dependencies(){
 
@@ -113,6 +113,7 @@ public class Skyblock extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             info("Successfully found and hooked into PlaceholderAPI!");
             new Placeholder(this).register();
+            this.placeholderAPIHook = true;
         }
 
         if (getServer().getPluginManager().getPlugin("WildStacker") != null) {
@@ -136,7 +137,11 @@ public class Skyblock extends JavaPlugin {
         this.islandHandler = new IslandHandler();
         this.mineHandler = new MineHandler();
         this.dataHandler = new DataHandler();
-        this.scoreboardHandler = new ScoreboardHandler();
+        if (this.placeholderAPIHook) {
+            this.scoreboardHandler = new ScoreboardHandler();
+        } else {
+            info("Scoreboard is automatically disabled if PlaceholderAPI is not installed in the server!");
+        }
         this.schematicHandler = new SchematicHandler();
         this.guiHandler = new GuiHandler();
         this.cooldownHandler = new CooldownHandler();
@@ -150,7 +155,8 @@ public class Skyblock extends JavaPlugin {
         this.islandHandler.onEnable();
         this.mineHandler.onEnable();
         this.dataHandler.onEnable();
-        this.scoreboardHandler.onEnable();
+        if (this.scoreboardHandler != null)
+            this.scoreboardHandler.onEnable();
         this.schematicHandler.onEnable();
         this.guiHandler.onEnable();
         this.leaderboardHandler.onEnable();

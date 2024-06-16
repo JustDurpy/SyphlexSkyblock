@@ -82,6 +82,7 @@ public class MinesFile extends SimpleConfig {
             config.set("mines." + mine.getMineName() + ".name", mine.getDisplayName());
             config.set("mines." + mine.getMineName() + ".permission", mine.getPermission());
             config.set("mines." + mine.getMineName() + ".pvp-enabled", mine.isPvp());
+            config.set("mines." + mine.getMineName() + ".spawn", mine.getSpawn().getAsString());
             config.set("mines." + mine.getMineName() + ".area-corner1", mine.getAreaCorner1().getAsString());
             config.set("mines." + mine.getMineName() + ".area-corner2", mine.getAreaCorner2().getAsString());
             config.set("mines." + mine.getMineName() + ".mine-pos1", mine.getMinePos1().getAsString());

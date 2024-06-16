@@ -31,7 +31,6 @@ public enum ConfigEnum {
             "&f&m-------------------",
             "&6&lYou",
             " &6➥ &eMoney: &f$%vault_eco_balance_formatted%",
-            " &6➥ &eMob Coins: &f%skyblock_player_mobcoins%⛁",
             "",
             "&6&lIsland",
             " &6➥ &eLeader: &f%skyblock_island_leader%",
@@ -154,7 +153,7 @@ public enum ConfigEnum {
             Double.parseDouble(this.object.toString());
             return true;
         } catch (NumberFormatException e) {
-            Skyblock.log("Config value was invalid and parsed incorrectly at " + this.name());
+            //Skyblock.log("Config value was invalid and parsed incorrectly at " + this.name());
             return false;
         }
     }

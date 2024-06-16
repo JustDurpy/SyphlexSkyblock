@@ -36,26 +36,18 @@ public class ProfileFile extends SimpleConfig {
 
                     config.options().copyDefaults(true);
                     config.addDefault("profile.island", "null");
-                    config.addDefault("profile.island-role", "Visitor");
-                    config.addDefault("profile.mobcoins", 0);
                     save();
                 }
 
                 FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
                 String identifier = config.getString("profile.island");
-                String islandRole = config.getString("profile.island-role");
-
-                int mobCoins = config.getInt("profile.mobcoins");
 
                 int[] id = IslandUtil.getId(identifier);
 
                 if (id[0] != -1 && id[1] != -1)
                     profile.setIsland(Skyblock.get().getIslandHandler().getGrid().get(id));
 
-                profile.getMemberProfile().setRole(IslandRole.get(islandRole));
-
-                profile.setMobCoins(mobCoins);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -84,9 +76,6 @@ public class ProfileFile extends SimpleConfig {
                 } else {
                     config.set("profile.island", "null");
                 }
-
-                config.set("profile.island-role", profile.getMemberProfile().getRole().getIdentifier());
-                config.set("profile.mobcoins", profile.getMobCoins());
 
                 config.save(f);
             } catch (IOException e) {

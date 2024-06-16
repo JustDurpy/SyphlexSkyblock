@@ -19,6 +19,7 @@ public abstract class Cooldown {
     }
 
     public void start(final UUID uuid) {
+        if (duration == 0) return;
         this.cache.put(uuid, System.currentTimeMillis());
     }
 

@@ -6,6 +6,8 @@ import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.settings.impl.IslandTimeLock;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.config.ConfigMenu;
+import net.syphlex.skyblock.util.config.Messages;
+import net.syphlex.skyblock.util.config.Permissions;
 import net.syphlex.skyblock.util.simple.SimpleConfig;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import net.syphlex.skyblock.util.utilities.PluginUtil;
@@ -20,8 +22,7 @@ public class IslandTimeLockGui extends SimpleGui {
 
         fill(ConfigMenu.TIME_LOCK_MENU);
 
-        for (GuiItem guiItem : ConfigMenu.TIME_LOCK_MENU.getMenuSetting().getItems())
-            this.inventory.setItem(guiItem.slot(), guiItem.item());
+        setItems(ConfigMenu.TIME_LOCK_MENU.getMenuSetting().getItems());
     }
 
     @Override
@@ -33,20 +34,25 @@ public class IslandTimeLockGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.TIME_LOCK_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot())
+            if (e.getSlot() != guiItem.getSlot())
                 continue;
 
-            ItemStack item = guiItem.item();
+            if (!Permissions.getPermEnum(guiItem.getPermission()).has(profile)) {
+                Messages.NO_PERMISSION.send(profile);
+                return;
+            }
+
+            ItemStack item = guiItem.getItem();
 
             if (!PluginUtil.isValidItem(item))
                 continue;
 
-            if (guiItem.id() == 99) {
+            if (guiItem.getId() == 99) {
                 profile.openIslandPanel();
                 return;
             }
 
-            island.getSettings().setTimeLock(IslandTimeLock.find(guiItem.id()));
+            island.getSettings().setTimeLock(IslandTimeLock.find(guiItem.getId()));
             break;
         }
     }

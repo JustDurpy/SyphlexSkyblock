@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class MineListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent e){
 
         final Player p = e.getPlayer();
@@ -41,7 +41,7 @@ public class MineListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent e){
 
         final Player p = e.getPlayer();

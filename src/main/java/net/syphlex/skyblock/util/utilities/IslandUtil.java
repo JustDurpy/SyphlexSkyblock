@@ -89,4 +89,20 @@ public class IslandUtil {
         return gridPrint.toString();
     }
 
+    /**
+     * This will find an island that the given uuid is apart of
+     * @param uuid - uuid of the player
+     * @return
+     */
+    public Island findIsland(UUID uuid){
+        for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
+            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
+                Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
+                if (island == null) continue;
+                if (island.isApartOfIsland(uuid)) return island;
+            }
+        }
+        return null;
+    }
+
 }

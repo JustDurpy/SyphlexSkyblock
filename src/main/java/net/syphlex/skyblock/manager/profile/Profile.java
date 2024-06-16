@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.cmd.IslandCmd;
-import net.syphlex.skyblock.manager.gui.impl.island.IslandPanelGui;
+import net.syphlex.skyblock.manager.gui.impl.island.manage.IslandPanelGui;
 import net.syphlex.skyblock.manager.island.data.Island;
 import net.syphlex.skyblock.manager.island.member.IslandRole;
 import net.syphlex.skyblock.manager.island.member.MemberProfile;
@@ -22,19 +22,17 @@ import java.util.ArrayList;
 @Setter
 public class Profile {
     private final Player player;
-    private final MemberProfile memberProfile;
     private FastBoard scoreboard;
 
     private Island island = null;
 
-    private int mobCoins;
     private boolean respawnAtIsland = false, adminMode = false;
 
     private final ArrayList<InviteRequest> inviteRequests = new ArrayList<>();
 
     public Profile(final Player player){
         this.player = player;
-        this.memberProfile = new MemberProfile(this.player.getUniqueId());
+        //this.memberProfile = new MemberProfile(this.player.getUniqueId());
 
         this.scoreboard = new FastBoard(player);
         this.scoreboard.updateTitle(StringUtil.CC(ConfigEnum.SCOREBOARD_TITLE.getAsString()));
@@ -56,21 +54,27 @@ public class Profile {
         Skyblock.get().getGuiHandler().openGui(this, new IslandPanelGui());
     }
 
-    public void joinIsland(Island island){
+    public void joinIsland(Island island) {
 
         if (hasIsland())
             return;
 
-        this.memberProfile.setRole(IslandRole.MEMBER);
+        //this.memberProfile.setRole(IslandRole.MEMBER);
 
         this.island = island;
-        this.island.getMembers().add(this.memberProfile);
+        //this.island.getMembers().add(this.memberProfile);
         this.island.teleport(this.player);
 
         this.inviteRequests.clear();
+
+        sendMessage(Messages.JOIN_ISLAND.get()
+                .replace("%player%", island.getLeader().getUsername()));
+        island.broadcast(Messages.JOIN_ISLAND_BROADCAST.get()
+                .replace("%player%", this.player.getName()));
     }
 
     public void leaveIsland(){
+
         if (!hasIsland())
             return;
 
@@ -79,10 +83,14 @@ public class Profile {
         if (profile == null)
             return;
 
+        Messages.LEFT_ISLAND.send(this.player);
+        this.island.broadcast(Messages.LEFT_ISLAND_BROADCAST.get()
+                .replace("%player%", this.player.getName()));
+
         this.island.getMembers().remove(profile);
         this.island = null;
 
-        this.memberProfile.setRole(IslandRole.VISITOR);
+        //this.memberProfile.setRole(IslandRole.VISITOR);
 
         this.player.teleport(Skyblock.get().getMainSpawn());
     }
@@ -111,6 +119,25 @@ public class Profile {
 
     public boolean hasIsland(){
         return island != null;
+    }
+
+    /*
+    improvised this.
+    used to use player-specific data caching
+    would eventually at times be not in sync with island
+    member/permission management.
+     */
+    public MemberProfile getMemberProfile(){
+
+        if (!hasIsland()) return new MemberProfile(
+                this.player.getUniqueId(),
+                IslandRole.VISITOR);
+
+        if (isIslandLeader()) return new MemberProfile(
+                this.player.getUniqueId(),
+                IslandRole.LEADER);
+
+        return this.island.getMember(this.player.getUniqueId());
     }
 
 }

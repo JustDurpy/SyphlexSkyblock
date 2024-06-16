@@ -28,7 +28,7 @@ public class IslandOreGeneratorGui extends SimpleGui {
         for (GuiItem guiItem : ConfigMenu.GENERATOR_MENU.getMenuSetting().getItems()) {
 
             if (!guiItem.hasMultipleItems()) {
-                setItem(guiItem.item(), guiItem.slot());
+                setItem(guiItem.getItem(), guiItem.getSlot());
                 continue;
             }
 
@@ -36,20 +36,20 @@ public class IslandOreGeneratorGui extends SimpleGui {
 
             if (!island.getUpgrades().getGenerator().canUpgrade()) {
                 // maxed out
-                actualItem = getPair(guiItem.items(), "already-upgraded").getY();
+                actualItem = getPair(guiItem.getItems(), "already-upgraded").getY();
             } else if (island.getUpgrades().getGenerator().canUpgrade()
                     && !Skyblock.economy().has(profile.getPlayer(),
                     island.getUpgrades().getGenerator().getNextCost())) {
                 // broke asf boi tryna buy
-                actualItem = getPair(guiItem.items(), "cannot-upgrade").getY();
+                actualItem = getPair(guiItem.getItems(), "cannot-upgrade").getY();
             } else {
                 // rich asf boy tryna buy
-                actualItem = getPair(guiItem.items(), "can-upgrade").getY();
+                actualItem = getPair(guiItem.getItems(), "can-upgrade").getY();
             }
 
             if (actualItem == null) continue;
 
-            setItem(actualItem.build(), guiItem.slot());
+            setItem(actualItem.build(), guiItem.getSlot());
         }
     }
 
@@ -62,17 +62,19 @@ public class IslandOreGeneratorGui extends SimpleGui {
 
         for (GuiItem guiItem : ConfigMenu.GENERATOR_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
             // generator name : guiItem.stringId();
 
-            IslandOreGenerator generator = Skyblock.get().getUpgradeHandler().getOreGenerator(guiItem.stringId());
+            IslandOreGenerator generator = Skyblock.get().getUpgradeHandler().getOreGenerator(guiItem.getStringId());
 
             if (generator == null) {
                 // todo error log
                 closeInventory(profile.getPlayer());
                 break;
             }
+
+            // todo fix these messages lol
 
             if (!island.getUpgrades().getGenerator().canUpgrade()) {
                 // maxed out

@@ -26,7 +26,7 @@ public class Placeholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "2.0.0-BETA";
+        return "2.1.0-BETA";
     }
 
     @Override
@@ -39,10 +39,6 @@ public class Placeholder extends PlaceholderExpansion {
         switch (identifier) {
             case "island_leader": {
                 placeholder = (profile.hasIsland() ? profile.isIslandLeader() ? "You" : profile.getIsland().getLeader().getUsername() : "No Island");
-                break;
-            }
-            case "player_mobcoins": {
-                placeholder = String.format("%,d", profile.getMobCoins());
                 break;
             }
             case "island_team_size": {

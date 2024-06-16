@@ -47,7 +47,7 @@ public abstract class SimpleGui implements InventoryHolder {
 
     public void setItems(Collection<GuiItem> guiItems) {
         for (GuiItem guiItem : guiItems)
-            setItem(guiItem.item(), guiItem.slot());
+            setItem(guiItem.getItem(), guiItem.getSlot());
     }
 
     public void fill(ItemStack item){

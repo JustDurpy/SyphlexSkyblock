@@ -12,7 +12,24 @@ import java.util.Arrays;
 
 @Getter
 public enum ConfigMenu {
-    GENERATOR_MENU("generator-menu", new MenuSetting(
+    ISLAND_INFORMATION_MENU("island-information", new MenuSetting(
+            true,
+            true,
+            new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
+            "Island Information",
+            45,
+            Arrays.asList(
+                    new GuiItem(new ItemBuilder()
+                            .setMaterial(Material.IRON_BLOCK)
+                            .setName("&6Visit Island")
+                            .setLore(Arrays.asList(
+                                    "Click to teleport to this island.")))
+                            .setPerm("none")
+                            .setCmd("island visit %island%")
+                            .setSlot(11)
+            )
+    )),
+    GENERATOR_MENU("generator", new MenuSetting(
             true,
             true,
             new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
@@ -64,8 +81,9 @@ public enum ConfigMenu {
                                             " &6➥ &eIron Ore &7(5%)",
                                             "",
                                             "&cYou already own this generator.",
-                                            " ")))
-                    ), "example", 11))
+                                            " ")))))
+                            .setStringId("example")
+                            .setSlot(11))
     )),
     TOP_ISLANDS_MENU("top-islands", new MenuSetting(
             true,
@@ -83,11 +101,31 @@ public enum ConfigMenu {
                                     " &6➥ &eMembers: &f%team_size%/%max_team_size%",
                                     "",
                                     "&7&o(( Click to view island information ))",
-                                    ""
-                            )), 0, 0),
+                                    "")))
+                            .setId(0)
+                            .setSlot(0),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.END_PORTAL_FRAME)
-                            .setName("&6Island Panel"), 99, 22))
+                            .setName("&6Island Panel"))
+                            .setId(99)
+                            .setSlot(22))
+    )),
+    CREATE_ISLAND_MENU("create-island", new MenuSetting(
+            true,
+            true,
+            new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
+            "Create an Island",
+            27,
+            Arrays.asList(
+                    new GuiItem(new ItemBuilder()
+                            .setName("&aDefault Island")
+                            .setMaterial(Material.GRASS_BLOCK)
+                            .setLore(Arrays.asList(
+                                    "&7Click to create your island",
+                                    "&7using the default schematic.")))
+                            .setStringId("default")
+                            .setPerm("none")
+                            .setSlot(13))
     )),
     DELETE_ISLAND_MENU("delete-island", new MenuSetting(
             true,
@@ -98,7 +136,9 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.RED_CONCRETE)
-                            .setName("&cDelete Island"), 0, 13))
+                            .setName("&cDelete Island"))
+                            .setId(0)
+                            .setSlot(13))
     )),
     ISLAND_PANEL_MENU("island-panel", new MenuSetting(
             true,
@@ -109,24 +149,36 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRASS_BLOCK)
-                            .setName("&6Island Home"), 0, 10),
+                            .setName("&6Island Home"))
+                            .setId(0)
+                            .setSlot(10),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.BOOK)
-                            .setName("&6Island Information"), 1, 11),
+                            .setName("&6Island Information"))
+                            .setId(1)
+                            .setSlot(11),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.DIAMOND)
-                            .setName("&6Top Islands"), 2, 12),
+                            .setName("&6Top Islands"))
+                            .setId(2)
+                            .setSlot(12),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.BEACON)
-                            .setName("&6Island Upgrades"), 3, 14),
+                            .setName("&6Island Upgrades"))
+                            .setId(3)
+                            .setSlot(14),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.PAPER)
-                            .setName("&6Island Permissions"), 4, 15),
+                            .setName("&6Island Permissions"))
+                            .setId(4)
+                            .setSlot(15),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.REPEATER)
-                            .setName("&6IIsland Settings"), 5, 16))
+                            .setName("&6IIsland Settings"))
+                            .setId(5)
+                            .setSlot(16))
     )),
-    ISLAND_SETTINGS_MENU("island-settings-menu", new MenuSetting(
+    ISLAND_SETTINGS_MENU("island-settings", new MenuSetting(
             true,
             true,
             new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
@@ -135,21 +187,31 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.CLOCK)
-                            .setName("&6Time Lock"), 0, 10),
+                            .setName("&6Time Lock"))
+                            .setId(0)
+                            .setSlot(10),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.SUNFLOWER)
-                            .setName("&6Weather Lock"), 1, 12),
+                            .setName("&6Weather Lock"))
+                            .setId(1)
+                            .setSlot(12),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.BARRIER)
-                            .setName("&6Island Border Color"), 2, 14),
+                            .setName("&6Island Border Color"))
+                            .setId(2)
+                            .setSlot(14),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.REPEATER)
-                            .setName("&6Extra Settings"), 3, 16),
+                            .setName("&6Extra Settings"))
+                            .setId(3)
+                            .setSlot(16),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.END_PORTAL_FRAME)
-                            .setName("&6Island Panel"), 99, 22))
+                            .setName("&6Island Panel"))
+                            .setId(99)
+                            .setSlot(22))
     )),
-    ISLAND_BORDER_COLOR_MENU("border-color-setting-menu", new MenuSetting(
+    ISLAND_BORDER_COLOR_MENU("border-color-setting", new MenuSetting(
             true,
             true,
             new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
@@ -158,18 +220,26 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-                            .setName("&9Blue Island Border"), 0, 11),
+                            .setName("&9Blue Island Border"))
+                            .setId(0)
+                            .setSlot(11),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.LIME_STAINED_GLASS_PANE)
-                            .setName("&aGreen Island Border"), 1, 13),
+                            .setName("&aGreen Island Border"))
+                            .setId(1)
+                            .setSlot(13),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.RED_STAINED_GLASS_PANE)
-                            .setName("&cRed Island Border"), 2, 15),
+                            .setName("&cRed Island Border"))
+                            .setId(2)
+                            .setSlot(15),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.END_PORTAL_FRAME)
-                            .setName("&6Island Panel"), 99, 22))
+                            .setName("&6Island Panel"))
+                            .setId(99)
+                            .setSlot(22))
     )),
-    TIME_LOCK_MENU("time-lock-setting-menu", new MenuSetting(
+    TIME_LOCK_MENU("time-lock-setting", new MenuSetting(
             true,
             true,
             new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
@@ -178,24 +248,36 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.RED_DYE)
-                            .setName("&cNone"), 0, 11),
+                            .setName("&cNone"))
+                            .setId(0)
+                            .setSlot(11),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&fSun &eRise"), 1, 12),
+                            .setName("&fSun &eRise"))
+                            .setId(1)
+                            .setSlot(12),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&eDay"), 2, 13),
+                            .setName("&eDay"))
+                            .setId(2)
+                            .setSlot(13),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&9Sun &6Set"), 3, 14),
+                            .setName("&9Sun &6Set"))
+                            .setId(3)
+                            .setSlot(14),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&7Night"), 4, 15),
+                            .setName("&7Night"))
+                            .setId(4)
+                            .setSlot(15),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.END_PORTAL_FRAME)
-                            .setName("&6Island Panel"), 99, 22))
+                            .setName("&6Island Panel"))
+                            .setId(99)
+                            .setSlot(22))
     )),
-    WEATHER_LOCK_MENU("weather-lock-setting-menu", new MenuSetting(
+    WEATHER_LOCK_MENU("weather-lock-setting", new MenuSetting(
             true,
             true,
             new ItemStack(Material.BLACK_STAINED_GLASS_PANE),
@@ -204,17 +286,24 @@ public enum ConfigMenu {
             Arrays.asList(
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.RED_DYE)
-                            .setName("&cNone"), 0, 11),
-
+                            .setName("&cNone"))
+                            .setId(0)
+                            .setSlot(11),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&eSunny"), 1, 13),
+                            .setName("&eSunny"))
+                            .setId(1)
+                            .setSlot(13),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.GRAY_DYE)
-                            .setName("&bRainy"), 2, 15),
+                            .setName("&bRainy"))
+                            .setId(2)
+                            .setSlot(15),
                     new GuiItem(new ItemBuilder()
                             .setMaterial(Material.END_PORTAL_FRAME)
-                            .setName("&6Island Panel"), 99, 22))
+                            .setName("&6Island Panel"))
+                            .setId(99)
+                            .setSlot(22))
     ));
 
     private final String fileName;

@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.permissions;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.island.member.IslandRole;

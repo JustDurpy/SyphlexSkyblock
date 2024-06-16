@@ -1,7 +1,11 @@
 package net.syphlex.skyblock.cmd;
 
 import net.syphlex.skyblock.Skyblock;
-import net.syphlex.skyblock.manager.gui.impl.island.*;
+import net.syphlex.skyblock.manager.gui.impl.island.extra.IslandInfoGui;
+import net.syphlex.skyblock.manager.gui.impl.island.extra.IslandTopGui;
+import net.syphlex.skyblock.manager.gui.impl.island.manage.IslandCreateGui;
+import net.syphlex.skyblock.manager.gui.impl.island.manage.IslandDeleteGui;
+import net.syphlex.skyblock.manager.gui.impl.island.permissions.IslandPermissionsRolesGui;
 import net.syphlex.skyblock.manager.gui.impl.island.settings.IslandSettingsGui;
 import net.syphlex.skyblock.manager.gui.impl.island.upgrades.IslandUpgradeGui;
 import net.syphlex.skyblock.manager.island.data.Island;
@@ -39,6 +43,7 @@ public class IslandCmd extends SimpleCmd {
         options.add("help");
         options.add("create");
         options.add("delete");
+        options.add("disband");
         options.add("info");
         options.add("settings");
         options.add("upgrade");
@@ -127,6 +132,7 @@ public class IslandCmd extends SimpleCmd {
                     handleCreate(profile);
                     break;
                 case "delete":
+                case "disband":
                     handleDelete(profile);
                     break;
                 case "info":
@@ -159,8 +165,21 @@ public class IslandCmd extends SimpleCmd {
                 case "join":
                     handleJoin(profile, args);
                     break;
+                case "promote":
+                    handlePromote(profile, args);
+                    break;
+                case "demote":
+                    handleDemote(profile, args);
+                    break;
+                case "setleader":
+                    handleSetLeader(profile, args);
+                    break;
                 case "top":
-                    Skyblock.get().getGuiHandler().openGui(profile, new IslandTopGui());
+                    if (ConfigMenu.TOP_ISLANDS_MENU.getMenuSetting().isEnabled()) {
+                        Skyblock.get().getGuiHandler().openGui(profile, new IslandTopGui());
+                        return;
+                    }
+                    Messages.FEATURE_DISABLED.send(profile);
                     break;
                 case "kick":
                     handleKick(profile, args);
@@ -199,6 +218,106 @@ public class IslandCmd extends SimpleCmd {
             sender.sendMessage(StringUtil.HexCC(s));
     }
 
+    private void handlePromote(Profile profile, String[] args){
+
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
+
+        final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+        final Island island = profile.getIsland();
+
+        if (!island.isApartOfIsland(target.getUniqueId())) {
+            Messages.NOT_APART_OF_ISLAND.send(profile);
+            return;
+        }
+
+        MemberProfile targetMember = island.getMember(target.getUniqueId());
+
+        // the boolean runs the role change
+        if (targetMember.promote()) {
+
+            profile.sendMessage(Messages.PROMOTED_ISLAND_MEMBER.get()
+                    .replace("%player%", targetMember.getUsername())
+                    .replace("%role%", targetMember.getRole().getIdentifier()));
+
+            if (target.isOnline()) {
+                target.getPlayer().sendMessage(Messages.ISLAND_MEMBER_GOT_PROMOTED.get()
+                        .replace("%role%", targetMember.getRole().getIdentifier()));
+            }
+
+            island.broadcast(Messages.PROMOTED_ISLAND_MEMBER_BROADCAST.get()
+                    .replace("%player%", targetMember.getUsername())
+                    .replace("%leader%", profile.getPlayer().getName())
+                    .replace("%role%", targetMember.getRole().getIdentifier()));
+
+        } else {
+            Messages.CANT_PROMOTE_OR_DEMOTE_ISLAND_MEMBER.send(profile);
+        }
+    }
+
+    private void handleDemote(Profile profile, String[] args){
+
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
+
+        final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+        final Island island = profile.getIsland();
+
+        if (!island.isApartOfIsland(target.getUniqueId())) {
+            Messages.NOT_APART_OF_ISLAND.send(profile);
+            return;
+        }
+
+        MemberProfile targetMember = island.getMember(target.getUniqueId());
+
+        // the boolean runs the role change
+        if (targetMember.demote()) {
+
+            profile.sendMessage(Messages.DEMOTED_ISLAND_MEMBER.get()
+                    .replace("%player%", targetMember.getUsername())
+                    .replace("%role%", targetMember.getRole().getIdentifier()));
+
+            if (target.isOnline())
+                target.getPlayer().sendMessage(Messages.ISLAND_MEMBER_GOT_DEMOTED.get()
+                        .replace("%role%", targetMember.getRole().getIdentifier()));
+
+            island.broadcast(Messages.DEMOTED_ISLAND_MEMBER_BROADCAST.get()
+                    .replace("%player%", targetMember.getUsername())
+                    .replace("%leader%", profile.getPlayer().getName())
+                    .replace("%role%", targetMember.getRole().getIdentifier()));
+
+        } else {
+            Messages.CANT_PROMOTE_OR_DEMOTE_ISLAND_MEMBER.send(profile);
+        }
+    }
+
+    private void handleSetLeader(Profile profile, String[] args){
+
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
+            return;
+        }
+
+        final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+        final Island island = profile.getIsland();
+
+        // this prevents users from setting themselves to the leader, todo add messages?
+        if (target.getUniqueId().equals(profile.getPlayer().getUniqueId()))
+            return;
+
+        if (!island.isApartOfIsland(target.getUniqueId())) {
+            Messages.NOT_APART_OF_ISLAND.send(profile);
+            return;
+        }
+
+        island.setLeader(island.getMember(target.getUniqueId()));
+    }
+
     private void handleAdmin(Profile profile){
 
         if (!Permissions.ADMIN.has(profile) && !profile.getPlayer().isOp()) {
@@ -207,7 +326,7 @@ public class IslandCmd extends SimpleCmd {
         }
 
         profile.setAdminMode(!profile.isAdminMode());
-        profile.sendMessage((profile.isAdminMode()
+        profile.sendMessage(StringUtil.HexCC(profile.isAdminMode()
                 ? "&aYour admin mode is now enabled."
                 : "&cYour admin mode is now disabled."));
     }
@@ -240,29 +359,7 @@ public class IslandCmd extends SimpleCmd {
             return;
         }
 
-        Island toVisit = null;
-
-        for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
-            for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().length(); c++) {
-
-                Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
-
-                if (island == null) continue;
-                if (toVisit != null) break;
-
-                if (island.getLeader().getUuid().equals(target.getUniqueId())) {
-                    toVisit = island;
-                    break;
-                }
-
-                for (MemberProfile members : island.getMembers()) {
-                    if (members.getUuid().equals(target)) {
-                        toVisit = island;
-                        break;
-                    }
-                }
-            }
-        }
+        Island toVisit = IslandUtil.findIsland(target.getUniqueId());
 
         if (toVisit == null) {
             Messages.ISLAND_NOT_FOUND.send(profile);
@@ -467,6 +564,9 @@ public class IslandCmd extends SimpleCmd {
     }
 
     private void handleInfo(Profile profile, String[] args){
+
+        Island infoIsland = null;
+
         if (args.length == 1) {
 
             if (!profile.hasIsland()) {
@@ -474,41 +574,28 @@ public class IslandCmd extends SimpleCmd {
                 return;
             }
 
-            profile.sendMessage(profile.getPlayer().getName() + "'s island:");
-            profile.sendMessage("Members: ");
-            for (MemberProfile memberProfile : profile.getIsland().getMembers()) {
-                profile.sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
-            }
-            profile.sendMessage("Worth: $" + profile.getIsland().getWorth());
+            infoIsland = profile.getIsland();
+
         } else {
 
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
-            Island targetIsland = null;
-
-            for (int r = 0; r < Skyblock.get().getIslandHandler().getGrid().length(); r++) {
-                for (int c = 0; c < Skyblock.get().getIslandHandler().getGrid().length(); c++) {
-                    Island island = Skyblock.get().getIslandHandler().getGrid().get(r, c);
-                    if (island == null) continue;
-                    if (island.getLeader().getUuid().equals(target.getUniqueId())) {
-                        targetIsland = island;
-                        break;
-                    }
-                }
-            }
+            Island targetIsland = IslandUtil.findIsland(target.getUniqueId());
 
             if (targetIsland == null) {
                 Messages.ISLAND_NOT_FOUND.send(profile);
                 return;
             }
 
-            profile.sendMessage(target.getName() + "'s island:");
-            profile.sendMessage("Members: ");
-            for (MemberProfile memberProfile : targetIsland.getMembers()) {
-                profile.sendMessage("" + memberProfile.getUsername() + " : " + memberProfile.getRole().getIdentifier());
-            }
-            profile.sendMessage("Worth: $" + targetIsland.getWorth());
+            infoIsland = targetIsland;
         }
+
+        if (!ConfigMenu.ISLAND_INFORMATION_MENU.getMenuSetting().isEnabled()) {
+            Messages.FEATURE_DISABLED.send(profile);
+            return;
+        }
+
+        Skyblock.get().getGuiHandler().openGui(profile, new IslandInfoGui(infoIsland));
     }
 
     private void handleUpgrades(Profile profile){
@@ -574,8 +661,6 @@ public class IslandCmd extends SimpleCmd {
         Island island = request.getIsland();
 
         profile.joinIsland(island);
-        profile.sendMessage(Messages.JOIN_ISLAND.get()
-                .replace("%player%", island.getLeader().getUsername()));
     }
 
     private void handleLeave(Profile profile){
@@ -675,6 +760,12 @@ public class IslandCmd extends SimpleCmd {
     }
 
     private void handleCreate(Profile profile){
+
+        if (ConfigMenu.CREATE_ISLAND_MENU.getMenuSetting().isEnabled()) {
+            Skyblock.get().getGuiHandler().openGui(profile, new IslandCreateGui());
+            return;
+        }
+
         Skyblock.get().getIslandHandler().generateIsland(profile, ConfigEnum.DEFAULT_SCHEMATIC_NAME.getAsString());
     }
 

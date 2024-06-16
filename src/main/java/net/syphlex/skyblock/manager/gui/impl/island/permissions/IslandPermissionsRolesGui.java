@@ -1,13 +1,11 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.permissions;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.simple.SimpleGui;
-import net.syphlex.skyblock.util.utilities.StringUtil;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 

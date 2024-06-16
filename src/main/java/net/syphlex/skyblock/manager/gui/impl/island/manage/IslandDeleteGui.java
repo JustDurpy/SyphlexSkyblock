@@ -1,4 +1,4 @@
-package net.syphlex.skyblock.manager.gui.impl.island;
+package net.syphlex.skyblock.manager.gui.impl.island.manage;
 
 import net.syphlex.skyblock.Skyblock;
 import net.syphlex.skyblock.manager.gui.type.ClickEvent;
@@ -6,6 +6,7 @@ import net.syphlex.skyblock.manager.gui.type.GuiItem;
 import net.syphlex.skyblock.manager.profile.Profile;
 import net.syphlex.skyblock.util.ItemBuilder;
 import net.syphlex.skyblock.util.config.ConfigMenu;
+import net.syphlex.skyblock.util.config.Messages;
 import net.syphlex.skyblock.util.simple.SimpleGui;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -27,16 +28,19 @@ public class IslandDeleteGui extends SimpleGui {
 
         final Profile profile = e.getProfile();
 
-        if (!profile.isIslandLeader())
+        if (!profile.isIslandLeader()) {
+            Messages.NOT_ISLAND_LEADER.send(profile);
             return;
+        }
 
         for (GuiItem guiItem : ConfigMenu.DELETE_ISLAND_MENU.getMenuSetting().getItems()) {
 
-            if (e.getSlot() != guiItem.slot()) continue;
+            if (e.getSlot() != guiItem.getSlot()) continue;
 
-            switch (guiItem.id()) {
+            switch (guiItem.getId()) {
                 case 0:
                     Skyblock.get().getIslandHandler().degenerateIsland(profile);
+                    closeInventory(profile.getPlayer());
                     break;
                 case 99:
                     profile.openIslandPanel();

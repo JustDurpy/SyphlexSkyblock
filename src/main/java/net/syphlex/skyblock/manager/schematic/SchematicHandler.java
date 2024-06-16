@@ -48,6 +48,8 @@ public class SchematicHandler {
             if (entry.getKey().equalsIgnoreCase(name))
                 return entry.getValue();
         }
+        Skyblock.log("Could not find schematic file with the name: "
+                + name + ". in schematics folder!");
         return null;
     }
 
@@ -64,7 +66,7 @@ public class SchematicHandler {
         Bukkit.getScheduler().runTask(Skyblock.get(), () -> {
             if (schematicFile == null) {
                 location.getBlock().setType(Material.BEDROCK);
-                //Skyblock.get().getLogger().warning("Could not find schematic " + schematic.schematicID);
+                Skyblock.get().getLogger().warning("Could not find and load schematic.");
             } else {
                 //if (fawe) {
                     Bukkit.getScheduler().runTaskAsynchronously(Skyblock.get(),

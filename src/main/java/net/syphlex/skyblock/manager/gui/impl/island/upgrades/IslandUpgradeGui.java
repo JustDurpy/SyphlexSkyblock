@@ -45,7 +45,7 @@ public class IslandUpgradeGui extends SimpleGui {
 
             GuiItem guiItem = upgrade.getGuiItem();
 
-            ItemStack itemStack = guiItem.item().clone();
+            ItemStack itemStack = guiItem.getItem().clone();
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta == null || itemMeta.getLore() == null)
                 continue;
@@ -68,7 +68,7 @@ public class IslandUpgradeGui extends SimpleGui {
             itemMeta.setLore(newLore);
             itemStack.setItemMeta(itemMeta);
 
-            this.inventory.setItem(guiItem.slot(), itemStack);
+            this.inventory.setItem(guiItem.getSlot(), itemStack);
         }
 
         setIslandPanelButton(22);
@@ -89,7 +89,7 @@ public class IslandUpgradeGui extends SimpleGui {
 
             GuiItem guiItem = upgrade.getGuiItem();
 
-            if (e.getSlot() != guiItem.slot())
+            if (e.getSlot() != guiItem.getSlot())
                 continue;
 
             // should be generator menu

@@ -17,7 +17,7 @@ public class Position {
 
     public Position(String s) {
 
-        if (s.equalsIgnoreCase("null")){
+        if (s == null || s.equalsIgnoreCase("null")){
             this.world = Skyblock.get().getIslandWorld();
             this.x = 0;
             this.y = 0;
